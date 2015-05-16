@@ -6,12 +6,29 @@
 #   wouldn't be useful and amusing enough for day to day huboting.
 #   Uncomment the ones you want to try and experiment with.
 #
-#   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
+
+json = require '../settings/poems.json'
+
+shuffle = (targets) ->
+  i = targets.length
+  if i is 0 then return false
+  while --i
+    j = Math.floor Math.random() * (i + 1)
+    tmpi = targets[i]
+    tmpj = targets[j]
+    targets[i] = tmpj
+    targets[j] = tmpi
+  return array[0]
+
 
 module.exports = (robot) ->
 
-  # robot.hear /badger/i, (res) ->
-  #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
+  robot.hear /なん(.|。|・)*だと(.|。|・)*/i, (res) ->
+    res.send "http://dic.nicovideo.jp/oekaki/219454.png"
+
+  robot.respond /poem$/i, (res) ->
+    res.send shuffle json.poem
+
   #
   # robot.respond /open the (.*) doors/i, (res) ->
   #   doorType = res.match[1]
