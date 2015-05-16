@@ -18,7 +18,7 @@ shuffle = (targets) ->
     tmpj = targets[j]
     targets[i] = tmpj
     targets[j] = tmpi
-  return array[0]
+  return targets[0]
 
 
 module.exports = (robot) ->
