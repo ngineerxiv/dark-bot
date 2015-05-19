@@ -1,7 +1,4 @@
 class Spell
-  
-  kurohitugi: ->
-    text
 
   hado:(n) ->
     switch n
@@ -21,6 +18,3 @@ class Spell
         '天光満つるところに我は在り\n黄泉の門開くところに汝在り\n出でよ、神の雷\n\n『インディグネイション』'
 
 module.exports = new Spell()
-
-
-
