@@ -18,3 +18,8 @@ module.exports = (robot) ->
 
   robot.hear /なん(.|。|・)*だと(.|。|・)*/i, (res) ->
     res.send "http://dic.nicovideo.jp/oekaki/219454.png"
+
+  robot.respond /炎上 (.+) (.+)/i, (res) ->
+    text1 = encodeURIComponent res.match[1]
+    text2 = encodeURIComponent res.match[2]
+    res.send "https://enjo-generator.herokuapp.com/api/create-enjo?text1=#{text1}&text2=#{text2}"
