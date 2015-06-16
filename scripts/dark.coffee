@@ -16,7 +16,7 @@ module.exports = (robot) ->
   robot.respond /poem$/i, (res) ->
     res.send util.shuffle json.poem
 
-  robot.hear /なん(.|。|・)*だと(.|。|・)*/i, (res) ->
+  robot.hear /なん(\.|。|・)*だと(\.|。|・)*$/i, (res) ->
     res.send "http://dic.nicovideo.jp/oekaki/219454.png"
 
   robot.respond /炎上 (.+) (.+)/i, (res) ->
