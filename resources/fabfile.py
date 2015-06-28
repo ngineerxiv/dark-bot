@@ -1,3 +1,5 @@
+from fabric.api import run, env, cd
+
 env.hosts = ['xn--zbv.tokyo']
 env.user = 'deploy-user'
 env.port = '10022'
