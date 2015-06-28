@@ -7,5 +7,5 @@ def deploy():
     code = '/web/httpd_arata/dark-bot'
     with cd(code):
         run('git pull origin master')
-    run('service dark restart')
+    run('service supervisord restart')
     print("Done")
