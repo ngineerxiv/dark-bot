@@ -7,6 +7,5 @@
   "hubot-rules",
   "hubot-shipit",
   "hubot-youtube",
-  "hubot-schedule",
-  "hubot-karma-classic"
+  "hubot-schedule"
 ]

@@ -1,3 +1,4 @@
 [
-  "redis-brain.coffee"
+  "redis-brain.coffee",
+  "karma.coffee"
 ]
