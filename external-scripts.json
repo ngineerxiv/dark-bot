@@ -8,6 +8,5 @@
   "hubot-shipit",
   "hubot-youtube",
   "hubot-schedule",
-  "hubot-karma",
-  "hubot-mongodb-brain"
+  "hubot-karma-classic"
 ]

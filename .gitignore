@@ -2,3 +2,4 @@ node_modules
 .DS_Store*
 .hubot_history
 settings/poems.json
+npm-debug.log
