@@ -7,5 +7,7 @@
   "hubot-rules",
   "hubot-shipit",
   "hubot-youtube",
-  "hubot-schedule"
+  "hubot-schedule",
+  "hubot-karma",
+  "hubot-mongodb-brain"
 ]
