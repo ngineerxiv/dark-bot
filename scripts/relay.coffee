@@ -1,9 +1,13 @@
 # Description:
 #   Relay Blog
 #
+# Commands:
+#   hubot relay start - オペレーション・スクルドを開始する
+#   hubot relay last - 現在実行中のオペレーション・スクルド概要を確認する
+#   hubot relay reset - シュタインズゲートの選択
+#
 # Notes:
 #   http://hatenablog.com/g/8454420450067357649
-#
 
 SlackClient  = require 'slack-api-client'
 relayEnv= require '../settings/relayblog.json'
