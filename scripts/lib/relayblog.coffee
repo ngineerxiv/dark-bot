@@ -6,8 +6,9 @@ class RelayBlog
     _member = member
     _util = util
 
-  apply:(toMessage = false) ->
-    targets = _util.shuffleAll _member
+  apply:(member, dateString) ->
+
+    targets = if( member == undefined) then _util.shuffleAll _member else member
     decided = {
       member:[]
     }
@@ -21,10 +22,7 @@ class RelayBlog
           until: next
         }
       }
-    if(toMessage)
-      this.toMessageOkarin decided.member
-    else
-      return decided
+    return decided
 
   toMessageOkarin: (member) ->
     message = "これよりオペレーション・スクルド(リレーブログプロジェクト)を開始する。\n"
@@ -51,6 +49,18 @@ class RelayBlog
       message += "#{idx + 1} 番目: #{elm.name}\n期日: #{from.getFullYear()}/#{from.getMonth() + 1}/#{from.getDate()} ~ #{to.getFullYear()}/#{to.getMonth() + 1}/#{to.getDate()}\n\n"
 
     return message
+
+  toMessageTimeleep: (member) ->
+    message = "(確定した過去を変えずに、結果を変えろ)\n"
+    for elm, idx in member
+      from  = elm.date.from
+      to    = elm.date.until
+
+      message += "#{idx + 1} 番目: #{elm.name} \n期日: #{from.getFullYear()}/#{from.getMonth() + 1}/#{from.getDate()} ~ #{to.getFullYear()}/#{to.getMonth() + 1}/#{to.getDate()}\n\n"
+
+    return message
+
+
 
   findSunday: ->
     today = new Date

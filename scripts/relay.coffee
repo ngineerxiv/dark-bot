@@ -1,9 +1,13 @@
 # Description:
 #   Relay Blog
 #
+# Commands:
+#   hubot relay start - オペレーション・スクルドを開始する
+#   hubot relay last - 現在実行中のオペレーション・スクルド概要を確認する
+#   hubot relay reset - シュタインズゲートの選択
+#
 # Notes:
 #   http://hatenablog.com/g/8454420450067357649
-#
 
 SlackClient  = require 'slack-api-client'
 relayEnv= require '../settings/relayblog.json'
@@ -50,4 +54,23 @@ module.exports = (robot) ->
         "そうか・・・それがシュタインズゲートか。\nしかたあるまい、今を持ってオペレーション・スクルドは中止とする。\nエル・プサイ・コングルゥ",
         "https://pbs.twimg.com/profile_images/378800000078323076/5f6afc04e701807ae99024e84c83057d.jpeg"
     else
-      res.send "効かぬ"
+      console.log (res.message.user.name + " called admin command")
+      res.send "選ばれし者以外はこのコマンドは実行出来ぬ"
+
+
+  robot.respond /relay set (\d{4}\/\d{2}\/\d{2}) (.+)$/i, (res) ->
+    if(res.message.user.name in admin)
+      date  = new Date(res.match[1])
+      date = if (isNaN date.getYear()) then undefined else date
+      names = res.match[2].split(/,| /)
+      names = (name for name in names when name in member)
+      result = blog.apply(names, date)
+      robot.brain.set(relayBlogBrainKey, result)
+      message = blog.toMessageTimeleep result.member
+      post "タイムリープマシン",
+        message,
+        "http://livedoor.blogimg.jp/onecall_dazeee/imgs/1/8/18f2fe6b.png"
+    else
+      console.log (res.message.user.name + " called admin command")
+      res.send "選ばれし者以外はこのコマンドは実行出来ぬ"
+
