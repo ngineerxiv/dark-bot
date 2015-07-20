@@ -1,6 +1,6 @@
 class Util
 
-  shuffle: (targets) ->
+  shuffleAll: (targets) ->
     i = targets.length
     if i is 0 then return false
     while --i
@@ -9,6 +9,11 @@ class Util
       tmpj = targets[j]
       targets[i] = tmpj
       targets[j] = tmpi
-    return targets[0]
+    return targets
+
+  shuffle: (targets, idx) ->
+    targets = this.shuffleAll targets
+    idx = if(idx == undefined ) then 0 else idx
+    targets[idx]
 
 module.exports = new Util
