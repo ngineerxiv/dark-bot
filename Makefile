@@ -22,3 +22,6 @@ test:
 
 lint:
 	$(lint) scripts -f lintconfig.json
+
+cp-setting-file:
+	cp -f ./settings/relayblog.sample.json ./settings/relayblog.json
