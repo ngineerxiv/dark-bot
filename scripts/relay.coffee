@@ -22,9 +22,10 @@ RelayBlog     = require './lib/relayblog.coffee'
 blog    = new RelayBlog(member, util)
 relayBlogBrainKey = "relay-blog-brain-key"
 
-post = (name, message, icon) ->
+post = (name, message, icon, channel = channelToPost) ->
+  channel = if( channel == "Shell" || channel == undefined) then channelToPost else channel
   client.api.chat.postMessage
-    channel: channelToPost
+    channel: channel
     text: message
     username: name
     icon_url: icon
@@ -33,7 +34,9 @@ post = (name, message, icon) ->
     console.log err if err
     console.log response
 
-
+findChannelByMessage = (res) ->
+  slackMsg = res.message.rawMessage ? {}
+  slackMsg.channel
 
 module.exports = (robot) ->
 
@@ -41,19 +44,26 @@ module.exports = (robot) ->
     result = blog.apply()
     robot.brain.set(relayBlogBrainKey, result)
     message = blog.toMessageOkarin result.member
-    post "鳳凰院凶真", message, "https://pbs.twimg.com/profile_images/378800000078323076/5f6afc04e701807ae99024e84c83057d.jpeg"
+    post "鳳凰院凶真",
+      message,
+      "https://pbs.twimg.com/profile_images/378800000078323076/5f6afc04e701807ae99024e84c83057d.jpeg",
+      findChannelByMessage(res)
 
   robot.respond /relay last$/i, (res) ->
     result  = robot.brain.get(relayBlogBrainKey) ? {}
     message = blog.toMessageMayusy (result.member ? [])
-    post "まゆしぃ", message, "http://pic.prepics-cdn.com/1046oryou/5661857.jpeg"
+    post "まゆしぃ",
+      message,
+      "http://pic.prepics-cdn.com/1046oryou/5661857.jpeg",
+      findChannelByMessage(res)
 
   robot.respond /relay reset$/i, (res) ->
     if(res.message.user.name in admin)
       robot.brain.remove(relayBlogBrainKey)
       post "鳳凰院凶真",
         "そうか・・・それがシュタインズゲートか。\nしかたあるまい、今を持ってオペレーション・スクルドは中止とする。\nエル・プサイ・コングルゥ",
-        "https://pbs.twimg.com/profile_images/378800000078323076/5f6afc04e701807ae99024e84c83057d.jpeg"
+        "https://pbs.twimg.com/profile_images/378800000078323076/5f6afc04e701807ae99024e84c83057d.jpeg",
+        findChannelByMessage(res)
     else
       console.log (res.message.user.name + " called admin command")
       res.send "選ばれし者以外はこのコマンドは実行出来ぬ"
@@ -71,6 +81,7 @@ module.exports = (robot) ->
       post "タイムリープマシン",
         message,
         "http://livedoor.blogimg.jp/onecall_dazeee/imgs/1/8/18f2fe6b.png"
+        findChannelByMessage(res)
     else
       console.log (res.message.user.name + " called admin command")
       res.send "選ばれし者以外はこのコマンドは実行出来ぬ"
