@@ -5,6 +5,7 @@
 #   hubot relay start - オペレーション・スクルドを開始する
 #   hubot relay last - 現在実行中のオペレーション・スクルド概要を確認する
 #   hubot relay reset - シュタインズゲートの選択
+#   hubot relay set <YYYY/MM/DD> members_with_@..> - シュタインズゲートの選択
 #
 # Notes:
 #   http://hatenablog.com/g/8454420450067357649
@@ -49,7 +50,7 @@ module.exports = (robot) ->
 
   robot.respond /relay reset$/i, (res) ->
     if(res.message.user.name in admin)
-      robot.brain.set(relayBlogBrainKey, {})
+      robot.brain.remove(relayBlogBrainKey)
       post "鳳凰院凶真",
         "そうか・・・それがシュタインズゲートか。\nしかたあるまい、今を持ってオペレーション・スクルドは中止とする。\nエル・プサイ・コングルゥ",
         "https://pbs.twimg.com/profile_images/378800000078323076/5f6afc04e701807ae99024e84c83057d.jpeg"

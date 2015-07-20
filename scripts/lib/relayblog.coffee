@@ -7,13 +7,16 @@ class RelayBlog
     _util = util
 
   apply:(member, dateString) ->
+    if (dateString != undefined) 
+      defaultDate = new Date(dateString) 
+      defaultDate = if(isNaN defaultDate.getDay()) then undefined else defaultDate
 
     targets = if( member == undefined) then _util.shuffleAll _member else member
     decided = {
       member:[]
     }
+    date = this.findSunday defaultDate
     for name, idx in targets
-      date = this.nextSunday date
       next = this.nextSunday date
       decided.member.push {
         name: name
@@ -22,6 +25,7 @@ class RelayBlog
           until: next
         }
       }
+      date = this.nextSunday date
     return decided
 
   toMessageOkarin: (member) ->
@@ -62,8 +66,9 @@ class RelayBlog
 
 
 
-  findSunday: ->
+  findSunday: (defaultDate) ->
     today = new Date
+    today.setTime(defaultDate.getTime()) if (defaultDate != undefined)
     d = new Date
     d.setTime(today.getTime() - today.getDay() * 24 * 60 * 60 * 1000)
     return d
