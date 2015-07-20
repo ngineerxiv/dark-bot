@@ -2,12 +2,23 @@ token=
 team=
 name=
 
+npm=$(shell which npm)
+mocha=./node_modules/mocha/bin/mocha
+lint=./node_modules/coffeelint/bin/coffeelint
+
+.PHONY:test
+
 install:
-	npm install
+	$(npm) install
 
 start:
 	HUBOT_SLACK_TOKEN=${token} \
 					  HUBOT_SLACK_TEAM=${team} \
 					  HUBOT_SLACK_BOTNAME=${name} \
-					  MONGODB_URL='mongodb://localhost/dark' \
 					  bin/hubot --adapter slack
+
+test:
+	$(mocha) --compilers coffee:coffee-script/register --recursive -R spec
+
+lint:
+	$(lint) scripts -f lintconfig.json

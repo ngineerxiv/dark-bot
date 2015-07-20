@@ -3,3 +3,4 @@ node_modules
 .hubot_history
 settings/poems.json
 npm-debug.log
+*.swp
