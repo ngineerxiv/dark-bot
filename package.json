@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "author": "Arata Tanaka <tarata43@yahoo.co.jp>",
+  "scripts": {
+      "test": "make test"
+  },
   "description": "Dark",
   "dependencies": {
     "hubot": "^2.12.0",
