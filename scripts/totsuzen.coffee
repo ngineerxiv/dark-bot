@@ -27,9 +27,9 @@ module.exports = (robot) ->
     return until message.length
     length = Math.floor eastasianwidth.length(message) / 2
 
-  suddendeath = [
-    "＿#{strpad '人', length + 2}＿"
-    "＞　#{message}　＜"
-    "￣Y#{strpad '^Y', length}￣"
-  ]
-  msg.send suddendeath.join "\n"
+    suddendeath = [
+      "＿#{strpad '人', length + 2}＿"
+      "＞　#{message}　＜"
+      "￣Y#{strpad '^Y', length}￣"
+    ]
+    msg.send suddendeath.join "\n"
