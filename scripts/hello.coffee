@@ -9,6 +9,3 @@ module.exports = (robot) ->
 
   robot.respond /helloworld/i, (res) ->
     res.send message
-
-  robot.hear /helloworld/i, (res) ->
-    res.send message
