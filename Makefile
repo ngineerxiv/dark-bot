@@ -20,7 +20,7 @@ start:
 					  HUBOT_SLACK_BOTNAME=${name} \
 					  bin/hubot --adapter slack
 
-test:
+test:install
 	$(mocha) --compilers coffee:coffee-script/register --recursive -R spec
 	test -f settings/hello.json
 	test -f settings/poems.json
