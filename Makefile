@@ -5,6 +5,7 @@ name=
 npm=$(shell which npm)
 mocha=./node_modules/.bin/mocha
 lint=./node_modules/.bin/coffeelint
+gulp=./node_modules/.bin/gulp
 
 .PHONY:test
 
@@ -25,7 +26,10 @@ start:
 start-local:
 	./bin/hubot
 
-test:install lint
+test-watch:
+	$(gulp) watch
+
+test: lint
 	$(mocha) --compilers coffee:coffee-script/register --recursive -R spec
 	test -f settings/hello.json
 	test -f settings/poems.json

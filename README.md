@@ -33,4 +33,8 @@ make start token={slack token} team={slack team name} name={bot name}
 
 ```
 make test
+
+# if you want test runner
+make test-watch
 ```
+
