@@ -8,9 +8,7 @@ lint=./node_modules/.bin/coffeelint
 
 .PHONY:test
 
-usage:
-	@echo make start token={slack token} team={slack team name} name={bot name}
-
+all: install
 
 install:
 	$(npm) install
@@ -23,6 +21,9 @@ start:
 					  HUBOT_SLACK_TEAM=${team} \
 					  HUBOT_SLACK_BOTNAME=${name} \
 					  bin/hubot --adapter slack
+
+start-loadl:
+	./bin/hubot
 
 test:install lint
 	$(mocha) --compilers coffee:coffee-script/register --recursive -R spec
