@@ -22,7 +22,7 @@ start:
 					  HUBOT_SLACK_BOTNAME=${name} \
 					  bin/hubot --adapter slack
 
-start-loadl:
+start-local:
 	./bin/hubot
 
 test:install lint
