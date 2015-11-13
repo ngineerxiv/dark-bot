@@ -2,8 +2,8 @@
 #   は俺の嫁.com
 #
 # Commands:
-#   @gaiachan 小路綾 - 小路綾.は俺の嫁.com
-#   @gaiachan 小野寺小咲 - 小野寺小咲.は俺の嫁.com
+#   hubot 小路綾 - 小路綾.は俺の嫁.com
+#   hubot 小野寺小咲 - 小野寺小咲.は俺の嫁.com
 
 random = (max) ->
   rand = 1 + Math.floor( Math.random() * max)

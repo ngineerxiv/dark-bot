@@ -6,6 +6,10 @@
 #   wouldn't be useful and amusing enough for day to day huboting.
 #   Uncomment the ones you want to try and experiment with.
 #
+# Commands:
+#   hubot poem - オサレポエム
+#   hubot 炎上 <text> <text> - ババーン
+#
 
 json = require '../settings/poems.json'
 util = require './lib/util.coffee'
