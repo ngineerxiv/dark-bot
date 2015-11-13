@@ -5,6 +5,9 @@
 #   They are commented out by default, because most of them are pretty silly and
 #   wouldn't be useful and amusing enough for day to day huboting.
 #   Uncomment the ones you want to try and experiment with.
+# Commands:
+#   hubot 破道の{n} - nは数字
+#   hubot hado {n}  - nは数字
 #
 
 json = require '../settings/poems.json'
