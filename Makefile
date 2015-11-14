@@ -13,7 +13,6 @@ all: install
 
 install:
 	$(npm) install
-	test -f settings/hello.json || cp settings/hello.json.sample settings/hello.json
 	test -f settings/poems.json || cp settings/poems.json.sample settings/poems.json
 	test -f settings/relayblog.json || cp settings/relayblog.json.sample settings/relayblog.json
 
