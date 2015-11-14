@@ -5,6 +5,8 @@
 #   hubot 小路綾 - 小路綾.は俺の嫁.com
 #   hubot 小野寺小咲 - 小野寺小咲.は俺の嫁.com
 
+punycode = require 'punycode'
+
 random = (max) ->
   rand = 1 + Math.floor( Math.random() * max)
   ('00' + rand).slice(-3)
@@ -14,8 +16,11 @@ orenoyome = (msg, yome) ->
     .get() (err, res, body) ->
       unless err
         resources = JSON.parse body
-        max = resources[yome]
-        msg.send "http://#{ yome }.は俺の嫁.com/images/#{ random(max) }.jpg"
+        max       = resources[yome]
+        encoded   = "xn--#{punycode.encode yome}"
+        domain    = "#{encoded}.xn--u9jb933vm9i.com"
+        url       = "http://#{ domain }/images/#{ random(max) }.jpg"
+        msg.send url
 
 module.exports = (robot) ->
   robot.respond /小路綾/i, (msg) ->
