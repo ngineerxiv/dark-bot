@@ -1,19 +1,20 @@
 # Description:
-#   Example scripts for you to examine and try out.
+#   Cat Images
 #
 # Notes:
-#   They are commented out by default, because most of them are pretty silly and
-#   wouldn't be useful and amusing enough for day to day huboting.
-#   Uncomment the ones you want to try and experiment with.
-#
-#   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
+#   Cat
 # Commands:
 #   hubot cat - 猫(*´ω｀*)
 
 module.exports = (robot) ->
+  robot.hear /cat(\s*)$/i, (msg) ->
+    query = "猫"
+    imageMe msg, query, (url) ->
+      msg.send url
 
-  robot.hear /cat/i, (msg) ->
-    imageMe msg, "猫", (url) ->
+  robot.hear /cat (.+)/i, (msg) ->
+    query = "猫 " + msg.match[1]
+    imageMe msg, query, (url) ->
       msg.send url
 
 imageMe = (msg, query, animated, faces, cb) ->
