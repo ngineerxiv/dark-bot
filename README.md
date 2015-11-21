@@ -26,7 +26,7 @@ make install
 make start-local
 
 # for slack
-make start token={slack token} team={slack team name} name={bot name}
+make start credential=${credential path. see ./credentials/sample}
 ```
 
 # Test

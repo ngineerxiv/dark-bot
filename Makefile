@@ -6,6 +6,8 @@ npm=$(shell which npm)
 mocha=./node_modules/.bin/mocha
 lint=./node_modules/.bin/coffeelint
 gulp=./node_modules/.bin/gulp
+monitoring-code=local
+credential=./credentials/development
 
 .PHONY:test
 
@@ -17,10 +19,7 @@ install:
 	test -f settings/relayblog.json || cp settings/relayblog.json.sample settings/relayblog.json
 
 start:
-	HUBOT_SLACK_TOKEN=${token} \
-					  HUBOT_SLACK_TEAM=${team} \
-					  HUBOT_SLACK_BOTNAME=${name} \
-					  bin/hubot --adapter slack
+	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
 start-local:
 	./bin/hubot
