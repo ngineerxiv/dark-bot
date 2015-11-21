@@ -5,3 +5,4 @@ settings/poems.json
 settings/relayblog.json
 npm-debug.log
 *.swp
+credentials/development
