@@ -7,6 +7,7 @@ mocha=./node_modules/.bin/mocha
 lint=./node_modules/.bin/coffeelint
 gulp=./node_modules/.bin/gulp
 monitoring-code=local
+credential=./credentials/development
 
 .PHONY:test
 
@@ -17,8 +18,8 @@ install:
 	test -f settings/poems.json || cp settings/poems.json.sample settings/poems.json
 	test -f settings/relayblog.json || cp settings/relayblog.json.sample settings/relayblog.json
 
-start-with-credentials:
-	./bin/hubot-slack ./credentials/development --monitoring-code=${monitoring-code}
+start:
+	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
 start-local:
 	./bin/hubot
