@@ -1,0 +1,7 @@
+#! /bin/sh
+
+file=${1:- "./credentials/sample"}
+. $file; \
+    export HUBOT_SLACK_TOKEN;
+
+node src/dark/bin/NewChennels.js
