@@ -13,6 +13,7 @@
         "<#C03PM99FY|twitter> @ngineerxiv のツイート関連が流れ続けるチャンネル",
         "<#C03LG3S8w|blog> みんなブログ書こう http://hatenablog.com/g/8454420450083360105 ",
         "<#C03RELP7L|github> dark botの進捗とか",
-        "<#C0E97RG9J|bot_heaven> ここでいくら遊んでも怒られないチャンネル。ミュート推奨"
+        "<#C0E97RG9J|bot_heaven> ここでいくら遊んでも怒られないチャンネル。ミュート推奨",
+        "#new_channels 新規チャンネルが出来た時に通知されるチャンネル"
     ]
 }
