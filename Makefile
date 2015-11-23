@@ -35,3 +35,6 @@ test: lint
 
 lint:
 	$(lint) scripts -f lintconfig.json
+
+run-new-channels:
+	./bin/start-new-channels $(credential)
