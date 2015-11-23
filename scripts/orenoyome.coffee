@@ -32,3 +32,12 @@ module.exports = (robot) ->
 
   robot.respond /筒隠月子/i, (msg) ->
     orenoyome(msg, '筒隠月子')
+
+  robot.respond /(orenoyome|俺の嫁) list/i, (msg) ->
+    msg.http("http://は俺の嫁.com/resource.json")
+      .get() (err, res, body) ->
+        unless err
+          resources = JSON.parse body
+          helps = (Object.keys resources).map (name) ->
+            "dark " + name
+          msg.send helps.join("\n")
