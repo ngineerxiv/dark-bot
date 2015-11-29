@@ -22,23 +22,22 @@ RelayBlog     = require './lib/relayblog.coffee'
 blog    = new RelayBlog(member, util)
 relayBlogBrainKey = "relay-blog-brain-key"
 
-post = (name, message, icon, channel = channelToPost) ->
-  channel = if( channel == "Shell" || channel == undefined) then channelToPost else channel
-  client.api.chat.postMessage
-    channel: channel
-    text: message
-    username: name
-    icon_url: icon
-    link_names: 1
-  , (err, response) ->
-    console.log err if err
-    console.log response
-
-findChannelByMessage = (res) ->
-  slackMsg = res.message.rawMessage ? {}
-  slackMsg.channel
-
 module.exports = (robot) ->
+  findChannelByMessage = (res) ->
+    slackMsg = res.message.rawMessage ? {}
+    slackMsg.channel
+
+  post = (name, message, icon, channel = channelToPost, logger = robot.logger) ->
+    channel = if( channel == "Shell" || channel == undefined) then channelToPost else channel
+    client.api.chat.postMessage
+      channel: channel
+      text: message
+      username: name
+      icon_url: icon
+      link_names: 1
+    , (err, response) ->
+      logger.error err if err
+      logger.log response
 
   robot.respond /relay start$/i, (res) ->
     result = blog.apply()
@@ -65,7 +64,7 @@ module.exports = (robot) ->
         "https://pbs.twimg.com/profile_images/378800000078323076/5f6afc04e701807ae99024e84c83057d.jpeg",
         findChannelByMessage(res)
     else
-      console.log (res.message.user.name + " called admin command")
+      robot.logger.error (res.message.user.name + " called admin command")
       res.send "選ばれし者以外はこのコマンドは実行出来ぬ"
 
 
@@ -83,6 +82,6 @@ module.exports = (robot) ->
         "http://livedoor.blogimg.jp/onecall_dazeee/imgs/1/8/18f2fe6b.png"
         findChannelByMessage(res)
     else
-      console.log (res.message.user.name + " called admin command")
+      robot.logger.error (res.message.user.name + " called admin command")
       res.send "選ばれし者以外はこのコマンドは実行出来ぬ"
 
