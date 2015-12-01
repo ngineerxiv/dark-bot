@@ -1,5 +1,6 @@
 #! /bin/sh
 
+trap 'kill $(jobs -p)' EXIT
 file=${1:- "./credentials/sample"}
 . $file; \
     export HUBOT_SLACK_TOKEN; \
