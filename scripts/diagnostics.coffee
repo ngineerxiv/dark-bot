@@ -9,7 +9,7 @@
 
 module.exports = (robot) ->
   robot.respond /PING$/i, (msg) ->
-    msg.send "http://imgcc.naver.jp/kaze/mission/USER/20130105/79/780609/17/607x314x1e412544122065c25107eade.jpg"
+    msg.send "http://yamiga.waka.ru.com/images/ping.jpg"
   robot.respond /ECHO (.*)$/i, (msg) ->
     msg.send msg.match[1]
   robot.respond /TIME$/i, (msg) ->

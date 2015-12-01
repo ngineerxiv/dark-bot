@@ -13,7 +13,7 @@ describe 'ping', ->
 
   it 'called ping', (done) ->
     adapter.on 'send', (envelope, strings) ->
-      expect(strings[0]).to.equal('http://imgcc.naver.jp/kaze/mission/USER/20130105/79/780609/17/607x314x1e412544122065c25107eade.jpg')
+      expect(strings[0]).to.be.a('string')
     , done
 
     adapter.receive(new TextMessage(user, 'hubot ping'))
