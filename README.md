@@ -1,6 +1,7 @@
 # Dark
 
 [![Build Status](https://travis-ci.org/ngineerxiv/dark-bot.svg)](https://travis-ci.org/ngineerxiv/dark-bot)
+[![Dependency Status](https://gemnasium.com/ngineerxiv/dark-bot.svg)](https://gemnasium.com/ngineerxiv/dark-bot)
 
 This is Dark Bot
 
