@@ -7,12 +7,12 @@
 #   hubot cat - 猫(*´ω｀*)
 
 module.exports = (robot) ->
-  robot.hear /cat(\s*)$/i, (msg) ->
+  robot.respond /cat(\s*)$/i, (msg) ->
     query = "猫"
     imageMe msg, query, (url) ->
       msg.send url
 
-  robot.hear /cat (.+)/i, (msg) ->
+  robot.respond /cat (.+)/i, (msg) ->
     query = "猫 " + msg.match[1]
     imageMe msg, query, (url) ->
       msg.send url
