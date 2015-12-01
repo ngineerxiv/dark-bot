@@ -19,7 +19,11 @@ install:
 	test -f settings/relayblog.json || cp settings/relayblog.json.sample settings/relayblog.json
 
 start:
-	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
+	. $(credential); \
+		export HUBOT_SLACK_TOKEN; \
+		export HUBOT_SLACK_TEAM; \
+		export HUBOT_SLACK_BOTNAME; \
+		./bin/hubot --adapter slack monitoring-code=$(monitoring-code);
 
 start-local:
 	./bin/hubot
@@ -27,7 +31,7 @@ start-local:
 test-watch:
 	$(gulp) watch
 
-test: lint
+test: lint config-check
 	$(mocha) --compilers coffee:coffee-script/register --recursive -R spec
 	test -f settings/hello.json
 	test -f settings/poems.json
@@ -35,6 +39,9 @@ test: lint
 
 lint:
 	$(lint) scripts -f lintconfig.json
+
+config-check:
+	./bin/hubot --config-check
 
 run-new-channels:
 	./bin/start-new-channels $(credential)
