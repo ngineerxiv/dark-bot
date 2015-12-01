@@ -8,9 +8,10 @@ env.key_filename = '~/.ssh/deploy'
 def deploy():
     code = '/web/httpd_arata/dark-bot'
     with cd(code):
+        run('git checkout master')
         run('git pull origin master')
         run('make -C /web/httpd_arata/dark-bot install')
         run('make -C /web/httpd_arata/dark-bot lint')
         run('make -C /web/httpd_arata/dark-bot test')
-    run('/usr/local/bin/supervisorctl reload dark')
+    run('/usr/local/bin/supervisorctl restart dark')
     print("Done")

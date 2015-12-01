@@ -19,11 +19,7 @@ install:
 	test -f settings/relayblog.json || cp settings/relayblog.json.sample settings/relayblog.json
 
 start:
-	. $(credential); \
-		export HUBOT_SLACK_TOKEN; \
-		export HUBOT_SLACK_TEAM; \
-		export HUBOT_SLACK_BOTNAME; \
-		./bin/hubot --adapter slack monitoring-code=$(monitoring-code);
+	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
 start-local:
 	./bin/hubot
