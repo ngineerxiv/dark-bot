@@ -26,7 +26,7 @@
     "slackbotapi": "^1.3.7"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "5.1.x"
   },
   "devDependencies": {
     "chai": "^3.2.0",
