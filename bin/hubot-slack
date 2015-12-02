@@ -5,6 +5,8 @@ file=${1:- "./credentials/sample"}
 . $file; \
     export HUBOT_SLACK_TOKEN; \
     export HUBOT_SLACK_TEAM; \
-    export HUBOT_SLACK_BOTNAME;
+    export HUBOT_SLACK_BOTNAME; \
+    export HUBOT_GOOGLE_CSE_ID; \
+    export HUBOT_GOOGLE_CSE_KEY;
 
 ./bin/hubot --adapter slack
