@@ -13,6 +13,7 @@
     "hubot-google-images": "^0.2.5",
     "hubot-google-translate": "^0.2.0",
     "hubot-help": "^0.1.1",
+    "hubot-lgtm": "https://github.com/bouzuya/hubot-lgtm/archive/master.tar.gz",
     "hubot-maps": "0.0.2",
     "hubot-pugme": "^0.1.0",
     "hubot-rules": "^0.1.0",
