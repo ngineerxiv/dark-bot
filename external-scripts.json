@@ -3,5 +3,6 @@
   "hubot-google-images",
   "hubot-maps",
   "hubot-youtube",
-  "hubot-schedule"
+  "hubot-schedule",
+  "hubot-lgtm"
 ]
