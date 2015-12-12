@@ -24,16 +24,17 @@ slack.on('channel_created', function (data) {
 });
 
 slack.on('message', function (data) {
+    var ch = slack.getChannel(data.channel);
     var option  = {
-        uri: "http://waka.ru.com/api/dark/slack/" + data.channel.name;
+        uri: "http://waka.ru.com/api/dark/slack/" + ch.name,
         form: {
             number: 1
         }
     };
     request.post(option, function(error, response, body){
-        //TODO エラーハンドリングまわり
+//        TODO エラーハンドリングまわり
         if (!error && response.statusCode == 200) {
-            console.log(body.name);
+            // do nothing
         } else {
             console.log('error: '+ response.statusCode);
         }
