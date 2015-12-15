@@ -1,7 +1,5 @@
 var slackAPI = require('slackbotapi');
 var token = process.env.WEB_SLACK_TOKEN;
-var request = require('request');
-
 if (!token) {
     console.error("slack web api token is not set");
     console.error("please `export WEB_SLACK_TOKEN`");
@@ -21,23 +19,5 @@ slack.on('channel_created', function (data) {
         icon_url: "http://yamiga.waka.ru.com/images/yaruo.jpg"
     };
     slack.reqAPI("chat.postMessage",data);
-});
-
-slack.on('message', function (data) {
-    var ch = slack.getChannel(data.channel);
-    var option  = {
-        uri: "http://waka.ru.com/api/dark/slack/" + ch.name,
-        form: {
-            number: 1
-        }
-    };
-    request.post(option, function(error, response, body){
-//        TODO エラーハンドリングまわり
-        if (!error && response.statusCode == 200) {
-            // do nothing
-        } else {
-            console.log('error: '+ response.statusCode);
-        }
-    });
 });
 
