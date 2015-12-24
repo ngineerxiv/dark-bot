@@ -4,5 +4,6 @@
   "hubot-maps",
   "hubot-youtube",
   "hubot-schedule",
-  "hubot-lgtm"
+  "hubot-lgtm",
+  "hubot-nullpo"
 ]
