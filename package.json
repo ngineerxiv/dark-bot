@@ -15,6 +15,7 @@
     "hubot-help": "^0.1.1",
     "hubot-lgtm": "https://github.com/bouzuya/hubot-lgtm/archive/master.tar.gz",
     "hubot-maps": "0.0.2",
+    "hubot-nullpo": "0.0.5",
     "hubot-pugme": "^0.1.0",
     "hubot-rules": "^0.1.0",
     "hubot-schedule": "^0.4.0",
