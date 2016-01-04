@@ -6,3 +6,6 @@ settings/relayblog.json
 npm-debug.log
 *.swp
 credentials/development
+compiled/*
+!compiled/.gitkeep
+
