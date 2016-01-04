@@ -43,4 +43,4 @@ run-new-channels:
 	./bin/start-new-channels $(credential)
 
 compile:
-	./node_modules/.bin/babel src/es2015 --out-dir ./compiled
+	./node_modules/.bin/babel src/es2015 --out-dir ./compiled --presets es2015
