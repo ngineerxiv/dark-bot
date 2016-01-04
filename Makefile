@@ -18,11 +18,11 @@ install:
 	test -f settings/poems.json || cp settings/poems.json.sample settings/poems.json
 	test -f settings/relayblog.json || cp settings/relayblog.json.sample settings/relayblog.json
 
-start:
+start: compile
 	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
-start-local:
-	./bin/hubot
+start-local: compile
+	./bin/hubot --require ./compiled
 
 test-watch:
 	$(gulp) watch
@@ -41,3 +41,6 @@ config-check:
 
 run-new-channels:
 	./bin/start-new-channels $(credential)
+
+compile:
+	./node_modules/.bin/babel src/es2015 --out-dir ./compiled
