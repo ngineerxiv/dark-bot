@@ -6,5 +6,6 @@
   "hubot-schedule",
   "hubot-lgtm",
   "hubot-nullpo",
-  "hubot-moji"
+  "hubot-moji",
+  "hubot-attend-management"
 ]
