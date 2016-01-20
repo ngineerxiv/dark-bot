@@ -44,3 +44,6 @@ run-new-channels:
 
 compile:
 	./node_modules/.bin/babel src/es2015 --out-dir ./compiled --presets es2015
+
+update:
+	$(npm) update
