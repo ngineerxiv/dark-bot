@@ -17,6 +17,7 @@
     "hubot-maps": "0.0.2",
     "hubot-moji": "^1.0.0",
     "hubot-nullpo": "0.0.5",
+    "hubot-plusplus": "^1.2.3",
     "hubot-pugme": "^0.1.0",
     "hubot-rules": "^0.1.0",
     "hubot-schedule": "^0.4.0",
