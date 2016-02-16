@@ -22,7 +22,7 @@ start: compile
 	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
 start-local: compile
-	./bin/hubot --require ./compiled
+	source ./credentials/development;./bin/hubot --require ./compiled
 
 test-watch:
 	$(gulp) watch
