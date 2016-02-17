@@ -18,7 +18,7 @@ module.exports = (robot => {
             message = encodeURIComponent(message)
             let linkNames = 1;
             let timelineChannel = 'timeline';
-            let request = msg.http(`https://slack.com/api/chat.postMessage?token=${process.env.SLACK_API_TOKEN}&channel=%23${timelineChannel}&text=${message}%20(at%20%23${channel}%20)&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`).get();
+            let request = msg.http(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=%23${timelineChannel}&text=${message}%20(at%20%23${channel}%20)&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`).get();
             request((err, res, body) => {
                 err && robot.logger.error(err);
             });
@@ -36,7 +36,7 @@ module.exports = (robot => {
             return;
         }
         let options = {
-            url: `https://slack.com/api/users.list?token=${process.env.SLACK_API_TOKEN}&pretty=1`
+            url: `https://slack.com/api/users.list?token=${process.env.WEB_SLACK_TOKEN}&pretty=1`
             timeout: 2000
             headers: {}
         };
