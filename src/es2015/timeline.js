@@ -36,8 +36,8 @@ module.exports = (robot => {
             return;
         }
         let options = {
-            url: `https://slack.com/api/users.list?token=${process.env.WEB_SLACK_TOKEN}&pretty=1`
-            timeout: 2000
+            url: `https://slack.com/api/users.list?token=${process.env.WEB_SLACK_TOKEN}&pretty=1`,
+            timeout: 2000,
             headers: {}
         };
 
