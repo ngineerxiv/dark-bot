@@ -6,19 +6,20 @@ module.exports = (robot => {
     }
 
     robot.hear(/(.+)/, res => {
+        let channelId   = res.message.rawMessage.channel
         let channel     = res.envelope.room;
         let userId      = res.message.user.id;
         let userName    = res.message.user.name;
-        let text = res.message.text;
+        let message     = res.message.text;
         let slack= res.message.user.slack;
         let icon = slack.profile.image_32;
         reloadUserImages(robot, userId)
         let userImage   = robot.brain.data.userImages[userId]
-        if(isPublic(channel)) {
+        if(isPublic(channelId)) {
             message = encodeURIComponent(message)
             let linkNames = 1;
             let timelineChannel = 'timeline';
-            let request = msg.http(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=%23${timelineChannel}&text=${message}%20(at%20%23${channel}%20)&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`).get();
+            let request = res.http(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=%23${timelineChannel}&text=${message}%20(at%20%23${channel}%20)&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`).get();
             request((err, res, body) => {
                 err && robot.logger.error(err);
             });
