@@ -13,7 +13,7 @@ var slack = new slackAPI({
 
 module.exports = (robot => {
     robot.respond(/join all/i, res => {
-        let bot = slackAPI.getUser(robot.name);
+        let bot = slack.getUser(robot.name);
         slack.reqAPI("channels.list",{
             exclude_archived: 1
         }, (listResponse) => {
@@ -22,17 +22,19 @@ module.exports = (robot => {
                 return;
             }
             listResponse.channels
-                .filter((ch) => (ch.substring(0, 1) === 'C') )
+                .filter((ch) => (ch.id.substring(0, 1) === 'C') )
                 .forEach((ch) => {
                     slack.reqAPI("channels.invite", {
                         channel: ch.id,
                         user: bot.id
                     }, (inviteResponse) => {
                         if( inviteResponse.ok ) {
-                            res.send(`joined #${ch.name}`)
+                            res.send(`joined <#${ch.id}|${ch.name}>`)
                         } else {
-                            robot.logger.error(`failed to join to ${ch}`);
-                            robot.logger.error(inviteResponse);
+                            if (inviteResponse.error !== 'already_in_channel' ) {
+                                robot.logger.error(`failed to join to ${ch.name}`);
+                                robot.logger.error(inviteResponse);
+                            };
                         }
                     });
                 });
