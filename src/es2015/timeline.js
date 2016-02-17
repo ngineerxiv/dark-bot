@@ -1,4 +1,6 @@
 let request = require("request");
+let hubotSlack = require("hubot-slack");
+let SlackTextMessage = hubotSlack.SlackTextMessage;
 
 module.exports = (robot => {
     let isPublic = function(channelId) {
@@ -9,7 +11,12 @@ module.exports = (robot => {
 
     let isBlackListChannel = (ch) => (blackList.indexOf(ch) !== -1);
 
+    let isSlackTextMessage = (message) => (message instanceof SlackTextMessage);
+
     robot.hear(/(.+)/, res => {
+        if ( !isSlackTextMessage(res.message) ) {
+            return;
+        }
         let channelId   = res.message.rawMessage.channel
         let channel     = res.envelope.room;
         let userId      = res.message.user.id;
