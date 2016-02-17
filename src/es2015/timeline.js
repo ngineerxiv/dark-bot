@@ -19,8 +19,8 @@ module.exports = (robot => {
             message = encodeURIComponent(message)
             let linkNames = 1;
             let timelineChannel = 'timeline';
-            let request = res.http(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=%23${timelineChannel}&text=${message}%20(at%20%23${channel}%20)&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`).get();
-            request((err, res, body) => {
+            let req = res.http(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=%23${timelineChannel}&text=${message}%20(at%20%23${channel}%20)&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`).get();
+            req((err, res, body) => {
                 err && robot.logger.error(err);
             });
         }
