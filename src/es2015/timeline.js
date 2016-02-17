@@ -5,6 +5,10 @@ module.exports = (robot => {
         return channelId.substring(0,1) === 'C';
     }
 
+    let blackList = ['timeline'];
+
+    let isBlackListChannel = (ch) => (blackList.indexOf(ch) !== -1);
+
     robot.hear(/(.+)/, res => {
         let channelId   = res.message.rawMessage.channel
         let channel     = res.envelope.room;
@@ -15,7 +19,7 @@ module.exports = (robot => {
         let icon = slack.profile.image_32;
         reloadUserImages(robot, userId)
         let userImage   = robot.brain.data.userImages[userId]
-        if(isPublic(channelId)) {
+        if(isPublic(channelId) && !isBlackListChannel(channel)) {
             message = encodeURIComponent(message)
             let linkNames = 1;
             let timelineChannel = 'timeline';
