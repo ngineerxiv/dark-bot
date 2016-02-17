@@ -6,6 +6,7 @@ var slackAPI = require('slackbotapi');
 var token = process.env.WEB_SLACK_TOKEN;
 var slack = new slackAPI({
     'token': token,
+    'logging': false,
     'autoReconnect': true
 });
 
