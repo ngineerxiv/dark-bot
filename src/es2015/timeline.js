@@ -3,7 +3,7 @@ let hubotSlack = require("hubot-slack");
 let SlackTextMessage = hubotSlack.SlackTextMessage;
 let timelineChannel  = process.env.TIMELINECHANNEL || "timeline";
 let linkNames        = process.env.LINK_NAMES;
-if (linkNames !== 0 && linkNames !== 1) {
+if (linkNames !== "0" && linkNames !== "1") {
     linkNames = 0;
 };
 
