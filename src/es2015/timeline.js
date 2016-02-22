@@ -32,9 +32,9 @@ module.exports = (robot => {
         reloadUserImages(robot, userId, () => {
             let userImage   = robot.brain.data.userImages[userId]
             if(isPublic(channelId) && !isBlackListChannel(channel)) {
+                message = message + ` (at <#${channelId}|${channel}> )`;
                 message = encodeURIComponent(message)
-                let timelineChannel = 'timeline';
-                let req = res.http(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=%23${timelineChannel}&text=${message}%20(at%20%23${channel}%20)&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`).get();
+                let req = res.http(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=%23${timelineChannel}&text=${message}&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`).get();
                     req((err, res, body) => {
                         err && robot.logger.error(err);
                     });
