@@ -20,11 +20,20 @@ module.exports = (robot => {
         res.send(`http://yamiga.waka.ru.com/images/zoi${selected}.jpg?cb=${uuid.v4()}`);
     };
 
-    robot.respond(/[zoi|ぞい]/i, res => {
+    robot.respond(/zoi/i, res => {
         zoi(res);
     })
 
-    robot.hear(/.*[がんばる|頑張る]{1}ぞい/i, res => {
+    robot.respond(/ぞい/i, res => {
+        zoi(res);
+    })
+
+    // TODO dark image がんばるぞいに引っかかるの部分の修正
+    robot.hear(/.*頑張るぞい$/i, res => {
+        zoi(res);
+    });
+
+    robot.hear(/.*がんばるぞい$/i, res => {
         zoi(res);
     });
 })
