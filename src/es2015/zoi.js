@@ -28,12 +28,9 @@ module.exports = (robot => {
         zoi(res);
     })
 
-    // TODO dark image がんばるぞいに引っかかるの部分の修正
-    robot.hear(/.*頑張るぞい$/i, res => {
-        zoi(res);
-    });
 
-    robot.hear(/.*がんばるぞい$/i, res => {
-        zoi(res);
-    });
+    let zoi1 = new RegExp(`^[^${robot.name}]*頑張るぞい$`, "i");
+    let zoi2 = new RegExp(`^[^${robot.name}]*がんばるぞい$`, "i");
+    robot.hear(zoi1, res => zoi(res));
+    robot.hear(zoi2, res => zoi(res));
 })
