@@ -8,6 +8,7 @@
 
 var INITIAL_ATTACK_DAMANE = 100;
 var INITIAL_CURE_POINT = 50;
+var MAX_HP = 1000;
 var GamePlugin = require("game-plugin");
 var Game = GamePlugin.Game;
 var User = GamePlugin.User;
@@ -21,7 +22,7 @@ module.exports = function(robot) {
             return User.factory(user.id, user.name, status);
         });
     };
-    var users = toGameUser(robot.adapter.client.users);
+    var users = robot.adapter.client ? toGameUser(robot.adapter.client.users) : [];
     var game = new Game(users, MAX_HP);
 
     robot.hear(/attack (.+)/i, function(res){
@@ -34,7 +35,7 @@ module.exports = function(robot) {
             res.send( target.name + " is dead " + target.status.toString());
         } else {
             actor.attack(target, INITIAL_ATTACK_DAMANE);
-            res.send( target.name + " is damaged by " + actor.name + target.status.toString());
+            res.send( target.name + " is damaged by " + actor.name + " " + target.status.toString());
         };
     });
 
@@ -48,7 +49,7 @@ module.exports = function(robot) {
             res.send( target.name + " is dead " + target.status.toString());
         } else {
             actor.cure(target, INITIAL_CURE_POINT);
-            res.send( target.name + " is cured by " + actor.name + target.status.toString());
+            res.send( target.name + " is cured by " + actor.name + " " + target.status.toString());
         };
     });
 
@@ -59,8 +60,12 @@ module.exports = function(robot) {
         if(actor === null && target === null) {
             res.send("There are no targets here.");
         } else {
-            if(!target.isDead() && actor.fullCare(target)) {
-                res.send( target.name + " is full cared by " + actor.name + target.status.toString());
+            if(!target.isDead()) {
+                res.send( target.name + " is not dead " + target.status.toString());
+            } else if (actor.fullCare(target)) {
+                res.send( target.name + " is full cared by " + actor.name + " " + target.status.toString());
+            } else {
+                res.send( "you cannnot full care by yourself"
             }
         };
     });
