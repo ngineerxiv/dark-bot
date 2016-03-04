@@ -65,7 +65,7 @@ module.exports = function(robot) {
             } else if (actor.fullCare(target)) {
                 res.send( target.name + " is full cared by " + actor.name + " " + target.status.toString());
             } else {
-                res.send( "you cannnot full care by yourself"
+                res.send( "you cannnot full care by yourself");
             }
         };
     });
