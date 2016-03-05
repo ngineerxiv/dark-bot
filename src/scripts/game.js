@@ -44,7 +44,7 @@ module.exports = function(robot) {
             var before      = target.status.currentHp;
             var afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
             var after       = afterStatus.currentHp
-            res.send( "[ATTACK] " + actor.name + "のこうげき！" + target.name + "に" + (after - before) + "のダメージ！ 残り:" + after + " / " + MAX_HP);
+            res.send( "[ATTACK] " + actor.name + "のこうげき！" + target.name + "に" + (before - after) + "のダメージ！ 残り:" + after + " / " + MAX_HP);
             if (target.isDead()) {
                 res.send( "[DEAD] " + target.name + "はしんでしまった");
             }
@@ -102,5 +102,39 @@ module.exports = function(robot) {
                 res.send("[CURE] " + target.name + "は いきかえった！");
             }
         };
+    });
+
+    var shakai  = new User(0, "社会", game.defaultStatus(), new Equipment(new Weapon(30, 12)), game.defaultStatus());
+    var negativeWords = ["つらい", "かなしい", "悲しい", "悲しい", "つかれる", "疲れる", "ねむい", "眠い"];
+    robot.hear(/.*/, function(res) {
+        var tokens = res.message.tokenized;
+        var length = tokens.length;
+        var negativeCount = 0;
+        tokens.forEach(function(token, idx) {
+            if(negativeWords.indexOf(token.basic_form) !== -1) {
+                negativeCount++;
+                if(idx + 1 < length && tokens[idx + 1].basic_form === 'ない') {
+                    negativeCount--;
+                }
+            };
+
+            if(token.basic_form === '帰れる' || token.basic_form === 'かえれる') {
+                if(idx + 1 < length && tokens[idx + 1].basic_form === 'ない') {
+                    negativeCount++;
+                }
+            }
+        });
+
+        var target = game.findUser(res.message.user.name);
+        if(negativeCount > 0 && target) {
+            var before      = target.status.currentHp;
+            var afterStatus;
+            for(var i=0;i<negativeCount;i++) {
+                afterStatus = shakai.attack(target, INITIAL_ATTACK_DAMANE);
+            }
+            var after       = afterStatus.currentHp
+
+            res.send( "[ATTACK] '社会'のこうげき！" + target.name + "に" + (after - before) + "のダメージ！ 残り:" + after + " / " + MAX_HP + " NegativeWord数: " + negativeCount);
+        }
     });
 }
