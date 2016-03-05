@@ -1,41 +1,53 @@
 // Description:
 //   遊ぶ
 // Commands:
-//   attack {user} - attack
-//   cure {user} - cure
-//   ザオリク {user}
+//   quest attack {user} - attack
+//   quest cure {user} - cure
+//   quest raise|ザオリク {user} - ふっかつ
 //
 
-var INITIAL_ATTACK_DAMANE = 100;
-var INITIAL_CURE_POINT = 50;
-var MAX_HP = 1000;
-var GamePlugin = require("game-plugin");
-var Game = GamePlugin.Game;
-var User = GamePlugin.User;
-var Status = GamePlugin.Status;
+var DarkQuest   = require("node-quest");
+var Game        = DarkQuest.Game;
+var Equipment   = DarkQuest.Equipment;
+var Parameter   = DarkQuest.Parameter;
+var Weapon      = DarkQuest.Weapon;
+var User        = DarkQuest.User;
+
+var INITIAL_ATTACK_DAMANE   = 70;
+var INITIAL_CURE_POINT      = 30;
+var MAX_HP                  = 1000;
 
 module.exports = function(robot) {
+    var game = new Game(0, MAX_HP);
     var toGameUser = function(users) {
         return Object.keys(users).map(function(id) {
-            var user   = users[id]
-            var status = new Status(MAX_HP, MAX_HP);
-            return User.factory(user.id, user.name, status);
+            var user    = users[id];
+            var eq      = new Equipment(new Weapon(30, 12));
+            var p       = new Parameter(20, 10);
+            return new User(user.id, user.name, game.defaultStatus(), eq, p);
         });
     };
     var users = robot.adapter.client ? toGameUser(robot.adapter.client.users) : [];
-    var game = new Game(users, MAX_HP);
+    game.setUsers(users);
 
     robot.hear(/attack (.+)/i, function(res){
         var actor = game.findUser(res.message.user.name);
         var target = game.findUser(res.match[1]);
 
-        if(actor === null && target === null) {
-            res.send("There are no targets here.");
+        if(actor === null || target === null) {
+            res.send("しかし だれもいなかった・・・");
+        } else if (actor.isDead() ) {
+            res.send( "[DEAD] おぉ" + actor.name + "！死んでしまうとはふがいない");
         } else if (target.isDead()) {
-            res.send( target.name + " is dead " + target.status.toString());
+            res.send( "[DEAD] こうかがない・・・" + target.name + "はただのしかばねのようだ・・・");
         } else {
-            actor.attack(target, INITIAL_ATTACK_DAMANE);
-            res.send( target.name + " is damaged by " + actor.name + " " + target.status.toString());
+            var before      = target.status.currentHp;
+            var afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
+            var after       = afterStatus.currentHp
+            res.send( "[ATTACK] " + actor.name + "のこうげき！" + target.name + "に" + (after - before) + "のダメージ！ 残り:" + after + " / " + MAX_HP);
+            if (target.isDead()) {
+                res.send( "[DEAD] " + target.name + "はしんでしまった");
+            }
         };
     });
 
@@ -43,13 +55,15 @@ module.exports = function(robot) {
         var actor = game.findUser(res.message.user.name);
         var target = game.findUser(res.match[1]);
 
-        if(actor === null && target === null) {
-            res.send("There are no targets here.");
+        if(actor === null || target === null) {
+            res.send("しかし だれもいなかった・・・");
+        } else if (actor.isDead() ) {
+            res.send( "[DEAD] おぉ" + actor.name + "！死んでしまうとはふがいない");
         } else if (target.isDead()) {
-            res.send( target.name + " is dead " + target.status.toString());
+            res.send( "[DEAD] しかし こうかがなかった・・・");
         } else {
             actor.cure(target, INITIAL_CURE_POINT);
-            res.send( target.name + " is cured by " + actor.name + " " + target.status.toString());
+            res.send("[CURE] " + target.name + "のキズがかいふくした！残り: " + target.status.currentHp + " / " + MAX_HP);
         };
     });
 
@@ -57,15 +71,35 @@ module.exports = function(robot) {
         var actor = game.findUser(res.message.user.name);
         var target = game.findUser(res.match[1]);
 
-        if(actor === null && target === null) {
-            res.send("There are no targets here.");
+        if(actor === null || target === null) {
+            res.send("しかし だれもいなかった・・・");
+        } else if (actor.isDead() ) {
+            res.send( "[DEAD] おぉ" + actor.name + "！死んでしまうとはふがいない");
         } else {
             if(!target.isDead()) {
-                res.send( target.name + " is not dead " + target.status.toString());
-            } else if (actor.fullCare(target)) {
-                res.send( target.name + " is full cared by " + actor.name + " " + target.status.toString());
+                res.send("しかし なにも おこらなかった！");
             } else {
-                res.send( "you cannnot full care by yourself");
+                actor.fullCare(target);
+                res.send("[CURE] " + target.name + "は いきかえった！");
+            }
+        };
+    });
+
+
+    robot.hear(/raise (.+)/i, function(res) {
+        var actor = game.findUser(res.message.user.name);
+        var target = game.findUser(res.match[1]);
+
+        if(actor === null || target === null) {
+            res.send("しかし だれもいなかった・・・");
+        } else if (actor.isDead() ) {
+            res.send( "[DEAD] おぉ" + actor.name + "！死んでしまうとはふがいない");
+        } else {
+            if(!target.isDead()) {
+                res.send("しかし なにも おこらなかった！");
+            } else {
+                actor.fullCare(target);
+                res.send("[CURE] " + target.name + "は いきかえった！");
             }
         };
     });
