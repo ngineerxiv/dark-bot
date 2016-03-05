@@ -105,7 +105,7 @@ module.exports = function(robot) {
     });
 
     var shakai  = new User(0, "社会", game.defaultStatus(), new Equipment(new Weapon(30, 12)), game.defaultStatus());
-    var negativeWords = ["つらい", "かなしい", "悲しい", "悲しい", "つかれる", "疲れる", "ねむい", "眠い"];
+    var negativeWords = ["つらい", "辛い", "かなしい", "悲しい", "悲しい", "つかれる", "疲れる", "ねむい", "眠い"];
     robot.hear(/.*/, function(res) {
         var tokens = res.message.tokenized;
         if(tokens === undefined) {
