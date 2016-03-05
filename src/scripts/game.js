@@ -108,6 +108,9 @@ module.exports = function(robot) {
     var negativeWords = ["つらい", "かなしい", "悲しい", "悲しい", "つかれる", "疲れる", "ねむい", "眠い"];
     robot.hear(/.*/, function(res) {
         var tokens = res.message.tokenized;
+        if(tokens === undefined) {
+            return
+        }
         var length = tokens.length;
         var negativeCount = 0;
         tokens.forEach(function(token, idx) {
