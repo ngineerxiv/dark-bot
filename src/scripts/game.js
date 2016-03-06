@@ -85,7 +85,6 @@ module.exports = function(robot) {
         };
     });
 
-
     robot.hear(/raise (.+)/i, function(res) {
         var actor = game.findUser(res.message.user.name);
         var target = game.findUser(res.match[1]);
@@ -101,6 +100,15 @@ module.exports = function(robot) {
                 actor.fullCare(target);
                 res.send("[CURE] " + target.name + "は いきかえった！");
             }
+        };
+    });
+
+    robot.hear(/status (.+)/i, function(res) {
+        var target = game.findUser(res.match[1]);
+        if(target === null) {
+            res.send("しかし だれもいなかった・・・");
+        } else {
+            res.send("現在のHP: " + target.status.currentHp + " / " + MAX_HP);
         };
     });
 
