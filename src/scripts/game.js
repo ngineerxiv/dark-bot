@@ -113,8 +113,19 @@ module.exports = function(robot) {
     });
 
     var shakai  = new User(0, "社会", game.defaultStatus(), new Equipment(new Weapon(30, 12)), game.defaultStatus());
-    var negativeWords = ["つらい", "辛い", "かなしい", "悲しい", "悲しい", "つかれる", "疲れる", "ねむい", "眠い"];
+    var negativeWords = [];
+    var updateNegativeWords = function(robot) {
+        var http = robot.http("http://yamiga.waka.ru.com/json/darkbot.json").get();
+        http(function(err, res, body) {
+            err && robot.logger.error(err);
+            var json = JSON.parse(body);
+            negativeWords = json.negativeWords;
+        });
+    };
+    updateNegativeWords(robot);
+
     robot.hear(/.*/, function(res) {
+        updateNegativeWords(robot);
         var tokens = res.message.tokenized;
         if(tokens === undefined) {
             return
@@ -146,6 +157,6 @@ module.exports = function(robot) {
             var after       = afterStatus.currentHp
 
             res.send( "[ATTACK] '社会'のこうげき！" + target.name + "に" + (after - before) + "のダメージ！ 残り:" + after + " / " + MAX_HP + " NegativeWord数: " + negativeCount);
-        }
+        };
     });
 }
