@@ -8,6 +8,7 @@
   },
   "description": "Dark",
   "dependencies": {
+    "cron": "^1.1.0",
     "eastasianwidth": "^0.1.0",
     "hubot": "^2.12.0",
     "hubot-attend-management": "^0.1.x",
