@@ -12,25 +12,42 @@ var Equipment   = DarkQuest.Equipment;
 var Parameter   = DarkQuest.Parameter;
 var Weapon      = DarkQuest.Weapon;
 var User        = DarkQuest.User;
+var Status      = DarkQuest.Status;
 
 var INITIAL_ATTACK_DAMANE   = 70;
 var INITIAL_CURE_POINT      = 30;
 var MAX_HP                  = 1000;
+var HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
+
+var saveHp = function(robot, users) {
+    var us = {};
+    users.forEach(function(u) {
+        us[u.id] = u.status.currentHp;
+    });
+    robot.brain.set(HUBOT_NODE_QUEST_USERS_HP, us);
+};
+
+var toGameUser = function(users, savedUsers) {
+    return Object.keys(users).map(function(id) {
+        var user    = users[id];
+        var eq      = new Equipment(new Weapon(30, 12));
+        var p       = new Parameter(20, 10);
+        var hp      = (savedUsers && savedUsers[id] && !isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
+        var st      = new Status(game, hp);
+        return new User(user.id, user.name, st, eq, p);
+    });
+};
+var game        = new Game(0, MAX_HP);
 
 module.exports = function(robot) {
-    var game = new Game(0, MAX_HP);
-    var toGameUser = function(users) {
-        return Object.keys(users).map(function(id) {
-            var user    = users[id];
-            var eq      = new Equipment(new Weapon(30, 12));
-            var p       = new Parameter(20, 10);
-            return new User(user.id, user.name, game.defaultStatus(), eq, p);
-        });
-    };
-    var users = robot.adapter.client ? toGameUser(robot.adapter.client.users) : [];
-    game.setUsers(users);
+    robot.brain.on("loaded", function(data) {
+        var savedUsers  = robot.brain.get(HUBOT_NODE_QUEST_USERS_HP);
+        savedUsers      = savedUsers ? savedUsers : {};
+        var users       = robot.adapter.client ? toGameUser(robot.adapter.client.users, savedUsers) : [];
+        game.setUsers(users);
+    });
 
-    robot.hear(/attack (.+)/i, function(res){
+    robot.hear(/^attack (.+)/i, function(res){
         var actor = game.findUser(res.message.user.name);
         var target = game.findUser(res.match[1]);
 
@@ -49,9 +66,10 @@ module.exports = function(robot) {
                 res.send( "[DEAD] " + target.name + "はしんでしまった");
             }
         };
+        saveHp(robot, game.users);
     });
 
-    robot.hear(/cure (.+)/i, function(res){
+    robot.hear(/^cure (.+)/i, function(res){
         var actor = game.findUser(res.message.user.name);
         var target = game.findUser(res.match[1]);
 
@@ -65,9 +83,10 @@ module.exports = function(robot) {
             actor.cure(target, INITIAL_CURE_POINT);
             res.send("[CURE] " + target.name + "のキズがかいふくした！残り: " + target.status.currentHp + " / " + MAX_HP);
         };
+        saveHp(robot, game.users);
     });
 
-    robot.hear(/ザオリク (.+)/i, function(res) {
+    robot.hear(/^ザオリク (.+)/i, function(res) {
         var actor = game.findUser(res.message.user.name);
         var target = game.findUser(res.match[1]);
 
@@ -83,9 +102,10 @@ module.exports = function(robot) {
                 res.send("[CURE] " + target.name + "は いきかえった！");
             }
         };
+        saveHp(robot, game.users);
     });
 
-    robot.hear(/raise (.+)/i, function(res) {
+    robot.hear(/^raise (.+)/i, function(res) {
         var actor = game.findUser(res.message.user.name);
         var target = game.findUser(res.match[1]);
 
@@ -101,9 +121,10 @@ module.exports = function(robot) {
                 res.send("[CURE] " + target.name + "は いきかえった！");
             }
         };
+        saveHp(robot, game.users);
     });
 
-    robot.hear(/status (.+)/i, function(res) {
+    robot.hear(/^status (.+)/i, function(res) {
         var target = game.findUser(res.match[1]);
         if(target === null) {
             res.send("しかし だれもいなかった・・・");
@@ -158,5 +179,6 @@ module.exports = function(robot) {
 
             res.send( "[ATTACK] '社会'のこうげき！" + target.name + "に" + (after - before) + "のダメージ！ 残り:" + after + " / " + MAX_HP + " NegativeWord数: " + negativeCount);
         };
+        saveHp(robot, game.users);
     });
 }
