@@ -6,6 +6,7 @@
 //   quest raise|ザオリク {user} - ふっかつ
 //
 
+var Cron = require("cron").CronJob;
 var DarkQuest   = require("node-quest");
 var Game        = DarkQuest.Game;
 var Equipment   = DarkQuest.Equipment;
@@ -38,6 +39,14 @@ var toGameUser = function(users, savedUsers) {
     });
 };
 var game        = new Game(0, MAX_HP);
+
+var resetUserHp = function() {
+    game.users.forEach(function(u) {
+        u.fullCare(u);
+    });
+};
+
+new Cron("0 0 * * 1", resetUserHp, null, true, "Asia/Tokyo");
 
 module.exports = function(robot) {
     robot.brain.on("loaded", function(data) {
