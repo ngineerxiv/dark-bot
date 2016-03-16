@@ -47,13 +47,18 @@ var resetUserHp = function() {
 };
 
 new Cron("0 0 * * 1", resetUserHp, null, true, "Asia/Tokyo");
+var alreadyLoaded = false;
 
 module.exports = function(robot) {
     robot.brain.on("loaded", function(data) {
+        if (alreadyLoaded) {
+            return
+        }
         var savedUsers  = robot.brain.get(HUBOT_NODE_QUEST_USERS_HP);
         savedUsers      = savedUsers ? savedUsers : {};
         var users       = robot.adapter.client ? toGameUser(robot.adapter.client.users, savedUsers) : [];
         game.setUsers(users);
+        alreadyLoaded = true;
     });
 
     robot.hear(/^attack (.+)/i, function(res){
@@ -179,14 +184,23 @@ module.exports = function(robot) {
 
         var target = game.findUser(res.message.user.name);
         if(negativeCount > 0 && target) {
-            var before      = target.status.currentHp;
-            var afterStatus;
-            for(var i=0;i<negativeCount;i++) {
-                afterStatus = shakai.attack(target, INITIAL_ATTACK_DAMANE);
-            }
-            var after       = afterStatus.currentHp
+            if(target === null) {
+                res.send("しかし だれもいなかった・・・");
+            } else if (target.isDead()) {
+                res.send( "[DEAD] こうかがない・・・" + target.name + "はただのしかばねのようだ・・・");
+            } else {
+                var before      = target.status.currentHp;
+                var afterStatus;
+                for(var i=0;i<negativeCount;i++) {
+                    afterStatus = shakai.attack(target, INITIAL_ATTACK_DAMANE);
+                }
+                var after       = afterStatus.currentHp
 
-            res.send( "[ATTACK] '社会'のこうげき！" + target.name + "に" + (after - before) + "のダメージ！ 残り:" + after + " / " + MAX_HP + " NegativeWord数: " + negativeCount);
+                    res.send( "[ATTACK] '社会'のこうげき！" + target.name + "に" + (after - before) + "のダメージ！ 残り:" + after + " / " + MAX_HP + " NegativeWord数: " + negativeCount);
+                if (target.isDead()) {
+                    res.send( "[DEAD] " + target.name + "はしんでしまった");
+                }
+            }
         };
         saveHp(robot, game.users);
     });
