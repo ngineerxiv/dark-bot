@@ -28,7 +28,7 @@ test-watch:
 	$(gulp) watch
 
 test: lint config-check
-	$(mocha) --compilers coffee:coffee-script/register --recursive -R spec
+	npm run test-coffee
 	test -f settings/hello.json
 	test -f settings/poems.json
 	test -f settings/relayblog.json

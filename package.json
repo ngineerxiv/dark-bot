@@ -4,7 +4,8 @@
   "private": true,
   "author": "Arata Tanaka <tarata43@yahoo.co.jp>",
   "scripts": {
-    "test": "make install && make test"
+      "test-coffee": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register --recursive ./test/*.coffee -R spec",
+      "test": "make install && make test"
   },
   "description": "Dark",
   "dependencies": {
