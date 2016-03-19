@@ -18,17 +18,8 @@ var Status      = DarkQuest.Status;
 var DarkGame    = require("./lib/DarkGame.js");
 var NegativeWords = require("./lib/NegativeWords.js");
 var NegativeWordsRepository = require("./lib/NegativeWordsRepository.js");
-
 var MAX_HP                  = 1000;
 var HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
-
-var saveHp = function(robot, users) {
-    var us = {};
-    users.forEach(function(u) {
-        us[u.id] = u.status.currentHp;
-    });
-    robot.brain.set(HUBOT_NODE_QUEST_USERS_HP, us);
-};
 
 var toGameUser = function(users, savedUsers) {
     return Object.keys(users).map(function(id) {
@@ -44,15 +35,24 @@ var game        = new Game(0, MAX_HP);
 var darkGame    = new DarkGame(game);
 var shakai      = new User(0, "'社会'", game.defaultStatus(), new Equipment(new Weapon(30, 12)), game.defaultStatus());
 
-var resetUserHp = function() {
-    game.users.forEach(function(u) {
-        u.fullCare(u);
-    });
-};
-
-new Cron("0 0 * * 1", resetUserHp, null, true, "Asia/Tokyo");
-
 module.exports = function(robot) {
+    var resetUserHp = function() {
+        game.users.forEach(function(u) {
+            u.fullCare(u);
+        });
+        saveHp();
+    };
+
+    new Cron("0 0 * * 1", resetUserHp, null, true, "Asia/Tokyo");
+    var saveHp = function() {
+        var us = {};
+        game.users.forEach(function(u) {
+            us[u.id] = u.status.currentHp;
+        });
+        robot.brain.set(HUBOT_NODE_QUEST_USERS_HP, us);
+    };
+
+
     var negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
     var negativeWords = new NegativeWords(negativeWordsRepository, robot.logger);
     var alreadyLoaded = false;
@@ -75,7 +75,7 @@ module.exports = function(robot) {
         result.messages.forEach(function(m) {
             res.send(m);
         });
-        saveHp(robot, game.users);
+        saveHp();
     });
 
     robot.hear(/^cure (.+)/i, function(res){
@@ -85,7 +85,7 @@ module.exports = function(robot) {
         result.messages.forEach(function(m) {
             res.send(m);
         });
-        saveHp(robot, game.users);
+        saveHp();
     });
 
     robot.hear(/^ザオリク (.+)/i, function(res) {
@@ -95,7 +95,7 @@ module.exports = function(robot) {
         result.messages.forEach(function(m) {
             res.send(m);
         });
-        saveHp(robot, game.users);
+        saveHp();
     });
 
     robot.hear(/^raise (.+)/i, function(res) {
@@ -106,7 +106,7 @@ module.exports = function(robot) {
         result.messages.forEach(function(m) {
             res.send(m);
         });
-        saveHp(robot, game.users);
+        saveHp();
     });
 
     robot.hear(/^status (.+)/i, function(res) {
@@ -135,6 +135,6 @@ module.exports = function(robot) {
                 res.send(m);
             });
         };
-        saveHp(robot, game.users);
+        saveHp();
     });
 }
