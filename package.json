@@ -6,7 +6,7 @@
   "scripts": {
     "test-coffee": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register --recursive ./test/coffee -R spec",
     "test-js": "./node_modules/.bin/mocha --compilers js:espower-babel/guess,coffee:coffee-script/register --recursive ./test/js -R spec",
-    "test": "make test"
+    "test": "make init && make test"
   },
   "description": "Dark",
   "dependencies": {

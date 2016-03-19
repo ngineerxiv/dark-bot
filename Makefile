@@ -13,10 +13,12 @@ credential=./credentials/development
 
 all: install
 
-install:
-	$(npm) install
+init:
 	test -f settings/poems.json || cp settings/poems.json.sample settings/poems.json
 	test -f settings/relayblog.json || cp settings/relayblog.json.sample settings/relayblog.json
+
+install: init
+	$(npm) install
 
 start: compile
 	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
