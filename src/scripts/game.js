@@ -112,7 +112,7 @@ module.exports = function(robot) {
     robot.hear(/.*/, function(res) {
         var tokens  = (res.message.tokenized || []).map(function(t) {
             return t.basic_form;
-        }) : [];
+        });
         darkGame.attack(
             shakai, 
             game.findUser(res.message.user.name),
