@@ -9,7 +9,7 @@ describe 'orenoyome.coffee', ->
     {robot, user, adapter} = ret
 
   beforeEach ->
-    require('../scripts/orenoyome.coffee')(robot)
+    require('../../scripts/orenoyome.coffee')(robot)
 
   it 'should be string when called hubot 小野寺小咲', (done) ->
     adapter.on 'send', (envelope, strings) ->

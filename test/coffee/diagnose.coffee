@@ -9,7 +9,7 @@ describe 'ping', ->
     {robot, user, adapter} = ret
 
   beforeEach ->
-    require('../scripts/diagnostics.coffee')(robot)
+    require('../../scripts/diagnostics.coffee')(robot)
 
   it 'called ping', (done) ->
     adapter.on 'send', (envelope, strings) ->

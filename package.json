@@ -4,8 +4,9 @@
   "private": true,
   "author": "Arata Tanaka <tarata43@yahoo.co.jp>",
   "scripts": {
-      "test-coffee": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register --recursive ./test/*.coffee -R spec",
-      "test": "make install && make test"
+    "test-coffee": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register --recursive ./test/coffee -R spec",
+    "test-js": "./node_modules/.bin/mocha --compilers js:espower-babel/guess --recursive ./test/js -R spec",
+    "test": "make install && make test"
   },
   "description": "Dark",
   "dependencies": {
@@ -44,6 +45,7 @@
     "chai": "^3.2.0",
     "coffee-script": "^1.9.3",
     "coffeelint": "^1.10.1",
+    "espower-babel": "^4.0.1",
     "gulp": "^3.9.0",
     "gulp-exec": "^2.1.2",
     "gulp-mocha": "^2.1.3",

@@ -9,7 +9,7 @@ describe 'dark.coffee', ->
     {robot, user, adapter} = ret
 
   beforeEach ->
-    require('../scripts/dark.coffee')(robot)
+    require('../../scripts/dark.coffee')(robot)
 
   it 'should be string when called hubot poem', (done) ->
     adapter.on 'send', (envelope, strings) ->
