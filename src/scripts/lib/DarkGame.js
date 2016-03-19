@@ -1,54 +1,42 @@
 var INITIAL_ATTACK_DAMANE   = 70;
 var INITIAL_CURE_POINT      = 30;
+var EventEmitter = require('eventemitter2').EventEmitter2;
 
 var DarkGame = function(game) {
-    this.attack = function(attacker, attacked) {
-        var messages = [];
-        if(attacker === null || attacked === null) {
-            messages.push("しかし だれもいなかった・・・");
-        } else if (attacker.isDead() ) {
-            messages.push("[DEAD] おぉ" + attacker.name + "！死んでしまうとはふがいない");
-        } else if (attacked.isDead()) {
-            messages.push("[DEAD] こうかがない・・・" + attacked.name + "はただのしかばねのようだ・・・");
-        } else {
-            var before      = attacked.status.currentHp;
-            var afterStatus = attacker.attack(attacked, INITIAL_ATTACK_DAMANE);
-            var after       = afterStatus.currentHp
-            messages.push("[ATTACK] " + attacker.name + "のこうげき！" + attacked.name + "に" + (before - after) + "のダメージ！ 残り:" + after + " / " + game.maxHp);
-            if (attacked.isDead()) {
-                messages.push("[DEAD] " + attacked.name + "はしんでしまった")
-            }
-        };
-        return {
-            actor: attacker,
-            target: attacker,
-            messages: messages
-        };
-    };
+    EventEmitter.call(this);
 
-    this.multipleAttack = function(attacker, attacked, n) {
+    this.attack = function(actor, target, n) {
+        n = n !== undefined ? n : 1;
         var messages = [];
-        if(attacker === null || attacked === null) {
+        if(actor === null || target === null) {
             messages.push("しかし だれもいなかった・・・");
-        } else if (attacker.isDead() ) {
-            messages.push("[DEAD] おぉ" + attacker.name + "！死んでしまうとはふがいない");
-        } else if (attacked.isDead()) {
-            messages.push("[DEAD] こうかがない・・・" + attacked.name + "はただのしかばねのようだ・・・");
+        } else if (actor.isDead() ) {
+            messages.push("[DEAD] おぉ" + actor.name + "！死んでしまうとはふがいない");
+        } else if (target.isDead()) {
+            messages.push("[DEAD] こうかがない・・・" + target.name + "はただのしかばねのようだ・・・");
         } else {
-            var before      = attacked.status.currentHp;
-            var afterStatus
-            for(var i=0;i<n;i++) {
-                afterStatus = attacker.attack(attacked, INITIAL_ATTACK_DAMANE);
-            }
+            var before      = target.status.currentHp;
+            
+            if ( n === 1 ) {
+            var afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
+
             var after       = afterStatus.currentHp
-            messages.push("[ATTACK] " + attacker.name + "の" + n + "れんぞくこうげき！" + attacked.name + "に" + (before - after) + "のダメージ！ 残り:" + after + " / " + game.maxHp);
-            if (attacked.isDead()) {
-                messages.push("[DEAD] " + attacked.name + "はしんでしまった")
+            messages.push("[ATTACK] " + actor.name + "のこうげき！" + target.name + "に" + (before - after) + "のダメージ！ 残り:" + after + " / " + game.maxHp);
+            } else if (n > 0) {
+                var afterStatus
+                for(var i=0;i<n;i++) {
+                    afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
+                }
+                var after       = afterStatus.currentHp
+                messages.push("[ATTACK] " + actor.name + "の" + n + "れんぞくこうげき！" + target.name + "に" + (before - after) + "のダメージ！ 残り:" + after + " / " + game.maxHp);
+            }
+            if (target.isDead()) {
+                messages.push("[DEAD] " + target.name + "はしんでしまった")
             }
         };
         return {
-            actor: attacker,
-            target: attacker,
+            actor: actor,
+            target: target,
             messages: messages
         };
     };
@@ -105,6 +93,12 @@ var DarkGame = function(game) {
             messages: messages
         };
     }
+
+    game.on("user-hp-changed", function(data) {
+        this.emit("game-user-hp-changed", data);
+    });
 }
+
+DarkGame.prototype = Object.create(EventEmitter.prototype);
 
 module.exports = DarkGame;

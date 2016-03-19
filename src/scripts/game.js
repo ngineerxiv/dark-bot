@@ -16,9 +16,11 @@ var User        = DarkQuest.User;
 var Status      = DarkQuest.Status;
 
 var DarkGame    = require("./lib/DarkGame.js");
-var NegativeWords = require("./lib/NegativeWords.js");
 var NegativeWordsRepository = require("./lib/NegativeWordsRepository.js");
-var MAX_HP                  = 1000;
+var negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
+var NegativeWords   = require("./lib/NegativeWords.js");
+var negativeWords   = new NegativeWords(negativeWordsRepository, console);
+var MAX_HP          = 1000;
 var HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
 
 var toGameUser = function(users, savedUsers) {
@@ -33,28 +35,24 @@ var toGameUser = function(users, savedUsers) {
 };
 var game        = new Game(0, MAX_HP);
 var darkGame    = new DarkGame(game);
-var shakai      = new User(0, "'社会'", game.defaultStatus(), new Equipment(new Weapon(30, 12)), game.defaultStatus());
+var shakai      = new User(0, "'社会'", game.defaultStatus(), new Equipment(new Weapon(30, 12)), game.defaultParameter());
+
+new Cron("0 0 * * 1", function() {
+    game.users.forEach(function(u) {
+        u.fullCare(u);
+    });
+}, null, true, "Asia/Tokyo");
 
 module.exports = function(robot) {
-    var resetUserHp = function() {
-        game.users.forEach(function(u) {
-            u.fullCare(u);
-        });
-        saveHp();
-    };
 
-    new Cron("0 0 * * 1", resetUserHp, null, true, "Asia/Tokyo");
-    var saveHp = function() {
+    darkGame.on("game-user-hp-changed", function(data) {
         var us = {};
         game.users.forEach(function(u) {
             us[u.id] = u.status.currentHp;
         });
         robot.brain.set(HUBOT_NODE_QUEST_USERS_HP, us);
-    };
+    });
 
-
-    var negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
-    var negativeWords = new NegativeWords(negativeWordsRepository, robot.logger);
     var alreadyLoaded = false;
     robot.brain.on("loaded", function(data) {
         if (alreadyLoaded) {
@@ -68,73 +66,59 @@ module.exports = function(robot) {
     });
 
     robot.hear(/^attack (.+)/i, function(res){
-        var actor = game.findUser(res.message.user.name);
-        var target = game.findUser(res.match[1]);
-
-        var result = darkGame.attack(actor, target)
-        result.messages.forEach(function(m) {
+        darkGame.attack(
+            game.findUser(res.message.user.name),
+            game.findUser(res.match[1])
+        ).messages.forEach(function(m) {
             res.send(m);
         });
-        saveHp();
     });
 
     robot.hear(/^cure (.+)/i, function(res){
-        var actor = game.findUser(res.message.user.name);
-        var target = game.findUser(res.match[1]);
-        var result = darkGame.cure(actor, target);
-        result.messages.forEach(function(m) {
+        darkGame.cure(
+            game.findUser(res.message.user.name),
+            game.findUser(res.match[1])
+        ).messages.forEach(function(m) {
             res.send(m);
         });
-        saveHp();
     });
 
     robot.hear(/^ザオリク (.+)/i, function(res) {
-        var actor = game.findUser(res.message.user.name);
-        var target = game.findUser(res.match[1]);
-        var result = darkGame.raise(actor, target);
-        result.messages.forEach(function(m) {
+        darkGame.raise(
+            game.findUser(res.message.user.name),
+            game.findUser(res.match[1])
+        ).messages.forEach(function(m) {
             res.send(m);
         });
-        saveHp();
     });
 
     robot.hear(/^raise (.+)/i, function(res) {
-        var actor = game.findUser(res.message.user.name);
-        var target = game.findUser(res.match[1]);
-
-        var result = darkGame.raise(actor, target);
-        result.messages.forEach(function(m) {
+        darkGame.raise(
+            game.findUser(res.message.user.name),
+            game.findUser(res.match[1])
+        ).messages.forEach(function(m) {
             res.send(m);
         });
-        saveHp();
     });
 
     robot.hear(/^status (.+)/i, function(res) {
-        var target = game.findUser(res.match[1]);
-        var result = darkGame.status(target);
-        result.messages.forEach(function(m) {
+        darkGame.status(
+            game.findUser(res.match[1])
+        ).messages.forEach(function(m) {
             res.send(m);
         });
     });
 
     robot.hear(/.*/, function(res) {
-        var tokens = res.message.tokenized
-        var basicNorms  = tokens ? tokens.map(function(t) {
+        var tokens  = (res.message.tokenized || []).map(function(t) {
             return t.basic_form;
         }) : [];
-        var negativeCount = negativeWords.countNegativeWords(basicNorms);
-        var target = game.findUser(res.message.user.name);
-        if(negativeCount == 1) {
-            var result = darkGame.attack(shakai, target, negativeCount)
-            result.messages.forEach(function(m) {
-                res.send(m);
-            });
-        } else if(negativeCount > 0) {
-            var result = darkGame.multipleAttack(shakai, target, negativeCount)
-            result.messages.forEach(function(m) {
-                res.send(m);
-            });
-        };
-        saveHp();
+        darkGame.attack(
+            shakai, 
+            game.findUser(res.message.user.name),
+            negativeWords.countNegativeWords(tokens)
+        ).messages.forEach(function(m) {
+            res.send(m);
+        });
     });
 }
