@@ -13,10 +13,12 @@ credential=./credentials/development
 
 all: install
 
-install:
-	$(npm) install
+init:
 	test -f settings/poems.json || cp settings/poems.json.sample settings/poems.json
 	test -f settings/relayblog.json || cp settings/relayblog.json.sample settings/relayblog.json
+
+install: init
+	$(npm) install
 
 start: compile
 	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
@@ -28,7 +30,8 @@ test-watch:
 	$(gulp) watch
 
 test: lint config-check
-	$(mocha) --compilers coffee:coffee-script/register --recursive -R spec
+	npm run test-coffee
+	npm run test-js
 	test -f settings/hello.json
 	test -f settings/poems.json
 	test -f settings/relayblog.json
