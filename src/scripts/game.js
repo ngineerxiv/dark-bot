@@ -106,12 +106,17 @@ module.exports = function(robot) {
     });
 
     robot.hear(/.*/, function(res) {
+        var target = game.findUser(res.message.user.name)
+        if ( !target || target.isDead() ) {
+            return;
+        }
+
         var tokens  = (res.message.tokenized || []).map(function(t) {
             return t.basic_form;
         });
         darkGame.attack(
             shakai, 
-            game.findUser(res.message.user.name),
+            target,
             negativeWords.countNegativeWords(tokens)
         ).messages.forEach(function(m) {
             res.send(m);
