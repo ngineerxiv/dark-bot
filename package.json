@@ -14,7 +14,6 @@
     "eastasianwidth": "^0.1.0",
     "eventemitter2": "^1.0.0",
     "hubot": "^2.12.0",
-    "hubot-attend-management": "^0.1.x",
     "hubot-google-images": "^0.2.5",
     "hubot-google-translate": "^0.2.0",
     "hubot-help": "^0.1.1",
