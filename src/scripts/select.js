@@ -1,5 +1,7 @@
 // Description:
 //   選ぶ
+// Commands:
+//   hubot 選んで ..... - 空白とかカンマ区切りの何かから選んでくれる
 //
 
 "use strict"

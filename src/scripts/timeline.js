@@ -1,4 +1,7 @@
-
+// Description:
+//   #timeline 用のscript
+//   参加しているチャンネルへの投稿が全て#timelineに投稿される
+//
 
 "use strict"
 let request = require("request");

@@ -1,6 +1,13 @@
+// Description:
+//   もくもく会用
 //
+// Notes:
+//   #mokumoku 
 //
-//
+// Commands:
+//   参加 - 最新のもくもく会に参加
+//   不参加 - 最新のもくもく会に不参加
+//   hubot moku - 今のイベントの参加者と日程を確認する
 //
 
 "use strict"
