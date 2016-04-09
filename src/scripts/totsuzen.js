@@ -1,3 +1,11 @@
+// Description:
+//   
+//
+// Commands:
+//   hubot 突然の {text} - 突然
+//
+
+"use strict"
 const eastasianwidth = require('eastasianwidth');
 const strpad = (str, count) => new Array(count + 1).join(str)
 
