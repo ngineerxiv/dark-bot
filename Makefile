@@ -8,6 +8,7 @@ lint=./node_modules/.bin/coffeelint
 gulp=./node_modules/.bin/gulp
 monitoring-code=local
 credential=./credentials/development
+exdirectory=./src/es2015
 
 .PHONY:test
 
@@ -20,11 +21,11 @@ init:
 install: init
 	$(npm) install
 
-start: compile
-	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
+start: 
+	./bin/hubot-slack $(credential) $(exdirectory) --monitoring-code=$(monitoring-code)
 
-start-local: compile
-	source ./credentials/development;./bin/hubot --require ./compiled
+start-local: 
+	source ./credentials/development;./bin/hubot --require ./src/es2015
 
 test-watch:
 	$(gulp) watch
@@ -44,9 +45,6 @@ config-check:
 
 run-new-channels:
 	./bin/start-new-channels $(credential)
-
-compile:
-	./node_modules/.bin/babel src/es2015 --out-dir ./compiled --presets es2015
 
 update:
 	$(npm) update

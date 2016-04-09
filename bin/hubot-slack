@@ -1,6 +1,6 @@
 #! /bin/sh
 
 trap 'kill $(jobs -p)' EXIT
-file=${1:- "./credentials/sample"}
+file=${1:-"./credentials/sample"}
 . $file
-./bin/hubot --adapter slack --require ./compiled
+./bin/hubot --adapter slack
