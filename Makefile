@@ -40,3 +40,7 @@ update:
 
 compile: install
 	$(babel) src/scripts
+
+watch-compile: install
+	$(babel) src/scripts --watch --out-file /dev/null
+
