@@ -39,8 +39,8 @@ update:
 	$(npm) update
 
 compile: install
-	$(babel) src/scripts
+	$(babel) src
 
 watch-compile: install
-	$(babel) src/scripts --watch --out-file /dev/null
+	$(babel) src --watch --out-file /dev/null
 
