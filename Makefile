@@ -22,7 +22,6 @@ start-local:
 	source $(credential);./bin/hubot
 
 test: install compile lint config-check
-	npm run test-coffee
 	npm run test-js
 	test -f settings/hello.json
 	test -f settings/poems.json

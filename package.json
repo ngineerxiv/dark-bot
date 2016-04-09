@@ -4,7 +4,6 @@
   "private": true,
   "author": "Arata Tanaka <tarata43@yahoo.co.jp>",
   "scripts": {
-    "test-coffee": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register --recursive ./test/coffee -R spec",
     "test-js": "./node_modules/.bin/mocha --compilers js:espower-babel/guess,coffee:coffee-script/register --recursive ./test/js -R spec",
     "test": "make init && make test"
   },
