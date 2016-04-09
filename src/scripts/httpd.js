@@ -1,4 +1,8 @@
-let spawn = require('child_process').spawn
+// Description:
+//   監視用
+//
+
+"use strict"
 
 module.exports = (robot) => {
     robot.router.get("/hubot/version", (req, res) => {

@@ -5,9 +5,10 @@ name=
 npm=$(shell which npm)
 mocha=./node_modules/.bin/mocha
 lint=./node_modules/.bin/coffeelint
-gulp=./node_modules/.bin/gulp
+babel=./node_modules/.bin/babel
 monitoring-code=local
 credential=./credentials/development
+exdirectory=./src/es2015
 
 .PHONY:test
 
@@ -20,23 +21,20 @@ init:
 install: init
 	$(npm) install
 
-start: compile
-	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
+start: 
+	./bin/hubot-slack $(credential) $(exdirectory) --monitoring-code=$(monitoring-code)
 
-start-local: compile
-	source ./credentials/development;./bin/hubot --require ./compiled
+start-local: 
+	source $(credential);./bin/hubot
 
-test-watch:
-	$(gulp) watch
-
-test: lint config-check
+test: install compile lint config-check
 	npm run test-coffee
 	npm run test-js
 	test -f settings/hello.json
 	test -f settings/poems.json
 	test -f settings/relayblog.json
 
-lint:
+lint: install
 	$(lint) scripts -f lintconfig.json
 
 config-check:
@@ -45,8 +43,8 @@ config-check:
 run-new-channels:
 	./bin/start-new-channels $(credential)
 
-compile:
-	./node_modules/.bin/babel src/es2015 --out-dir ./compiled --presets es2015
-
 update:
 	$(npm) update
+
+compile: install
+	$(babel) src/scripts

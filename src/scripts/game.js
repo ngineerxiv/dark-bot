@@ -1,9 +1,9 @@
 // Description:
 //   遊ぶ
 // Commands:
-//   quest attack {user} - attack
-//   quest cure {user} - cure
-//   quest raise|ザオリク {user} - ふっかつ
+//   attack {user} - attack
+//   cure {user} - cure
+//   raise|ザオリク {user} - ふっかつ
 //
 
 var Cron = require("cron").CronJob;

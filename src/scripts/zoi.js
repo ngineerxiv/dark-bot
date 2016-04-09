@@ -1,13 +1,18 @@
 // Description:
-//   新規参加者用挨拶スクリプト
+//   今日も一日頑張るぞい
+// Commands:
+//   hubot zoi - がんばるぞい
+//   hubot ぞい - がんばるぞい
 //
 
-let uuid = require("node-uuid");
+"use strict"
+
+const uuid = require("node-uuid");
 
 module.exports = (robot => {
     const urataku = 'U034TCZKE';
-    const targets = [1,1,1,1,1,2,3];
-    let zoi = (res) => {
+    const targets = [1,1,1,1,1,1,1,1,1,1,,2,2,3];
+    const zoi = (res) => {
         let filtered = targets;
         try {
             if(res.message.user.id === urataku) {
@@ -16,7 +21,7 @@ module.exports = (robot => {
         } catch (e) {
             robot.logger.error(e);
         }
-        let selected = res.random(filtered);
+        const selected = res.random(filtered);
         res.send(`http://yamiga.waka.ru.com/images/zoi${selected}.jpg?cb=${uuid.v4()}`);
     };
 
@@ -29,8 +34,8 @@ module.exports = (robot => {
     })
 
 
-    let zoi1 = new RegExp(`^[^${robot.name}]*頑張るぞい$`, "i");
-    let zoi2 = new RegExp(`^[^${robot.name}]*がんばるぞい$`, "i");
+    const zoi1 = new RegExp(`^[^${robot.name}]*頑張るぞい$`, "i");
+    const zoi2 = new RegExp(`^[^${robot.name}]*がんばるぞい$`, "i");
     robot.hear(zoi1, res => zoi(res));
     robot.hear(zoi2, res => zoi(res));
 })
