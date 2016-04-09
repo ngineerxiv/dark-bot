@@ -13,7 +13,7 @@ module.exports = (robot => {
     const urataku = 'U034TCZKE';
     const targets = [1,1,1,1,1,1,1,1,1,1,,2,2,3];
     const zoi = (res) => {
-        const filtered = targets;
+        let filtered = targets;
         try {
             if(res.message.user.id === urataku) {
                 filtered = filtered.filter(elm => elm !== 1);

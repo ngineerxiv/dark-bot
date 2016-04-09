@@ -11,17 +11,32 @@
 "use strict"
 
 const slackAPI = require('slackbotapi');
-const token = process.env.WEB_SLACK_TOKEN;
+
+const init = function(token) {
+    if ( token === undefined ) {
+        return new Error(`WEB_SLACK_TOKEN cannot be empty! value: undefined`);
+    }
+    try {
+        return new slackAPI({
+            'token': token,
+            'logging': false,
+            'autoReconnect': true
+        });
+    } catch (e) {
+        return e;
+    }
+};
 
 module.exports = (robot => {
-    const slack = new slackAPI({
-        'token': token,
-        'logging': false,
-        'autoReconnect': true
-    });
-
+    const slack = init(process.env.WEB_SLACK_TOKEN);
 
     robot.respond(/join all/i, res => {
+        if (slack instanceof Error) {
+            robot.logger.error(slack);
+            robot.emit("error", slack);
+            return res.send("Something ocuured to slack api client!");
+        }
+
         const bot = slack.getUser(robot.name);
         slack.reqAPI("channels.list",{
             exclude_archived: 1
