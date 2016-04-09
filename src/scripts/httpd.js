@@ -1,3 +1,6 @@
+
+"use strict"
+
 let spawn = require('child_process').spawn
 
 module.exports = (robot) => {

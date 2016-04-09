@@ -1,19 +1,28 @@
 // Description:
 //   join all channels
 //
+// Notes:
+//   #timeline 用
+//
+// Commands:
+//   hubot join all - 存在する全てのpublicチャンネルに参加する
+//
 
-var slackAPI = require('slackbotapi');
-var token = process.env.WEB_SLACK_TOKEN;
-var slack = new slackAPI({
-    'token': token,
-    'logging': false,
-    'autoReconnect': true
-});
+"use strict"
 
+const slackAPI = require('slackbotapi');
+const token = process.env.WEB_SLACK_TOKEN;
 
 module.exports = (robot => {
+    const slack = new slackAPI({
+        'token': token,
+        'logging': false,
+        'autoReconnect': true
+    });
+
+
     robot.respond(/join all/i, res => {
-        let bot = slack.getUser(robot.name);
+        const bot = slack.getUser(robot.name);
         slack.reqAPI("channels.list",{
             exclude_archived: 1
         }, (listResponse) => {

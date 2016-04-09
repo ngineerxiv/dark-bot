@@ -1,3 +1,6 @@
+
+
+"use strict"
 let request = require("request");
 let hubotSlack = require("hubot-slack");
 let SlackTextMessage = hubotSlack.SlackTextMessage;

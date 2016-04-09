@@ -1,8 +1,9 @@
 // Description:
 //   新規参加者用挨拶スクリプト
 //
+"use strict"
 
-let hello   = require('../settings/hello.json')
+let hello   = require('../../settings/hello.json')
 let message = hello.message.join("\n")
 
 module.exports = (robot => {

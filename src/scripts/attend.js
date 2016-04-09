@@ -1,3 +1,9 @@
+//
+//
+//
+//
+
+"use strict"
 const request = require("request")
 
 const apiUrl = "https://ngineerxiv-dark.appspot.com/mokumoku/events"

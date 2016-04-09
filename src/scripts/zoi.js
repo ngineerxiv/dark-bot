@@ -1,6 +1,8 @@
 // Description:
 //   新規参加者用挨拶スクリプト
 //
+//
+"use strict"
 
 let uuid = require("node-uuid");
 
