@@ -15,10 +15,10 @@ var Weapon      = DarkQuest.Weapon;
 var User        = DarkQuest.User;
 var Status      = DarkQuest.Status;
 
-var DarkGame    = require("./lib/DarkGame.js");
-var NegativeWordsRepository = require("./lib/NegativeWordsRepository.js");
+var DarkGame    = require("../game/DarkGame.js");
+var NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
 var negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
-var NegativeWords   = require("./lib/NegativeWords.js");
+var NegativeWords   = require("../game/NegativeWords.js");
 var negativeWords   = new NegativeWords(negativeWordsRepository, console);
 var MAX_HP          = 1000;
 var HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
