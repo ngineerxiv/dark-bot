@@ -1,11 +1,7 @@
-token=
-team=
-name=
-
 npm=$(shell which npm)
 mocha=./node_modules/.bin/mocha
 lint=./node_modules/.bin/coffeelint
-gulp=./node_modules/.bin/gulp
+babel=./node_modules/.bin/babel
 monitoring-code=local
 credential=./credentials/development
 
@@ -15,28 +11,22 @@ all: install
 
 init:
 	test -f settings/poems.json || cp settings/poems.json.sample settings/poems.json
-	test -f settings/relayblog.json || cp settings/relayblog.json.sample settings/relayblog.json
 
 install: init
 	$(npm) install
 
-start: compile
+start: 
 	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
-start-local: compile
-	source ./credentials/development;./bin/hubot --require ./compiled
+start-local: 
+	source $(credential);./bin/hubot
 
-test-watch:
-	$(gulp) watch
-
-test: lint config-check
-	npm run test-coffee
+test: install compile lint config-check
 	npm run test-js
 	test -f settings/hello.json
 	test -f settings/poems.json
-	test -f settings/relayblog.json
 
-lint:
+lint: install
 	$(lint) scripts -f lintconfig.json
 
 config-check:
@@ -45,8 +35,12 @@ config-check:
 run-new-channels:
 	./bin/start-new-channels $(credential)
 
-compile:
-	./node_modules/.bin/babel src/es2015 --out-dir ./compiled --presets es2015
-
 update:
 	$(npm) update
+
+compile: install
+	$(babel) src
+
+watch-compile: install
+	$(babel) src --watch --out-file /dev/null
+

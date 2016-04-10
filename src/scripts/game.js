@@ -1,9 +1,9 @@
 // Description:
 //   遊ぶ
 // Commands:
-//   quest attack {user} - attack
-//   quest cure {user} - cure
-//   quest raise|ザオリク {user} - ふっかつ
+//   attack {user} - attack
+//   cure {user} - cure
+//   raise|ザオリク {user} - ふっかつ
 //
 
 var Cron = require("cron").CronJob;
@@ -15,10 +15,10 @@ var Weapon      = DarkQuest.Weapon;
 var User        = DarkQuest.User;
 var Status      = DarkQuest.Status;
 
-var DarkGame    = require("./lib/DarkGame.js");
-var NegativeWordsRepository = require("./lib/NegativeWordsRepository.js");
+var DarkGame    = require("../game/DarkGame.js");
+var NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
 var negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
-var NegativeWords   = require("./lib/NegativeWords.js");
+var NegativeWords   = require("../game/NegativeWords.js");
 var negativeWords   = new NegativeWords(negativeWordsRepository, console);
 var MAX_HP          = 1000;
 var HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
@@ -106,12 +106,17 @@ module.exports = function(robot) {
     });
 
     robot.hear(/.*/, function(res) {
+        var target = game.findUser(res.message.user.name)
+        if ( !target || target.isDead() ) {
+            return;
+        }
+
         var tokens  = (res.message.tokenized || []).map(function(t) {
             return t.basic_form;
         });
         darkGame.attack(
             shakai, 
-            game.findUser(res.message.user.name),
+            target,
             negativeWords.countNegativeWords(tokens)
         ).messages.forEach(function(m) {
             res.send(m);
