@@ -5,6 +5,7 @@
   "author": "Arata Tanaka <tarata43@yahoo.co.jp>",
   "scripts": {
     "test-js": "./node_modules/.bin/mocha --compilers js:espower-babel/guess,coffee:coffee-script/register --recursive ./test/js -R spec",
+    "test-watch-js": "./node_modules/.bin/mocha --compilers js:espower-babel/guess,coffee:coffee-script/register --recursive ./test/js -R spec --watch",
     "test": "make init && make test"
   },
   "description": "Dark",

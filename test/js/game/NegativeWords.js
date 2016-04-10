@@ -1,8 +1,7 @@
 "use strict"
 const assert = require("power-assert");
 
-const NegativeWords = require("../../../src/scripts/lib/NegativeWords.js");
-
+const NegativeWords = require("../../../src/game/NegativeWords.js");
 
 describe('NegativeWords#countNegativeWords', () => {
     class MockNegativeWordsRepository {
