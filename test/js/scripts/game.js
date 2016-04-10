@@ -1,4 +1,4 @@
-require("./helper.js")
+require("../helper.js")
 
 
 const TextMessage = require('hubot/src/message').TextMessage
