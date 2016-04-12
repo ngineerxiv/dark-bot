@@ -44,7 +44,7 @@ class AttendeeRepositoryOnHubotBrain {
 
     _tokey(event) {
         const d = new Date(event.startAt);
-        return `${d.getYear()}-${d.getMonth()}-${d.getDay()}`;
+        return `${d.getYear()}-${d.getMonth()}-${d.getDate()}`;
     }
 
     _save(attendees) {
