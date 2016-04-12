@@ -19,7 +19,7 @@ const AttendChecker      = require("../mokumoku/AttendChecker.js");
 
 const status = (event) => {
     const start  = new Date(event.startAt);
-    return `${event.title} @ ${event.location}\n 開始: ${start}`;
+    return `${event.title} on ${start.getFullYear()}/${start.getMonth() + 1}/${start.getDate()}`;
 }
 
 module.exports = (robot => {
@@ -48,18 +48,18 @@ module.exports = (robot => {
             robot.logger.info(tokens)
         } else if ( checkResult.isAttend ) {
             const result = eventServer.attend(userName, eventServer.latestEvent());
-            result.changed && res.send(`${userName} joined! \n${status(event)}`)
+            result.changed && res.send(`*${userName} joined!* -> ${status(event)}`)
         } else if ( checkResult.notAttend ) {
             const result = eventServer.leave(userName, eventServer.latestEvent());
-            result.changed && res.send(`${userName} leaved! \n${status(event)}`);
+            result.changed && res.send(`*${userName} leaved!* <- ${status(event)}`);
         }
     })
 
     robot.respond(/moku/i, res => {
         const event     = eventServer.latestEvent();
         if(event !== null) {
-            const message = eventServer.attendees(event).join(",");
-            res.send(`直近のもくもく会: \n${status(event)}\n参加者: ${message}`);
+            const members = eventServer.attendees(event);
+            res.send(`直近のもくもく会 ~~ *${event.title}* ~~\n参加者: ${members.length}人 ( ${members.join(",")} )\n場所: ${event.location}\n備考: ${event.description}`);
         } else {
             res.send("直近のもくもく会は見当たらないなぁ・・・");
         }
