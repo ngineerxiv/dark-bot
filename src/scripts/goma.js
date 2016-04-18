@@ -2,9 +2,7 @@
 //   コスプレ
 //
 // Commands:
-//   hubot goma - 
-//   hubot 炎上 <text> <text> - ババーン
-//   なんだと・・・
+//   hubot goma - やればわかる
 //
 
 "use strict"
