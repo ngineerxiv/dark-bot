@@ -28,14 +28,14 @@ var toGameUser = function(users, savedUsers) {
         var user    = users[id];
         var eq      = new Equipment(new Weapon(30, 12));
         var p       = new Parameter(20, 10);
-        var hp      = (savedUsers && savedUsers[id] && !isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
+        var hp      = (savedUsers && (savedUsers[id] !== undefined) && !isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
         var st      = new Status(game, hp);
         return new User(user.id, user.name, st, eq, p);
     });
 };
 var game        = new Game(0, MAX_HP);
 var darkGame    = new DarkGame(game);
-var shakai      = new User(0, "'社会'", game.defaultStatus(), new Equipment(new Weapon(30, 12)), game.defaultParameter());
+var shakai      = new User(0, "社会", new Status(game, Infinity), new Equipment(new Weapon(30, 12)), game.defaultParameter());
 
 new Cron("0 0 * * 1", function() {
     game.users.forEach(function(u) {
@@ -53,16 +53,12 @@ module.exports = function(robot) {
         robot.brain.set(HUBOT_NODE_QUEST_USERS_HP, us);
     });
 
-    var alreadyLoaded = false;
-    robot.brain.on("loaded", function(data) {
-        if (alreadyLoaded) {
-            return
-        }
+    robot.brain.once("loaded", function(data) {
         var savedUsers  = robot.brain.get(HUBOT_NODE_QUEST_USERS_HP);
         savedUsers      = savedUsers ? savedUsers : {};
         var users       = robot.adapter.client ? toGameUser(robot.adapter.client.users, savedUsers) : [];
+        users.push(shakai);
         game.setUsers(users);
-        alreadyLoaded = true;
     });
 
     robot.hear(/^attack (.+)/i, function(res){
