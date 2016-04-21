@@ -1,4 +1,7 @@
 
+var guessWords = ['そう'];
+var denialWords = ["ない"];
+
 var NegativeWords = function(negativeWordsRepository, logger, defaultNegativeWords) {
     this.negativeWords = defaultNegativeWords ? defaultNegativeWords : [];
 
@@ -23,13 +26,15 @@ var NegativeWords = function(negativeWordsRepository, logger, defaultNegativeWor
         tokens.forEach(function(token, idx) {
             if(self.negativeWords.indexOf(token) !== -1) {
                 negativeCount++;
-                if(idx + 1 < length && tokens[idx + 1] === 'ない') {
-                    negativeCount--;
+                if(idx + 1 < length) {
+                    var token = tokens[idx + 1];
+                    denialWords.indexOf(token) !== -1 && negativeCount--;
+                    guessWords.indexOf(token) !== -1 && negativeCount--;
                 }
             };
 
             if(token === '帰れる' || token === 'かえれる') {
-                if(idx + 1 < length && tokens[idx + 1] === 'ない') {
+                if(idx + 1 < length && denialWords.indexOf(tokens[idx + 1]) !== -1) {
                     negativeCount++;
                 }
             }
