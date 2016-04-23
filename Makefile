@@ -1,9 +1,7 @@
 npm=$(shell which npm)
-mocha=./node_modules/.bin/mocha
-lint=./node_modules/.bin/coffeelint
-babel=./node_modules/.bin/babel
 monitoring-code=local
 credential=./credentials/development
+deploy-branch="master"
 
 .PHONY:test
 
@@ -21,13 +19,15 @@ start:
 start-local: 
 	source $(credential);./bin/hubot
 
-test: install compile lint config-check
+test: install compile config-check
 	npm run test-js
 	test -f settings/hello.json
 	test -f settings/poems.json
 
-lint: install
-	$(lint) scripts -f lintconfig.json
+deploy:
+	git checkout $(deploy-branch)
+	git pull origin $(deploy-branch)
+	$(MAKE) test
 
 config-check:
 	./bin/hubot --config-check
@@ -39,8 +39,8 @@ update:
 	$(npm) update
 
 compile: install
-	$(babel) src
+	$(npm) run compile
 
 watch-compile: install
-	$(babel) src --watch --out-file /dev/null
+	$(npm) run compile-watch
 
