@@ -6,7 +6,8 @@
   "scripts": {
     "test-js": "./node_modules/.bin/mocha --compilers js:espower-babel/guess,coffee:coffee-script/register --recursive ./test/js -R spec",
     "test-watch-js": "./node_modules/.bin/mocha --compilers js:espower-babel/guess,coffee:coffee-script/register --recursive ./test/js -R spec --watch",
-    "test": "make init && make test"
+    "compile":"./node_modules/.bin/babel src",
+    "compile-watch": "./node_modules/.bin/babel src --watch --out-file /dev/null"
   },
   "description": "Dark",
   "dependencies": {
