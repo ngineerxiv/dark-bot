@@ -29,6 +29,9 @@ deploy:
 	git pull origin $(deploy-branch)
 	$(MAKE) test
 
+ping:
+	./bin/ping
+
 config-check:
 	./bin/hubot --config-check
 
