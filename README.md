@@ -34,8 +34,8 @@ make start credential=${credential path. see ./credentials/sample}
 
 ```
 make test
-
-# if you want test runner
-make test-watch
 ```
 
+# More detail...
+
+See Makefile

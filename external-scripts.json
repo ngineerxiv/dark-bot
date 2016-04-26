@@ -1,9 +1,7 @@
 [
   "hubot-help",
   "hubot-google-images",
-  "hubot-maps",
   "hubot-youtube",
-  "hubot-schedule",
   "hubot-nullpo",
   "hubot-moji",
   "hubot-plusplus",

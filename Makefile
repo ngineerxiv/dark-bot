@@ -3,47 +3,58 @@ monitoring-code=local
 credential=./credentials/development
 deploy-branch="master"
 
-.PHONY:test
+.PHONY:test help
 
-all: install
+help:
+	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-init:
-	test -f settings/poems.json || cp settings/poems.json.sample settings/poems.json
 
-install: init
+###########################################
+##########  Development scripts  ##########
+###########################################
+
+test: ## run dark's all tests
+	./bin/hubot --config-check
+	$(npm) run compile
+	$(npm) run test-js
+
+watch-test-js:
+	$(npm) run test-watch-js
+
+watch-compile:
+	$(npm) run compile-watch
+
+install: settings/poems.json ## install dark bot
 	$(npm) install
 
-start: 
+settings/poems.json:
+	cp settings/poems.json.sample settings/poems.json
+
+####################################
+##########  main scripts  ##########
+####################################
+
+start: ## start hubot with slack adapter.
 	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
-start-local: 
+start-local: ## start hubot with shell adapter
 	source $(credential);./bin/hubot
-
-test: install compile config-check
-	npm run test-js
-	test -f settings/hello.json
-	test -f settings/poems.json
-
-deploy:
-	git checkout $(deploy-branch)
-	git pull origin $(deploy-branch)
-	$(MAKE) test
-
-ping:
-	./bin/ping
-
-config-check:
-	./bin/hubot --config-check
 
 run-new-channels:
 	./bin/start-new-channels $(credential)
 
-update:
+######################################
+##########  Jenkins scripts  #########
+######################################
+
+deploy: ## deploy script for Jenkins
+	git checkout $(deploy-branch)
+	git pull origin $(deploy-branch)
+	$(MAKE) test
+
+ping: ## ping script for Jenkins
+	./bin/ping
+
+update: ## update script for Jenkins
 	$(npm) update
-
-compile: install
-	$(npm) run compile
-
-watch-compile: install
-	$(npm) run compile-watch
 
