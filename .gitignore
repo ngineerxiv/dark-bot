@@ -2,7 +2,6 @@ node_modules
 .DS_Store*
 .hubot_history
 settings/poems.json
-settings/relayblog.json
 npm-debug.log
 *.swp
 credentials/development
