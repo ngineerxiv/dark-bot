@@ -1,35 +1,38 @@
-var INITIAL_ATTACK_DAMANE   = 70;
-var INITIAL_CURE_POINT      = 30;
-var EventEmitter = require('eventemitter2').EventEmitter2;
+"use strict";
+
+const INITIAL_ATTACK_DAMANE   = 70;
+const INITIAL_CURE_POINT      = 30;
+const EventEmitter = require('eventemitter2').EventEmitter2;
 const lang = require(`${__dirname}/lang/Ja.js`);
 
-var DarkGame = function(game) {
-    EventEmitter.call(this);
+class DarkGame extends EventEmitter {
+    constructor(game) {
+        super();
+        this.game = game;
+        game.on("user-hp-changed", function(data) {
+            this.emit("game-user-hp-changed", data);
+        });
+    }
 
-    this.attack = function(actor, target, n) {
+    attack(actor, target, n) {
         n = n !== undefined ? n : 1;
-        var messages = [];
+        let messages = [];
         if(actor === null || target === null) {
             messages.push(lang.actor.notarget(actor));
-        } else if (actor.isDead() ) {
+        } else if (actor.isDead()) {
             messages.push(lang.actor.dead(actor));
         } else if (target.isDead()) {
             messages.push(lang.target.dead(target));
         } else {
-            var before      = target.status.currentHp;
-            if ( n === 1 ) {
-            var afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
-
-            var after       = afterStatus.currentHp
-            messages.push(lang.attack.default(actor, target, before, after));
-            } else if (n > 0) {
-                var afterStatus
-                for(var i=0;i<n;i++) {
-                    afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
-                }
-                var after       = afterStatus.currentHp
-                messages.push(lang.attack.multiple(actor, target, before, after));
+            let before      = target.status.currentHp;
+            let afterStatus;
+            for(let i=0;i<n;i++) {
+                afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
             }
+            let after       = afterStatus.currentHp;
+            n === 1 ?
+                messages.push(lang.attack.default(actor, target, before, after)):
+                messages.push(lang.attack.multiple(actor, target, before, after, n));
             if (target.isDead()) {
                 messages.push(lang.target.dead(target))
             }
@@ -39,10 +42,10 @@ var DarkGame = function(game) {
             target: target,
             messages: messages
         };
-    };
+    }
 
-    this.cure = function(actor, target) {
-        var messages = [];
+    cure(actor, target) {
+        let messages = [];
         if(actor === null || target === null) {
             messages.push(lang.actor.notarget(actor));
         } else if (actor.isDead() ) {
@@ -58,10 +61,10 @@ var DarkGame = function(game) {
             target: target,
             messages: messages
         };
-    };
+    }
 
-    this.raise = function(actor, target) {
-        var messages = [];
+    raise(actor, target) {
+        let messages = [];
         if(actor === null || target === null) {
             messages.push(lang.actor.notarget(actor));
         } else if (actor.isDead() ) {
@@ -79,26 +82,16 @@ var DarkGame = function(game) {
             target: target,
             messages: messages
         };
-    };
-
-    this.status = function(target) {
-        var messages = [];
-        if(target === null) {
-            messages.push(lang.actor.notarget(actor));
-        } else {
-            messages.push(lang.status.default(target));
-        };
-        return {
-            target: target,
-            messages: messages
-        };
     }
 
-    game.on("user-hp-changed", function(data) {
-        this.emit("game-user-hp-changed", data);
-    });
+    status(target) {
+        return {
+            target: target,
+            messages: target ?
+                [lang.status.default(target)] :
+                [lang.actor.notarget(actor)]
+        };
+    }
 }
-
-DarkGame.prototype = Object.create(EventEmitter.prototype);
 
 module.exports = DarkGame;

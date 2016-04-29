@@ -126,10 +126,14 @@ module.exports = (robot) => {
         const tokens  = (res.message.tokenized || []).map((t) => {
             return t.basic_form;
         });
+        const count   = negativeWords.countNegativeWords(tokens);
+        if(count <= 0) {
+            return
+        }
         darkGame.attack(
             shakai, 
             target,
-            negativeWords.countNegativeWords(tokens)
+            count
         ).messages.forEach((m) => {
             res.send(m);
         });
