@@ -12,7 +12,7 @@ module.exports = {
   },
   attack: {
     default: (actor, target, before, after) => `[ATTACK] ${actor.name}のこうげき！${target.name}に${(before - after)}のダメージ！ 残り:${after} / ${target.status.maxHp}`,
-    multiple: (actor, target, before, after) => `[ATTACK] ${actor.name}の${n}れんぞくこうげき！${target.name}に${(before - after)}のダメージ！ 残り:${after} / ${target.status.maxHp}`,
+    multiple: (actor, target, before, after, n) => `[ATTACK] ${actor.name}の${n}れんぞくこうげき！${target.name}に${(before - after)}のダメージ！ 残り:${after} / ${target.status.maxHp}`,
     dead: (target) => `[DEAD] ${target.name}はしんでしまった`
   },
   cure: {

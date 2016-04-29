@@ -25,19 +25,14 @@ class DarkGame extends EventEmitter {
             messages.push(lang.target.dead(target));
         } else {
             let before      = target.status.currentHp;
-            if ( n === 1 ) {
-            let afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
-
-            let after       = afterStatus.currentHp
-            messages.push(lang.attack.default(actor, target, before, after));
-            } else if (n > 0) {
-                let afterStatus
-                for(let i=0;i<n;i++) {
-                    afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
-                }
-                let after       = afterStatus.currentHp
-                messages.push(lang.attack.multiple(actor, target, before, after));
+            let afterStatus;
+            for(let i=0;i<n;i++) {
+                afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
             }
+            let after       = afterStatus.currentHp;
+            n === 1 ?
+                messages.push(lang.attack.default(actor, target, before, after)):
+                messages.push(lang.attack.multiple(actor, target, before, after, n));
             if (target.isDead()) {
                 messages.push(lang.target.dead(target))
             }
@@ -90,15 +85,11 @@ class DarkGame extends EventEmitter {
     }
 
     status(target) {
-        var messages = [];
-        if(target === null) {
-            messages.push(lang.actor.notarget(actor));
-        } else {
-            messages.push(lang.status.default(target));
-        };
         return {
             target: target,
-            messages: messages
+            messages: target ?
+                [lang.status.default(target)] :
+                [lang.actor.notarget(actor)]
         };
     }
 }
