@@ -9,47 +9,21 @@
 "use strict"
 
 const Cron      = require("cron").CronJob;
-const DarkQuest = require("node-quest");
-const Game      = DarkQuest.Game;
-const Equipment = DarkQuest.Equipment;
-const Parameter = DarkQuest.Parameter;
-const Weapon    = DarkQuest.Weapon;
-const User      = DarkQuest.User;
-const Status    = DarkQuest.Status;
-const HitRate   = DarkQuest.HitRate;
-const Spell     = DarkQuest.Spell;
-const AttackEffect = DarkQuest.AttackEffect;
+const Game      = require("node-quest").Game;
 const DarkGame  = require("../game/DarkGame.js");
-const NegativeWords   = require("../game/NegativeWords.js");
+const SpellRepository = require("../game/SpellRepository.js");
+const UserRepository  = require("../game/UserRepository.js");
 const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
-const lang      = require("../game/lang/Ja.js");
-
-const spells    = [
-    new Spell("アルテマ", 5, new AttackEffect(800)),
-    new Spell("メラ", 5, new AttackEffect(20)),
-    new Spell("ザケル", 5, new AttackEffect(50)),
-    new Spell("異議あり", 5, new AttackEffect(200)),
-    new Spell("黒棺", 5, new AttackEffect(Infinity))
-];
+const MonsterRepository = require("../game/MonsterRepository.js");
+const NegativeWords   = require("../game/NegativeWords.js");
 
 const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
 const negativeWords   = new NegativeWords(negativeWordsRepository, console);
-const MAX_HP          = 1000;
-const HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
-
-const toGameUser = (users, savedUsers) => {
-    return Object.keys(users).map((id) => {
-        const user    = users[id];
-        const eq      = new Equipment(new Weapon(30, 12, new HitRate(100)));
-        const p       = new Parameter(20, 10);
-        const hp      = (savedUsers && savedUsers[id] && !isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
-        const st      = new Status(game, hp, MAX_HP, Infinity, Infinity);
-        return new User(user.id, user.name, st, eq, p, spells);
-    });
-};
+const spellRepository = new SpellRepository();
+const monsterRepository = new MonsterRepository(spellRepository)
 const game        = new Game();
 const darkGame    = new DarkGame(game);
-const shakai      = new User(0, "'社会'", game.defaultStatus(), new Equipment(new Weapon(30, 12, new HitRate(100))), game.defaultParameter());
+const lang      = require("../game/lang/Ja.js");
 
 new Cron("0 0 * * 1", () => {
     game.users.forEach((u) => {
@@ -59,18 +33,15 @@ new Cron("0 0 * * 1", () => {
 
 module.exports = (robot) => {
 
+    const userRepository  = new UserRepository(robot, spellRepository);
+    const shakai = monsterRepository.getByName("社会");
+
     darkGame.on("game-user-hp-changed", (data) => {
-        const us = {};
-        game.users.forEach((u) => {
-            us[u.id] = u.status.currentHp;
-        });
-        robot.brain.set(HUBOT_NODE_QUEST_USERS_HP, us);
+        return userRepository.save(game.users);
     });
 
     robot.brain.once("loaded", (data) => {
-        const savedUsers  = robot.brain.get(HUBOT_NODE_QUEST_USERS_HP) || {};
-        const users       = robot.adapter.client ? toGameUser(robot.adapter.client.users, savedUsers) : [];
-        game.setUsers(users);
+        game.setUsers(userRepository.get().concat(monsterRepository.get()));
     });
 
     robot.hear(/^attack (.+)/i, (res) => {
@@ -110,14 +81,18 @@ module.exports = (robot) => {
     });
 
     robot.hear(/^status (.+)/i, (res) => {
-        darkGame.status(
-            game.findUser(res.match[1])
-        ).messages.forEach((m) => {
-            res.send(m);
-        });
+        const target    = game.findUser(res.match[1])
+        const message   = target ?
+            lang.status.default(target) :
+            lang.actor.notarget(target);
+        res.send(message)
     });
 
     robot.hear(/.*/, (res) => {
+        if ( shakai === null ) {
+            return;
+        }
+        shakai.isDead() ? shakai.fullCare(shakai): null;
         const target = game.findUser(res.message.user.name)
         if ( !target || target.isDead() ) {
             return;
@@ -171,7 +146,9 @@ module.exports = (robot) => {
         targets.forEach((user, idx) => {
             const before = targetBeforeHps[idx]
             const after  = result[idx].currentHp;
-            res.send(lang.target.damaged(user, before, after))
+            let point = before - after;
+            point = isNaN(point) ? 0 : point;
+            res.send(lang.target.damaged(user, point))
             if(after === 0) {
                 res.send(lang.attack.dead(user))
             }

@@ -1,7 +1,5 @@
 "use strict";
 
-const INITIAL_ATTACK_DAMANE   = 70;
-const INITIAL_CURE_POINT      = 30;
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const lang = require(`${__dirname}/lang/Ja.js`);
 
@@ -27,12 +25,14 @@ class DarkGame extends EventEmitter {
             let before      = target.status.currentHp;
             let afterStatus;
             for(let i=0;i<n;i++) {
-                afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
+                afterStatus = actor.attack(target);
             }
             let after       = afterStatus.currentHp;
+            let point = before - after;
+            point = isNaN(point) ? 0 : point;
             n === 1 ?
-                messages.push(lang.attack.default(actor, target, before, after)):
-                messages.push(lang.attack.multiple(actor, target, before, after, n));
+                messages.push(lang.attack.default(actor, target, point)):
+                messages.push(lang.attack.multiple(actor, target, point, n));
             if (target.isDead()) {
                 messages.push(lang.target.dead(target))
             }
@@ -53,7 +53,7 @@ class DarkGame extends EventEmitter {
         } else if (target.isDead()) {
             messages.push(lang.target.noeffect(target));
         } else {
-            actor.cure(target, INITIAL_CURE_POINT);
+            actor.cure(target);
             messages.push(lang.cure.default(target));
         };
         return {
@@ -81,15 +81,6 @@ class DarkGame extends EventEmitter {
             actor: actor,
             target: target,
             messages: messages
-        };
-    }
-
-    status(target) {
-        return {
-            target: target,
-            messages: target ?
-                [lang.status.default(target)] :
-                [lang.actor.notarget(actor)]
         };
     }
 }
