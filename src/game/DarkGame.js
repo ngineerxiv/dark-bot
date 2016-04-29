@@ -1,7 +1,5 @@
 "use strict";
 
-const INITIAL_ATTACK_DAMANE   = 70;
-const INITIAL_CURE_POINT      = 30;
 const EventEmitter = require('eventemitter2').EventEmitter2;
 const lang = require(`${__dirname}/lang/Ja.js`);
 
@@ -27,7 +25,7 @@ class DarkGame extends EventEmitter {
             let before      = target.status.currentHp;
             let afterStatus;
             for(let i=0;i<n;i++) {
-                afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
+                afterStatus = actor.attack(target, 0);
             }
             let after       = afterStatus.currentHp;
             n === 1 ?
@@ -53,7 +51,7 @@ class DarkGame extends EventEmitter {
         } else if (target.isDead()) {
             messages.push(lang.target.noeffect(target));
         } else {
-            actor.cure(target, INITIAL_CURE_POINT);
+            actor.cure(target, 0);
             messages.push(lang.cure.default(target));
         };
         return {

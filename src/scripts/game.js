@@ -38,8 +38,8 @@ new Cron("0 0 * * 1", () => {
 }, null, true, "Asia/Tokyo");
 
 function factoryUser(id, name, status, spells) {
-    const eq      = new Equipment(new Weapon(30, 12, new HitRate(100)));
-    const p       = new Parameter(20, 10);
+    const eq      = new Equipment(new Weapon(100, 12, new HitRate(100)));
+    const p       = new Parameter(50, 10);
     return new User(id, name, status, eq, p, spells);
 }
 
