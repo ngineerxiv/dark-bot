@@ -1,11 +1,14 @@
-var request = require("request");
+const request = require("request");
 
-var NegativeWordsRepositoryWithHttp = function(url) {
-    this.get = function(callback, errorCallback) {
-        request(url, function(err, res, body) {
+class NegativeWordsRepositoryWithHttp {
+    constructor(url) {
+        this.url = url;
+    }
+
+    get(callback, errorCallback) {
+        request(this.url, (err, res, body) => {
             err && errorCallback(err);
-            var json = JSON.parse(body);
-            callback(json);
+            callback(JSON.parse(body));
         });
     };
 };
