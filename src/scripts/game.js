@@ -17,24 +17,15 @@ const Weapon    = DarkQuest.Weapon;
 const User      = DarkQuest.User;
 const Status    = DarkQuest.Status;
 const HitRate   = DarkQuest.HitRate;
-const Spell     = DarkQuest.Spell;
-const AttackEffect = DarkQuest.AttackEffect;
 const DarkGame  = require("../game/DarkGame.js");
+const SpellRepository = require("../game/SpellRepository.js");
 const NegativeWords   = require("../game/NegativeWords.js");
 const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
 const lang      = require("../game/lang/Ja.js");
-
-const spells    = [
-    new Spell("アルテマ", 5, new AttackEffect(800)),
-    new Spell("メラ", 5, new AttackEffect(20)),
-    new Spell("ザケル", 5, new AttackEffect(50)),
-    new Spell("異議あり", 5, new AttackEffect(200)),
-    new Spell("黒棺", 5, new AttackEffect(Infinity))
-];
-
 const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
 const negativeWords   = new NegativeWords(negativeWordsRepository, console);
-const MAX_HP          = 1000;
+const spellRepository = new SpellRepository();
+const MAX_HP          = 3000;
 const HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
 
 const toGameUser = (users, savedUsers) => {
@@ -44,7 +35,7 @@ const toGameUser = (users, savedUsers) => {
         const p       = new Parameter(20, 10);
         const hp      = (savedUsers && savedUsers[id] && !isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
         const st      = new Status(game, hp, MAX_HP, Infinity, Infinity);
-        return new User(user.id, user.name, st, eq, p, spells);
+        return new User(user.id, user.name, st, eq, p, spellRepository.get());
     });
 };
 const game        = new Game();
