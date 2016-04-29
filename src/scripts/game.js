@@ -8,17 +8,21 @@
 
 "use strict"
 
-var Cron = require("cron").CronJob;
-var DarkQuest   = require("node-quest");
-var Game        = DarkQuest.Game;
-var Equipment   = DarkQuest.Equipment;
-var Parameter   = DarkQuest.Parameter;
-var Weapon      = DarkQuest.Weapon;
-var User        = DarkQuest.User;
-var Status      = DarkQuest.Status;
+const Cron      = require("cron").CronJob;
+const DarkQuest = require("node-quest");
+const Game      = DarkQuest.Game;
+const Equipment = DarkQuest.Equipment;
+const Parameter = DarkQuest.Parameter;
+const Weapon    = DarkQuest.Weapon;
+const User      = DarkQuest.User;
+const Status    = DarkQuest.Status;
 const HitRate   = DarkQuest.HitRate;
 const Spell     = DarkQuest.Spell;
 const AttackEffect = DarkQuest.AttackEffect;
+const DarkGame  = require("../game/DarkGame.js");
+const NegativeWords   = require("../game/NegativeWords.js");
+const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
+
 const spells    = [
     new Spell("アルテマ", 5, new AttackEffect(800)),
     new Spell("メラ", 5, new AttackEffect(20)),
@@ -27,114 +31,105 @@ const spells    = [
     new Spell("黒棺", 5, new AttackEffect(Infinity))
 ];
 
-var DarkGame    = require("../game/DarkGame.js");
-var NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
-var negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
-var NegativeWords   = require("../game/NegativeWords.js");
-var negativeWords   = new NegativeWords(negativeWordsRepository, console);
-var MAX_HP          = 1000;
-var HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
+const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
+const negativeWords   = new NegativeWords(negativeWordsRepository, console);
+const MAX_HP          = 1000;
+const HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
 
-var toGameUser = function(users, savedUsers) {
-    return Object.keys(users).map(function(id) {
-        var user    = users[id];
-        var eq      = new Equipment(new Weapon(30, 12, new HitRate(100)));
-        var p       = new Parameter(20, 10);
-        var hp      = (savedUsers && savedUsers[id] && !isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
-        var st      = new Status(game, hp, MAX_HP, Infinity, Infinity);
+const toGameUser = (users, savedUsers) => {
+    return Object.keys(users).map((id) => {
+        const user    = users[id];
+        const eq      = new Equipment(new Weapon(30, 12, new HitRate(100)));
+        const p       = new Parameter(20, 10);
+        const hp      = (savedUsers && savedUsers[id] && !isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
+        const st      = new Status(game, hp, MAX_HP, Infinity, Infinity);
         return new User(user.id, user.name, st, eq, p, spells);
     });
 };
-var game        = new Game();
-var darkGame    = new DarkGame(game);
-var shakai      = new User(0, "'社会'", game.defaultStatus(), new Equipment(new Weapon(30, 12, new HitRate(100))), game.defaultParameter());
+const game        = new Game();
+const darkGame    = new DarkGame(game);
+const shakai      = new User(0, "'社会'", game.defaultStatus(), new Equipment(new Weapon(30, 12, new HitRate(100))), game.defaultParameter());
 
-new Cron("0 0 * * 1", function() {
-    game.users.forEach(function(u) {
+new Cron("0 0 * * 1", () => {
+    game.users.forEach((u) => {
         u.fullCare(u);
     });
 }, null, true, "Asia/Tokyo");
 
-module.exports = function(robot) {
+module.exports = (robot) => {
 
-    darkGame.on("game-user-hp-changed", function(data) {
-        var us = {};
-        game.users.forEach(function(u) {
+    darkGame.on("game-user-hp-changed", (data) => {
+        const us = {};
+        game.users.forEach((u) => {
             us[u.id] = u.status.currentHp;
         });
         robot.brain.set(HUBOT_NODE_QUEST_USERS_HP, us);
     });
 
-    var alreadyLoaded = false;
-    robot.brain.on("loaded", function(data) {
-        if (alreadyLoaded) {
-            return
-        }
-        var savedUsers  = robot.brain.get(HUBOT_NODE_QUEST_USERS_HP);
-        savedUsers      = savedUsers ? savedUsers : {};
-        var users       = robot.adapter.client ? toGameUser(robot.adapter.client.users, savedUsers) : [];
+    robot.brain.once("loaded", (data) => {
+        const savedUsers  = robot.brain.get(HUBOT_NODE_QUEST_USERS_HP) || {};
+        const users       = robot.adapter.client ? toGameUser(robot.adapter.client.users, savedUsers) : [];
         game.setUsers(users);
-        alreadyLoaded = true;
     });
 
-    robot.hear(/^attack (.+)/i, function(res){
+    robot.hear(/^attack (.+)/i, (res) => {
         darkGame.attack(
             game.findUser(res.message.user.name),
             game.findUser(res.match[1])
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
 
-    robot.hear(/^cure (.+)/i, function(res){
+    robot.hear(/^cure (.+)/i, (res) => {
         darkGame.cure(
             game.findUser(res.message.user.name),
             game.findUser(res.match[1])
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
 
-    robot.hear(/^ザオリク (.+)/i, function(res) {
+    robot.hear(/^ザオリク (.+)/i, (res) => {
         darkGame.raise(
             game.findUser(res.message.user.name),
             game.findUser(res.match[1])
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
 
-    robot.hear(/^raise (.+)/i, function(res) {
+    robot.hear(/^raise (.+)/i, (res) => {
         darkGame.raise(
             game.findUser(res.message.user.name),
             game.findUser(res.match[1])
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
 
-    robot.hear(/^status (.+)/i, function(res) {
+    robot.hear(/^status (.+)/i, (res) => {
         darkGame.status(
             game.findUser(res.match[1])
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
 
-    robot.hear(/.*/, function(res) {
-        var target = game.findUser(res.message.user.name)
+    robot.hear(/.*/, (res) => {
+        const target = game.findUser(res.message.user.name)
         if ( !target || target.isDead() ) {
             return;
         }
 
-        var tokens  = (res.message.tokenized || []).map(function(t) {
+        const tokens  = (res.message.tokenized || []).map((t) => {
             return t.basic_form;
         });
         darkGame.attack(
             shakai, 
             target,
             negativeWords.countNegativeWords(tokens)
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
@@ -169,8 +164,8 @@ module.exports = function(robot) {
         }
         res.send(`[ATTACK] ${actor.name} は ${spellName} をとなえた！`);
         targets.forEach((user, idx) => {
-            let before = targetBeforeHps[idx]
-            let after  = result[idx].currentHp;
+            const before = targetBeforeHps[idx]
+            const after  = result[idx].currentHp;
             res.send(`${user.name}に ${(before - after)} のダメージ！ 残り: ${after} / ${user.status.maxHp}`)
             if(after === 0) {
                 res.send(`[DEAD] ${user.name}はしんでしまった`)
