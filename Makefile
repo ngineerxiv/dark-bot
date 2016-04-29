@@ -13,7 +13,7 @@ help:
 ##########  Development scripts  ##########
 ###########################################
 
-test: ## run dark's all tests
+test: settings/poems.json ## run dark's all tests
 	./bin/hubot --config-check
 	$(npm) run compile
 	$(npm) run test-js
@@ -28,7 +28,7 @@ install: settings/poems.json ## install dark bot
 	$(npm) install
 
 settings/poems.json:
-	cp settings/poems.json.sample settings/poems.json
+	cp -f settings/poems.json.sample settings/poems.json
 
 ####################################
 ##########  main scripts  ##########
