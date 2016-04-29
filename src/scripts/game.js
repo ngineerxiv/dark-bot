@@ -22,6 +22,7 @@ const AttackEffect = DarkQuest.AttackEffect;
 const DarkGame  = require("../game/DarkGame.js");
 const NegativeWords   = require("../game/NegativeWords.js");
 const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
+const lang      = require("../game/lang/Ja.js");
 
 const spells    = [
     new Spell("アルテマ", 5, new AttackEffect(800)),
@@ -155,20 +156,20 @@ module.exports = (robot) => {
         }
 
         if(targets.length === 0) {
-            return res.send("しかし だれもいなかった・・・");
+            return res.send(lang.actor.notarget(actor));
         }
         const targetBeforeHps = targets.map((u) => u.status.currentHp);
         const result    = actor.cast(spell, targets);
         if(!result) {
-            return res.send("MPが足りない！")
+            return res.send(lang.actor.nomagicpoint(actor));
         }
-        res.send(`[ATTACK] ${actor.name} は ${spellName} をとなえた！`);
+        res.send(lang.spell.cast(actor, spellName));
         targets.forEach((user, idx) => {
             const before = targetBeforeHps[idx]
             const after  = result[idx].currentHp;
-            res.send(`${user.name}に ${(before - after)} のダメージ！ 残り: ${after} / ${user.status.maxHp}`)
+            res.send(lang.target.damaged(user, before, after))
             if(after === 0) {
-                res.send(`[DEAD] ${user.name}はしんでしまった`)
+                res.send(lang.attack.dead(user))
             }
         });
     });
