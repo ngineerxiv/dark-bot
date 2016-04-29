@@ -34,6 +34,8 @@ new Cron("0 0 * * 1", () => {
 module.exports = (robot) => {
 
     const userRepository  = new UserRepository(robot, spellRepository);
+    const shakai = monsterRepository.getByName("社会");
+
     darkGame.on("game-user-hp-changed", (data) => {
         return userRepository.save(game.users);
     });
@@ -82,15 +84,15 @@ module.exports = (robot) => {
         const target    = game.findUser(res.match[1])
         const message   = target ?
             lang.status.default(target) :
-            lang.actor.notarget(actor);
+            lang.actor.notarget(target);
         res.send(message)
     });
 
     robot.hear(/.*/, (res) => {
-        const shakai = monsterRepository.getByName("社会");
         if ( shakai === null ) {
             return;
         }
+        shakai.isDead() ? shakai.fullCare(shakai): null;
         const target = game.findUser(res.message.user.name)
         if ( !target || target.isDead() ) {
             return;
