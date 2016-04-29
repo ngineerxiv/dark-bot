@@ -21,14 +21,14 @@ var DarkGame = function(game) {
             var afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
 
             var after       = afterStatus.currentHp
-            messages.push("[ATTACK] " + actor.name + "のこうげき！" + target.name + "に" + (before - after) + "のダメージ！ 残り:" + after + " / " + game.maxHp);
+            messages.push("[ATTACK] " + actor.name + "のこうげき！" + target.name + "に" + (before - after) + "のダメージ！ 残り:" + after + " / " + target.status.maxHp);
             } else if (n > 0) {
                 var afterStatus
                 for(var i=0;i<n;i++) {
                     afterStatus = actor.attack(target, INITIAL_ATTACK_DAMANE);
                 }
                 var after       = afterStatus.currentHp
-                messages.push("[ATTACK] " + actor.name + "の" + n + "れんぞくこうげき！" + target.name + "に" + (before - after) + "のダメージ！ 残り:" + after + " / " + game.maxHp);
+                messages.push("[ATTACK] " + actor.name + "の" + n + "れんぞくこうげき！" + target.name + "に" + (before - after) + "のダメージ！ 残り:" + after + " / " + target.status.maxHp);
             }
             if (target.isDead()) {
                 messages.push("[DEAD] " + target.name + "はしんでしまった")
@@ -51,7 +51,7 @@ var DarkGame = function(game) {
             messages.push( "[DEAD] しかし こうかがなかった・・・");
         } else {
             actor.cure(target, INITIAL_CURE_POINT);
-            messages.push("[CURE] " + target.name + "のキズがかいふくした！残り: " + target.status.currentHp + " / " + game.maxHp);
+            messages.push("[CURE] " + target.name + "のキズがかいふくした！残り: " + target.status.currentHp + " / " + target.status.maxHp);
         };
         return {
             actor: actor,
@@ -86,7 +86,7 @@ var DarkGame = function(game) {
         if(target === null) {
             messages.push("しかし だれもいなかった・・・");
         } else {
-            messages.push("現在のHP: " + target.status.currentHp + " / " + game.maxHp);
+            messages.push("現在のHP: " + target.status.currentHp + " / " + target.status.maxHp);
         };
         return {
             target: target,
