@@ -102,7 +102,8 @@ module.exports = (robot) => {
     });
 
     robot.hear(/^status (.+)/i, (res) => {
-        const message = target ?
+        const target    = game.findUser(res.match[1])
+        const message   = target ?
             lang.status.default(target) :
             lang.actor.notarget(actor);
         res.send(message)
