@@ -59,7 +59,7 @@ module.exports = (robot) => {
         const users = Object.keys(robot.adapter.client.users).map((id) => {
             const user  = us[id];
             const hp    = (!isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
-            const st    = new Status(game, hp, MAX_HP, Infinity, Infinity);
+            const st    = new Status(hp, MAX_HP, Infinity, Infinity);
             return factoryUser(user.id, user.name, st, spellRepository.get());
         })
         game.setUsers(users);

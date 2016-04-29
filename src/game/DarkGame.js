@@ -25,7 +25,7 @@ class DarkGame extends EventEmitter {
             let before      = target.status.currentHp;
             let afterStatus;
             for(let i=0;i<n;i++) {
-                afterStatus = actor.attack(target, 0);
+                afterStatus = actor.attack(target);
             }
             let after       = afterStatus.currentHp;
             n === 1 ?
@@ -51,7 +51,7 @@ class DarkGame extends EventEmitter {
         } else if (target.isDead()) {
             messages.push(lang.target.noeffect(target));
         } else {
-            actor.cure(target, 0);
+            actor.cure(target);
             messages.push(lang.cure.default(target));
         };
         return {
