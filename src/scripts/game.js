@@ -8,7 +8,7 @@
 
 "use strict"
 
-const Cron = require("cron").CronJob;
+const Cron      = require("cron").CronJob;
 const DarkQuest = require("node-quest");
 const Game      = DarkQuest.Game;
 const Equipment = DarkQuest.Equipment;
@@ -36,8 +36,8 @@ const negativeWords   = new NegativeWords(negativeWordsRepository, console);
 const MAX_HP          = 1000;
 const HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
 
-const toGameUser = function(users, savedUsers) {
-    return Object.keys(users).map(function(id) {
+const toGameUser = (users, savedUsers) => {
+    return Object.keys(users).map((id) => {
         const user    = users[id];
         const eq      = new Equipment(new Weapon(30, 12, new HitRate(100)));
         const p       = new Parameter(20, 10);
@@ -50,17 +50,17 @@ const game        = new Game();
 const darkGame    = new DarkGame(game);
 const shakai      = new User(0, "'社会'", game.defaultStatus(), new Equipment(new Weapon(30, 12, new HitRate(100))), game.defaultParameter());
 
-new Cron("0 0 * * 1", function() {
-    game.users.forEach(function(u) {
+new Cron("0 0 * * 1", () => {
+    game.users.forEach((u) => {
         u.fullCare(u);
     });
 }, null, true, "Asia/Tokyo");
 
-module.exports = function(robot) {
+module.exports = (robot) => {
 
-    darkGame.on("game-user-hp-changed", function(data) {
+    darkGame.on("game-user-hp-changed", (data) => {
         const us = {};
-        game.users.forEach(function(u) {
+        game.users.forEach((u) => {
             us[u.id] = u.status.currentHp;
         });
         robot.brain.set(HUBOT_NODE_QUEST_USERS_HP, us);
@@ -76,7 +76,7 @@ module.exports = function(robot) {
         darkGame.attack(
             game.findUser(res.message.user.name),
             game.findUser(res.match[1])
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
@@ -85,7 +85,7 @@ module.exports = function(robot) {
         darkGame.cure(
             game.findUser(res.message.user.name),
             game.findUser(res.match[1])
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
@@ -94,7 +94,7 @@ module.exports = function(robot) {
         darkGame.raise(
             game.findUser(res.message.user.name),
             game.findUser(res.match[1])
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
@@ -103,7 +103,7 @@ module.exports = function(robot) {
         darkGame.raise(
             game.findUser(res.message.user.name),
             game.findUser(res.match[1])
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
@@ -111,7 +111,7 @@ module.exports = function(robot) {
     robot.hear(/^status (.+)/i, (res) => {
         darkGame.status(
             game.findUser(res.match[1])
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
@@ -122,14 +122,14 @@ module.exports = function(robot) {
             return;
         }
 
-        const tokens  = (res.message.tokenized || []).map(function(t) {
+        const tokens  = (res.message.tokenized || []).map((t) => {
             return t.basic_form;
         });
         darkGame.attack(
             shakai, 
             target,
             negativeWords.countNegativeWords(tokens)
-        ).messages.forEach(function(m) {
+        ).messages.forEach((m) => {
             res.send(m);
         });
     });
