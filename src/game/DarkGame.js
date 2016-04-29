@@ -28,9 +28,11 @@ class DarkGame extends EventEmitter {
                 afterStatus = actor.attack(target);
             }
             let after       = afterStatus.currentHp;
+            let point = before - after;
+            point = isNaN(point) ? 0 : point;
             n === 1 ?
-                messages.push(lang.attack.default(actor, target, before, after)):
-                messages.push(lang.attack.multiple(actor, target, before, after, n));
+                messages.push(lang.attack.default(actor, target, point)):
+                messages.push(lang.attack.multiple(actor, target, point, n));
             if (target.isDead()) {
                 messages.push(lang.target.dead(target))
             }

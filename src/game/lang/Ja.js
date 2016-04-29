@@ -8,11 +8,11 @@ module.exports = {
   target: {
     dead: (target) => `[DEAD] こうかがない・・・${target.name}はただのしかばねのようだ・・・`,
     noeffect: (target) => "[DEAD] しかし こうかがなかった・・・",
-    damaged: (target, before, after) => `${target.name}に ${(before - after)} のダメージ！ 残り: ${after} / ${target.status.maxHp}`
+    damaged: (target, point) => `${target.name}に ${point} のダメージ！ 残り: ${target.status.currentHp} / ${target.status.maxHp}`
   },
   attack: {
-    default: (actor, target, before, after) => `[ATTACK] ${actor.name}のこうげき！${target.name}に${(before - after)}のダメージ！ 残り:${after} / ${target.status.maxHp}`,
-    multiple: (actor, target, before, after, n) => `[ATTACK] ${actor.name}の${n}れんぞくこうげき！${target.name}に${(before - after)}のダメージ！ 残り:${after} / ${target.status.maxHp}`,
+    default: (actor, target, point) => `[ATTACK] ${actor.name}のこうげき！${target.name}に${point}のダメージ！ 残り:${target.status.currentHp} / ${target.status.maxHp}`,
+    multiple: (actor, target, point, n) => `[ATTACK] ${actor.name}の${n}れんぞくこうげき！${target.name}に${point}のダメージ！ 残り:${target.status.currentHp} / ${target.status.maxHp}`,
     dead: (target) => `[DEAD] ${target.name}はしんでしまった`
   },
   cure: {

@@ -9,23 +9,20 @@
 "use strict"
 
 const Cron      = require("cron").CronJob;
-const DarkQuest = require("node-quest");
-const Game      = DarkQuest.Game;
-const Equipment = DarkQuest.Equipment;
-const Weapon    = DarkQuest.Weapon;
-const User      = DarkQuest.User;
-const HitRate   = DarkQuest.HitRate;
+const Game      = require("node-quest").Game;
 const DarkGame  = require("../game/DarkGame.js");
 const SpellRepository = require("../game/SpellRepository.js");
 const UserRepository  = require("../game/UserRepository.js");
 const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
-const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
+const MonsterRepository = require("../game/MonsterRepository.js");
 const NegativeWords   = require("../game/NegativeWords.js");
+
+const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
 const negativeWords   = new NegativeWords(negativeWordsRepository, console);
 const spellRepository = new SpellRepository();
+const monsterRepository = new MonsterRepository(spellRepository)
 const game        = new Game();
 const darkGame    = new DarkGame(game);
-const shakai      = new User(0, "'社会'", game.defaultStatus(), new Equipment(new Weapon(30, 12, new HitRate(100))), game.defaultParameter());
 const lang      = require("../game/lang/Ja.js");
 
 new Cron("0 0 * * 1", () => {
@@ -42,7 +39,7 @@ module.exports = (robot) => {
     });
 
     robot.brain.once("loaded", (data) => {
-        game.setUsers(userRepository.get());
+        game.setUsers(userRepository.get().concat(monsterRepository.get()));
     });
 
     robot.hear(/^attack (.+)/i, (res) => {
@@ -90,6 +87,10 @@ module.exports = (robot) => {
     });
 
     robot.hear(/.*/, (res) => {
+        const shakai = monsterRepository.getByName("社会");
+        if ( shakai === null ) {
+            return;
+        }
         const target = game.findUser(res.message.user.name)
         if ( !target || target.isDead() ) {
             return;
@@ -143,7 +144,9 @@ module.exports = (robot) => {
         targets.forEach((user, idx) => {
             const before = targetBeforeHps[idx]
             const after  = result[idx].currentHp;
-            res.send(lang.target.damaged(user, before, after))
+            let point = before - after;
+            point = isNaN(point) ? 0 : point;
+            res.send(lang.target.damaged(user, point))
             if(after === 0) {
                 res.send(lang.attack.dead(user))
             }
