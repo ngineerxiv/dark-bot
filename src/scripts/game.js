@@ -19,34 +19,29 @@ const Status    = DarkQuest.Status;
 const HitRate   = DarkQuest.HitRate;
 const DarkGame  = require("../game/DarkGame.js");
 const SpellRepository = require("../game/SpellRepository.js");
-const NegativeWords   = require("../game/NegativeWords.js");
 const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
-const lang      = require("../game/lang/Ja.js");
 const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
+const NegativeWords   = require("../game/NegativeWords.js");
 const negativeWords   = new NegativeWords(negativeWordsRepository, console);
 const spellRepository = new SpellRepository();
 const MAX_HP          = 3000;
 const HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
-
-const toGameUser = (users, savedUsers) => {
-    return Object.keys(users).map((id) => {
-        const user    = users[id];
-        const eq      = new Equipment(new Weapon(30, 12, new HitRate(100)));
-        const p       = new Parameter(20, 10);
-        const hp      = (savedUsers && savedUsers[id] && !isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
-        const st      = new Status(game, hp, MAX_HP, Infinity, Infinity);
-        return new User(user.id, user.name, st, eq, p, spellRepository.get());
-    });
-};
 const game        = new Game();
 const darkGame    = new DarkGame(game);
 const shakai      = new User(0, "'社会'", game.defaultStatus(), new Equipment(new Weapon(30, 12, new HitRate(100))), game.defaultParameter());
+const lang      = require("../game/lang/Ja.js");
 
 new Cron("0 0 * * 1", () => {
     game.users.forEach((u) => {
         u.fullCare(u);
     });
 }, null, true, "Asia/Tokyo");
+
+function factoryUser(id, name, status, spells) {
+    const eq      = new Equipment(new Weapon(30, 12, new HitRate(100)));
+    const p       = new Parameter(20, 10);
+    return new User(id, name, status, eq, p, spells);
+}
 
 module.exports = (robot) => {
 
@@ -60,7 +55,13 @@ module.exports = (robot) => {
 
     robot.brain.once("loaded", (data) => {
         const savedUsers  = robot.brain.get(HUBOT_NODE_QUEST_USERS_HP) || {};
-        const users       = robot.adapter.client ? toGameUser(robot.adapter.client.users, savedUsers) : [];
+        const us  = robot.adapter.client.users;
+        const users = Object.keys(robot.adapter.client.users).map((id) => {
+            const user  = us[id];
+            const hp    = (!isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
+            const st    = new Status(game, hp, MAX_HP, Infinity, Infinity);
+            return factoryUser(user.id, user.name, st, spellRepository.get());
+        })
         game.setUsers(users);
     });
 
@@ -101,11 +102,10 @@ module.exports = (robot) => {
     });
 
     robot.hear(/^status (.+)/i, (res) => {
-        darkGame.status(
-            game.findUser(res.match[1])
-        ).messages.forEach((m) => {
-            res.send(m);
-        });
+        const message = target ?
+            lang.status.default(target) :
+            lang.actor.notarget(actor);
+        res.send(message)
     });
 
     robot.hear(/.*/, (res) => {

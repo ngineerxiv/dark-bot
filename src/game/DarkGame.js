@@ -83,15 +83,6 @@ class DarkGame extends EventEmitter {
             messages: messages
         };
     }
-
-    status(target) {
-        return {
-            target: target,
-            messages: target ?
-                [lang.status.default(target)] :
-                [lang.actor.notarget(actor)]
-        };
-    }
 }
 
 module.exports = DarkGame;
