@@ -20,7 +20,7 @@ const NegativeWords   = require("../game/NegativeWords.js");
 const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
 const negativeWords   = new NegativeWords(negativeWordsRepository, console);
 const spellRepository = new SpellRepository();
-const monsterRepository = new MonsterRepository(spellRepository)
+const monsterRepository = new MonsterRepository();
 const game        = new Game();
 const darkGame    = new DarkGame(game);
 const lang      = require("../game/lang/Ja.js");
@@ -33,7 +33,7 @@ new Cron("0 0 * * 1", () => {
 
 module.exports = (robot) => {
 
-    const userRepository  = new UserRepository(robot, spellRepository);
+    const userRepository  = new UserRepository(robot);
     const shakai = monsterRepository.getByName("社会");
 
     darkGame.on("game-user-hp-changed", (data) => {
@@ -41,7 +41,9 @@ module.exports = (robot) => {
     });
 
     robot.brain.once("loaded", (data) => {
-        game.setUsers(userRepository.get().concat(monsterRepository.get()));
+        const users = userRepository.get().concat(monsterRepository.get());
+        users.forEach((u) => u.setSpells(spellRepository.get()));
+        game.setUsers(users);
     });
 
     robot.hear(/^attack (.+)/i, (res) => {

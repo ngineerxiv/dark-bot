@@ -9,10 +9,9 @@ const Status    = DarkQuest.Status;
 const HitRate   = DarkQuest.HitRate;
 
 class MonsterRepositoryOnMemory {
-    constructor(spellRepository) {
-        this.spellRepository = spellRepository;
+    constructor() {
         this.monsters = [
-            new User(0, "社会", new Status(Infinity, Infinity, Infinity, Infinity), new Equipment(new Weapon(100, 12, new HitRate(100))), new Parameter(100, 12), this.spellRepository.get())
+            new User(0, "社会", new Status(Infinity, Infinity, Infinity, Infinity), new Equipment(new Weapon(100, 12, new HitRate(100))), new Parameter(100, 12))
         ];
     }
 
