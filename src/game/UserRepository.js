@@ -11,16 +11,15 @@ const HitRate   = DarkQuest.HitRate;
 const MAX_HP          = 3000;
 const HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
 
-function factoryUser(id, name, status, spells) {
+function factoryUser(id, name, status) {
     const eq      = new Equipment(new Weapon(100, 12, new HitRate(100)));
     const p       = new Parameter(50, 10);
-    return new User(id, name, status, eq, p, spells);
+    return new User(id, name, status, eq, p);
 }
 
 class UserRepositoryOnHubot {
-    constructor(robot, spellRepository) {
+    constructor(robot) {
         this.robot = robot;
-        this.spellRepository = spellRepository;
     }
 
     save(users) {
@@ -38,10 +37,9 @@ class UserRepositoryOnHubot {
             const user  = us[id];
             const hp    = (!isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
             const st    = new Status(hp, MAX_HP, Infinity, Infinity);
-            return factoryUser(user.id, user.name, st, this.spellRepository.get());
+            return factoryUser(user.id, user.name, st);
         })
     }
-
 }
 
 module.exports = UserRepositoryOnHubot;
