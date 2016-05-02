@@ -24,6 +24,12 @@ module.exports = (robot => {
 
     let isSlackTextMessage = (message) => (message instanceof SlackTextMessage);
 
+    robot.respond(/timeline clear/, res => {
+        robot.logger.info(robot.brain.data.userImages);
+        robot.brain.data.userImages = {};
+        res.send("cleared")
+    })
+
     robot.hear(/(.+)/, res => {
         if ( !isSlackTextMessage(res.message) ) {
             return;
@@ -39,11 +45,11 @@ module.exports = (robot => {
             let userImage   = robot.brain.data.userImages[userId]
             if(isPublic(channelId) && !isBlackListChannel(channel)) {
                 message = message + ` (at <#${channelId}|${channel}> )`;
-                message = encodeURIComponent(message)
+                message = encodeURIComponent(message);
                 let req = res.http(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=%23${timelineChannel}&text=${message}&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`).get();
-                    req((err, res, body) => {
-                        err && robot.logger.error(err);
-                    });
+                req((err, res, body) => {
+                    err && robot.logger.error(err);
+                });
             }
         })
     })
