@@ -46,6 +46,7 @@ module.exports = (robot => {
             if(isPublic(channelId) && !isBlackListChannel(channel)) {
                 message = message + ` (at <#${channelId}|${channel}> )`;
                 message = encodeURIComponent(message);
+                console.log(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=%23${timelineChannel}&text=${message}&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`);
                 let req = res.http(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=%23${timelineChannel}&text=${message}&username=${userName}&link_names=${linkNames}&pretty=1&icon_url=${userImage}`).get();
                 req((err, res, body) => {
                     err && robot.logger.error(err);
@@ -76,7 +77,7 @@ module.exports = (robot => {
             let i = 0;
             let len = json.members.length;
             while (i < len) {
-                let image = json.members[i].profile.image_48
+                let image = json.members[i].profile.image_original
                 robot.brain.data.userImages[json.members[i].id] = image
                 ++i
             }
