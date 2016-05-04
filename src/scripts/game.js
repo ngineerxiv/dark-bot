@@ -66,6 +66,11 @@ module.exports = (robot) => {
         res.send(message)
     });
 
+    robot.hear(/spells/, (res) => {
+        const actor = game.findUser(res.message.user.name);
+        res.send(`使える魔法: ${actor.spells.join(",")}`);
+    });
+
     robot.hear(/.*/, (res) => {
         if ( shakai === null ) {
             return;
@@ -129,10 +134,14 @@ module.exports = (robot) => {
             res.send(lang.target.damaged(result.target, result.effects.attack));
             result.target.isDead() && res.send(lang.attack.dead(result.target));
         }
-        if( result.effects.status.length > 0 ) {
+        const statusEffectResult = result.effects.status.filter((e) => e.effective)
+        if( statusEffectResult.length > 0) {
             res.send(lang.raise.default(result.target));
         } else if( result.effects.cure !== null) {
             res.send(lang.cure.default(result.target));
+        } else {
+            res.send(lang.target.noeffect(result.target));
+
         }
     });
 }

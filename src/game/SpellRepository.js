@@ -26,7 +26,7 @@ class SpellRepositoryOnMemory {
             new Spell("ケアルラ", 20, new CureEffect(500)),
             new Spell("ケアルガ", 50, new CureEffect(1200)),
             new Spell("raise", 20, [new StatusEffect(StatusValues.DEAD), new CureEffect(100)]),
-            new Spell("レイズ", 20, [new StatusEffect(StatusValues.DEAD), new CureEffect(100)])
+            new Spell("レイズ", 20, [new StatusEffect(StatusValues.DEAD), new CureEffect(100)]),
             new Spell("アレイズ", 40, [new StatusEffect(StatusValues.DEAD), new CureEffect(Infinity)])
         ];
     }
