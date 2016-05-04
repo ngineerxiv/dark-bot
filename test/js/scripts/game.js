@@ -1,23 +1,10 @@
-require("../helper.js")
+"use strict"
+const Helper = require("hubot-test-helper");
+const assert = require("power-assert");
+const helper = new Helper("../../../src/scripts/game.js");
 
-
-const TextMessage = require('hubot/src/message').TextMessage
-
+// See https://github.com/github/hubot/blob/master/docs/scripting.md#testing-hubot-scripts
 describe('game.js', () => {
-    "use strict"
-    let robot = {}
-    let user  = [
-        {"id": 1, "name": "hoge"},
-        {"id": 2, "name": "fuga"}
-    ]
-    let adapter = {}
-
-    shared_context.robot_is_running((ret) => {
-        robot = ret.robot
-        adapter = ret.adapter
-    });
-
-    beforeEach(() => {
-        require('../../src/scripts/game.js')(robot)
+    describe("attack", () => {
     });
 })
