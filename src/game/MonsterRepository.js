@@ -7,11 +7,13 @@ const Weapon    = DarkQuest.Weapon;
 const User      = DarkQuest.User;
 const Status    = DarkQuest.Status;
 const HitRate   = DarkQuest.HitRate;
+const HitPoint  = DarkQuest.HitPoint;
+const MagicPoint= DarkQuest.MagicPoint;
 
 class MonsterRepositoryOnMemory {
     constructor() {
         this.monsters = [
-            new User(0, "社会", new Status(Infinity, Infinity, Infinity, Infinity), new Equipment(new Weapon(100, 12, new HitRate(100))), new Parameter(100, 12))
+            new User(0, "社会", new HitPoint(Infinity, Infinity), new MagicPoint(Infinity, Infinity), new Equipment(new Weapon(100, 12, new HitRate(100))), new Parameter(100, 12))
         ];
     }
 

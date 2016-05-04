@@ -1,15 +1,10 @@
 "use strict";
 
-const EventEmitter = require('eventemitter2').EventEmitter2;
 const lang = require(`${__dirname}/lang/Ja.js`);
 
-class DarkGame extends EventEmitter {
+class DarkGame {
     constructor(game) {
-        super();
         this.game = game;
-        game.on("user-hp-changed", function(data) {
-            this.emit("game-user-hp-changed", data);
-        });
     }
 
     attack(actor, target, n) {
@@ -22,59 +17,17 @@ class DarkGame extends EventEmitter {
         } else if (target.isDead()) {
             messages.push(lang.target.dead(target));
         } else {
-            let before      = target.status.currentHp;
-            let afterStatus;
+            let results     = [];
             for(let i=0;i<n;i++) {
-                afterStatus = actor.attack(target);
+                results = results.concat([actor.attack(target)]);
             }
-            let after       = afterStatus.currentHp;
-            let point = before - after;
+            let point = results.reduce((pre, cur) => pre + cur.attack.value, 0);
             point = isNaN(point) ? 0 : point;
             n === 1 ?
                 messages.push(lang.attack.default(actor, target, point)):
                 messages.push(lang.attack.multiple(actor, target, point, n));
             if (target.isDead()) {
                 messages.push(lang.target.dead(target))
-            }
-        };
-        return {
-            actor: actor,
-            target: target,
-            messages: messages
-        };
-    }
-
-    cure(actor, target) {
-        let messages = [];
-        if(actor === null || target === null) {
-            messages.push(lang.actor.notarget(actor));
-        } else if (actor.isDead() ) {
-            messages.push(lang.actor.dead(actor));
-        } else if (target.isDead()) {
-            messages.push(lang.target.noeffect(target));
-        } else {
-            actor.cure(target);
-            messages.push(lang.cure.default(target));
-        };
-        return {
-            actor: actor,
-            target: target,
-            messages: messages
-        };
-    }
-
-    raise(actor, target) {
-        let messages = [];
-        if(actor === null || target === null) {
-            messages.push(lang.actor.notarget(actor));
-        } else if (actor.isDead() ) {
-            messages.push(lang.actor.dead(actor));
-        } else {
-            if(!target.isDead()) {
-                messages.push(lang.actor.noeffect(actor));
-            } else {
-                actor.fullCare(target);
-                messages.push(lang.raise.default(target));
             }
         };
         return {
