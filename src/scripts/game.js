@@ -11,39 +11,37 @@
 const Cron      = require("cron").CronJob;
 const NodeQuest = require("node-quest");
 const UserExceptions  = NodeQuest.UserExceptions;
-const Game      = NodeQuest.Game;
+const lang      = require("../game/lang/Ja.js");
 const DarkGame  = require("../game/DarkGame.js");
-const SpellRepository = require("../game/SpellRepository.js");
-const UserRepository  = require("../game/UserRepository.js");
-const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
-const MonsterRepository = require("../game/MonsterRepository.js");
-const NegativeWords   = require("../game/NegativeWords.js");
+const SpellRepository       = require("../game/SpellRepository.js");
+const HitPointRepository    = require("../game/user/HitPointRepository.js");
+const UserRepository        = require("../game/user/UserRepository.js");
+const NegativeWordsRepository   = require("../game/NegativeWordsRepository.js");
+const MonsterRepository         = require("../game/MonsterRepository.js");
+const NegativeWords             = require("../game/NegativeWords.js");
 
 const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
-const negativeWords   = new NegativeWords(negativeWordsRepository, console);
-const spellRepository = new SpellRepository();
+const negativeWords     = new NegativeWords(negativeWordsRepository, console);
+const spellRepository   = new SpellRepository();
 const monsterRepository = new MonsterRepository();
+const Game      = NodeQuest.Game;
 const game      = new Game();
 const darkGame  = new DarkGame(game);
-const lang      = require("../game/lang/Ja.js");
 
-new Cron("0 0 * * 1", () => {
-    game.users.forEach((u) => {
-        u.fullCare(u);
-    });
-}, null, true, "Asia/Tokyo");
+new Cron("0 0 * * 1",() => game.users.forEach((u) => u.cured(Infinity)), null, true, "Asia/Tokyo");
 
 module.exports = (robot) => {
 
-    const userRepository  = new UserRepository(robot);
-    const shakai = monsterRepository.getByName("社会");
+    const hitPointRepository    = new HitPointRepository(robot.brain);
+    const userRepository        = new UserRepository(robot.adapter);
+    const shakai                = monsterRepository.getByName("社会");
 
     robot.brain.once("loaded", (data) => {
         const users = userRepository.get().concat(monsterRepository.get());
         users.forEach((u) => {
             u.spells = spellRepository.get();
             u.hitPoint.on("changed", (data) => {
-                userRepository.save(game.users);
+                hitPointRepository.save(game.users);
             });
         });
         game.setUsers(users);
