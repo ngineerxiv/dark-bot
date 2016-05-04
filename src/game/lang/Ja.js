@@ -8,24 +8,24 @@ module.exports = {
   target: {
     dead: (target) => `[DEAD] こうかがない・・・${target.name}はただのしかばねのようだ・・・`,
     noeffect: (target) => "[DEAD] しかし こうかがなかった・・・",
-    damaged: (target, point) => `${target.name}に ${point} のダメージ！ 残り: ${target.status.currentHp} / ${target.status.maxHp}`
+    damaged: (target, point) => `${target.name}に ${point} のダメージ！ 残り: ${target.hitPoint.current} / ${target.hitPoint.max}`
   },
   attack: {
-    default: (actor, target, point) => `[ATTACK] ${actor.name}のこうげき！${target.name}に${point}のダメージ！ 残り:${target.status.currentHp} / ${target.status.maxHp}`,
-    multiple: (actor, target, point, n) => `[ATTACK] ${actor.name}の${n}れんぞくこうげき！${target.name}に${point}のダメージ！ 残り:${target.status.currentHp} / ${target.status.maxHp}`,
+    default: (actor, target, point) => `[ATTACK] ${actor.name}のこうげき！${target.name}に${point}のダメージ！ 残り:${target.hitPoint.current} / ${target.hitPoint.max}`,
+    multiple: (actor, target, point, n) => `[ATTACK] ${actor.name}の${n}れんぞくこうげき！${target.name}に${point}のダメージ！ 残り:${target.hitPoint.current} / ${target.hitPoint.max}`,
     dead: (target) => `[DEAD] ${target.name}はしんでしまった`
   },
   cure: {
-    default: (target) => `[CURE] ${target.name}のキズがかいふくした！残り: ${target.status.currentHp} / ${target.status.maxHp}`
+    default: (target) => `[CURE] ${target.name}のキズがかいふくした！残り: ${target.hitPoint.current} / ${target.hitPoint.max}`
   },
   raise: {
     default: (target) => `[CURE] ${target.name}は いきかえった！`
   },
   status: {
-    default: (target) => `現在のHP: ${target.status.currentHp} / ${target.status.maxHp}`
+    default: (target) => `現在のHP: ${target.hitPoint.current} / ${target.hitPoint.max}`
   },
   spell: {
-    cast: (actor, spellName) => `[ATTACK] ${actor.name} は ${spellName} をとなえた！`
+    cast: (actor, spellName) => `${actor.name} は ${spellName} をとなえた！`
   }
 
 }
