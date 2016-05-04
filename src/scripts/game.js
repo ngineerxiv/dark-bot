@@ -8,9 +8,7 @@
 
 "use strict"
 
-const Cron      = require("cron").CronJob;
 const NodeQuest = require("node-quest");
-const UserExceptions  = NodeQuest.UserExceptions;
 const lang      = require("../game/lang/Ja.js");
 const DarkGame  = require("../game/DarkGame.js");
 const SpellRepository       = require("../game/SpellRepository.js");
@@ -22,30 +20,21 @@ const NegativeWords             = require("../game/NegativeWords.js");
 
 const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
 const negativeWords     = new NegativeWords(negativeWordsRepository, console);
-const spellRepository   = new SpellRepository();
-const monsterRepository = new MonsterRepository();
-const Game      = NodeQuest.Game;
-const game      = new Game();
-const darkGame  = new DarkGame(game);
-
-new Cron("0 0 * * 1",() => game.users.forEach((u) => u.cured(Infinity)), null, true, "Asia/Tokyo");
 
 module.exports = (robot) => {
+    const UserExceptions  = NodeQuest.UserExceptions;
+    const monsterRepository = new MonsterRepository();
+    const game      = new NodeQuest.Game();
+    const darkGame  = new DarkGame(
+        game,
+        new UserRepository(robot.adapter),
+        new HitPointRepository(robot.brain),
+        new MonsterRepository(),
+        new SpellRepository()
+    );
+    const shakai    = monsterRepository.getByName("社会");
 
-    const hitPointRepository    = new HitPointRepository(robot.brain);
-    const userRepository        = new UserRepository(robot.adapter);
-    const shakai                = monsterRepository.getByName("社会");
-
-    robot.brain.once("loaded", (data) => {
-        const users = userRepository.get().concat(monsterRepository.get());
-        users.forEach((u) => {
-            u.spells = spellRepository.get();
-            u.hitPoint.on("changed", (data) => {
-                hitPointRepository.save(game.users);
-            });
-        });
-        game.setUsers(users);
-    });
+    robot.brain.once("loaded", (data) => darkGame.loadUsers());
 
     robot.hear(/^attack (.+)/i, (res) => {
         darkGame.attack(
@@ -70,10 +59,7 @@ module.exports = (robot) => {
     });
 
     robot.hear(/.*/, (res) => {
-        if ( shakai === null ) {
-            return;
-        }
-        shakai.isDead() ? shakai.fullCare(shakai): null;
+        shakai.isDead() && shakai.cured(Infinity);
         const target = game.findUser(res.message.user.name)
         if ( !target || target.isDead() ) {
             return;

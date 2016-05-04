@@ -6,7 +6,9 @@ class UserRepositoryOnSlack {
     }
 
     get() {
-        return this.adapter.client.users.map((userId, idx, self) => self[userId]);
+        return this.adapter.client ?
+            this.adapter.client.users.map((userId, idx, self) => self[userId]):
+            [];
     }
 }
 
