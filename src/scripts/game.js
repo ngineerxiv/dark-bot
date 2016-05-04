@@ -68,7 +68,7 @@ module.exports = (robot) => {
 
     robot.hear(/spells/, (res) => {
         const actor = game.findUser(res.message.user.name);
-        res.send(`使える魔法: ${actor.spells.join(",")}`);
+        res.send(`使える魔法: ${actor.spells.map((s) => s.name).join(",")}`);
     });
 
     robot.hear(/.*/, (res) => {
@@ -135,13 +135,12 @@ module.exports = (robot) => {
             result.target.isDead() && res.send(lang.attack.dead(result.target));
         }
         const statusEffectResult = result.effects.status.filter((e) => e.effective)
-        if( statusEffectResult.length > 0) {
-            res.send(lang.raise.default(result.target));
+        if(result.effects.status.length > 0) {
+            (statusEffectResult.length > 0) ?
+                res.send(lang.raise.default(result.target)): 
+                res.send(lang.actor.noeffect(result.actor));
         } else if( result.effects.cure !== null) {
             res.send(lang.cure.default(result.target));
-        } else {
-            res.send(lang.target.noeffect(result.target));
-
         }
     });
 }
