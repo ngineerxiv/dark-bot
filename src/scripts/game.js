@@ -3,7 +3,7 @@
 // Commands:
 //   attack {user} - attack
 //   cure {user} - cure
-//   raise|ザオリク {user} - ふっかつ
+//   raise {user} - ふっかつ
 //
 
 "use strict"
@@ -26,6 +26,9 @@ const monsterRepository = new MonsterRepository();
 const game      = new Game();
 const darkGame  = new DarkGame(game);
 const lang      = require("../game/lang/Ja.js");
+const hubotSlack = require("hubot-slack");
+const SlackTextMessage = hubotSlack.SlackTextMessage;
+const isSlackTextMessage = (message) => (message instanceof SlackTextMessage);
 
 new Cron("0 0 * * 1", () => {
     game.users.forEach((u) => {
@@ -98,6 +101,9 @@ module.exports = (robot) => {
     });
 
     robot.hear(/(.+)/, (res) => {
+        if(!isSlackTextMessage(res.message)) {
+            return;
+        }
         const messages = res.message.rawText.split(" ")
         if(messages.length < 2) {
             return;
