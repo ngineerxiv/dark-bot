@@ -25,6 +25,7 @@ module.exports = (robot => {
     let isSlackTextMessage = (message) => (message instanceof SlackTextMessage);
 
     robot.respond(/timeline clear/, res => {
+        robot.logger.info(robot.brain.data.userImages);
         robot.brain.data.userImages = {};
         res.send("cleared")
     })
@@ -75,7 +76,7 @@ module.exports = (robot => {
             let i = 0;
             let len = json.members.length;
             while (i < len) {
-                let image = json.members[i].profile.image_original
+                let image = json.members[i].profile.image_48
                 robot.brain.data.userImages[json.members[i].id] = image
                 ++i
             }
