@@ -32,7 +32,7 @@ const isSlackTextMessage = (message) => (message instanceof SlackTextMessage);
 
 new Cron("0 0 * * 1", () => {
     game.users.forEach((u) => {
-        u.fullCare(u);
+        u.cured(Infinity);
     });
 }, null, true, "Asia/Tokyo");
 
@@ -78,7 +78,7 @@ module.exports = (robot) => {
         if ( shakai === null ) {
             return;
         }
-        shakai.isDead() ? shakai.fullCare(shakai): null;
+        shakai.isDead() ? shakai.cured(Infinity): null;
         const target = game.findUser(res.message.user.name)
         if ( !target || target.isDead() ) {
             return;
