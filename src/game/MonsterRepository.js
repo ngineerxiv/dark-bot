@@ -13,7 +13,7 @@ const MagicPoint= DarkQuest.MagicPoint;
 class MonsterRepositoryOnMemory {
     constructor() {
         this.monsters = [
-            new User(0, "社会", new HitPoint(Infinity, Infinity), new MagicPoint(Infinity, Infinity), new Equipment(new Weapon(100, 12, new HitRate(100))), new Parameter(100, 12))
+            new User(0, "社会", new HitPoint(Infinity, Infinity), new MagicPoint(Infinity, Infinity), new Equipment(new Weapon(300, 120, new HitRate(100))), new Parameter(100, 12))
         ];
     }
 
