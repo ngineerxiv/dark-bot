@@ -31,6 +31,7 @@
     "hubot-slack": "^3.4.2",
     "hubot-youtube": "^1.0.2",
     "kuromoji": "0.0.5",
+    "levenshtein": "^1.0.5",
     "node-quest": "^0.7.7",
     "node-uuid": "^1.4.7",
     "punycode": "^1.4.1",
