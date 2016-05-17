@@ -19,9 +19,10 @@ function factoryUser(id, name, hitPoint, magicPoint) {
     return new User(id, name, hitPoint, magicPoint, eq, p);
 }
 
-class UserRepositoryOnBrain {
-    constructor(brain) {
+class HitPointRepositoryOnBrain {
+    constructor(brain, brainKey) {
         this.brain = brain;
+        this.brainKey = brainKey || HUBOT_NODE_QUEST_USERS_HP;
     }
 
     save(users) {
@@ -32,8 +33,8 @@ class UserRepositoryOnBrain {
         this.brain.set(HUBOT_NODE_QUEST_USERS_HP, us);
     }
 
-    get(slackUsers) {
-        const savedUsers  = this.brain.get(HUBOT_NODE_QUEST_USERS_HP) || {};
+    factoryBySlackUsers(slackUsers) {
+        const savedUsers  = this.brain.get(this.brainKey) || {};
         return slackUsers.map((user) => {
             const hp    = (!isNaN(savedUsers[user.id])) ? savedUsers[user.id] : MAX_HP;
             const hitPoint = new HitPoint(hp, MAX_HP);
@@ -43,4 +44,4 @@ class UserRepositoryOnBrain {
     }
 }
 
-module.exports = UserRepositoryOnBrain;
+module.exports = HitPointRepositoryOnBrain;

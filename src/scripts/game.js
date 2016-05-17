@@ -13,7 +13,6 @@ const lang      = require("../game/lang/Ja.js");
 const DarkGame  = require("../game/DarkGame.js");
 const SpellRepository       = require("../game/SpellRepository.js");
 const HitPointRepository    = require("../game/user/HitPointRepository.js");
-const UserRepository        = require("../game/user/UserRepository.js");
 const NegativeWordsRepository   = require("../game/NegativeWordsRepository.js");
 const MonsterRepository         = require("../game/MonsterRepository.js");
 const NegativeWords             = require("../game/NegativeWords.js");
@@ -41,14 +40,13 @@ module.exports = (robot) => {
     const game      = new NodeQuest.Game();
     const darkGame  = new DarkGame(
         game,
-        new UserRepository(robot.adapter),
         new HitPointRepository(robot.brain),
         new MonsterRepository(),
         new SpellRepository()
     );
     const shakai    = monsterRepository.getByName("社会");
 
-    robot.brain.once("loaded", (data) => darkGame.loadUsers());
+    robot.brain.once("loaded", (data) => darkGame.loadUsers(robot.adapter.client.users.map((userId, idx, self) => self[userId])));
 
     robot.hear(/^attack (.+)/i, (res) => {
         darkGame.attack(
