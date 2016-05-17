@@ -1,10 +1,27 @@
 "use strict";
 
-const lang = require(`${__dirname}/lang/Ja.js`);
+const Cron  = require("cron").CronJob;
+const lang  = require(`${__dirname}/lang/Ja.js`);
 
 class DarkGame {
-    constructor(game) {
+    constructor(game, hitPointRepository, monsterRepository, spellRepository) {
         this.game = game;
+        this.hitPointRepository = hitPointRepository;
+        this.monsterRepository  = monsterRepository;
+        this.spellRepository    = spellRepository;
+
+        new Cron("0 0 * * 1",() => this.game.users.forEach((u) => u.cured(Infinity)), null, true, "Asia/Tokyo");
+    }
+
+    loadUsers(slackUsers) {
+        const users = slackUsers.concat(this.monsterRepository.get());
+        users.forEach((u) => {
+            u.spells = this.spellRepository.get();
+            u.hitPoint.on("changed", (data) => {
+                this.hitPointRepository.save(this.game.users);
+            });
+        });
+        this.game.setUsers(users);
     }
 
     attack(actor, target, n) {

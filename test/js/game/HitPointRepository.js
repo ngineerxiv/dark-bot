@@ -1,7 +1,7 @@
 "use strict"
 const assert = require("power-assert");
 
-const UserRepository = require("../../../src/game/UserRepository.js");
+const UserRepository = require("../../../src/game/user/HitPointRepository.js");
 const DarkQuest = require("node-quest");
 const HitPoint  = DarkQuest.HitPoint;
 const MagicPoint= DarkQuest.MagicPoint;
@@ -21,24 +21,14 @@ describe('UserRepository', () => {
             return this.users[k];
         }
     }
-    class MockRobot {
-        constructor(brain, users) {
-            this.brain = brain;
-            this.adapter = {
-                client: {
-                    users: users
-                }
-            };
-        }
-    }
 
     it("should save and get", () => {
-        const users = {
-            "a": {"id": "a", "name": "hoge"},
-            "b": {"id": "b", "name": "fuga"},
-            "c": {"id": "c", "name": "piyo"}
-        };
-        const r = new UserRepository(new MockRobot(new MockBrain(), users));
+        const users = [
+            {"id": "a", "name": "hoge"},
+            {"id": "b", "name": "fuga"},
+            {"id": "c", "name": "piyo"}
+        ];
+        const r = new UserRepository(new MockBrain(), users);
         r.save([
                 {
                     id: "a",
@@ -53,7 +43,7 @@ describe('UserRepository', () => {
                     }
                 }
         ]);
-        const actual = r.get();
+        const actual = r.get(users);
         assert.equal(actual.length, 3);
         const vals = actual.map((u) => [
             u.id,
