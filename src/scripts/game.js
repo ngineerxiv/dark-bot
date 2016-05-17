@@ -3,7 +3,7 @@
 // Commands:
 //   attack {user} - attack
 //   cure {user} - cure
-//   raise|ザオリク {user} - ふっかつ
+//   raise {user} - ふっかつ
 //
 
 "use strict"
@@ -19,7 +19,21 @@ const MonsterRepository         = require("../game/MonsterRepository.js");
 const NegativeWords             = require("../game/NegativeWords.js");
 
 const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
-const negativeWords     = new NegativeWords(negativeWordsRepository, console);
+const negativeWords   = new NegativeWords(negativeWordsRepository, console);
+const spellRepository = new SpellRepository();
+const monsterRepository = new MonsterRepository();
+const game      = new Game();
+const darkGame  = new DarkGame(game);
+const lang      = require("../game/lang/Ja.js");
+const hubotSlack = require("hubot-slack");
+const SlackTextMessage = hubotSlack.SlackTextMessage;
+const isSlackTextMessage = (message) => (message instanceof SlackTextMessage);
+
+new Cron("0 0 * * 1", () => {
+    game.users.forEach((u) => {
+        u.cured(Infinity);
+    });
+}, null, true, "Asia/Tokyo");
 
 module.exports = (robot) => {
     const UserExceptions  = NodeQuest.UserExceptions;
@@ -59,6 +73,9 @@ module.exports = (robot) => {
     });
 
     robot.hear(/.*/, (res) => {
+        if ( shakai === null ) {
+            return;
+        }
         shakai.isDead() && shakai.cured(Infinity);
         const target = game.findUser(res.message.user.name)
         if ( !target || target.isDead() ) {
@@ -82,6 +99,9 @@ module.exports = (robot) => {
     });
 
     robot.hear(/(.+)/, (res) => {
+        if(!isSlackTextMessage(res.message)) {
+            return;
+        }
         const messages = res.message.rawText.split(" ")
         if(messages.length < 2) {
             return;
