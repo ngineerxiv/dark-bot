@@ -11,7 +11,7 @@ const uuid = require("node-uuid");
 
 module.exports = (robot => {
     const urataku = 'U034TCZKE';
-    const targets = [1,1,1,1,1,1,1,1,1,1,,2,2,3];
+    const targets = [1,1,1,1,1,1,1,1,1,1,2,2,3];
     const zoi = (res) => {
         let filtered = targets;
         try {
