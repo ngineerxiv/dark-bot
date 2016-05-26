@@ -10,7 +10,7 @@
 
 const Cron      = require("cron").CronJob;
 const NodeQuest = require("node-quest");
-const UserExceptions  = NodeQuest.UserExceptions;
+const UserStates  = NodeQuest.UserStates;
 const Game      = NodeQuest.Game;
 const DarkGame  = require("../game/DarkGame.js");
 const SpellRepository = require("../game/SpellRepository.js");
@@ -53,12 +53,23 @@ module.exports = (robot) => {
     });
 
     robot.hear(/^attack (.+)/i, (res) => {
-        darkGame.attack(
-            game.findUser(res.message.user.name),
-            game.findUser(res.match[1])
-        ).messages.forEach((m) => {
-            res.send(m);
-        });
+        const actor = game.findUser(res.message.user.name);
+        if (!actor) {
+            return
+        }
+        const target = game.findUser(res.match[1]);
+        if (!target) {
+            return res.send(lang.actor.notarget(actor));
+        }
+        const result = actor.attack(target)
+        switch (result) {
+            case UserStates.TargetDead:
+                return res.send(lang.target.dead(target));
+            case UserStates.ActorDead:
+                return res.send(lang.actor.dead(target));
+        }
+        const point = result.attack.value;
+        res.send(lang.attack.default(actor, target, point))
     });
 
     robot.hear(/^status (.+)/i, (res) => {
@@ -123,17 +134,15 @@ module.exports = (robot) => {
         }
 
         const result    = actor.cast(spellName, target);
-        if(result instanceof UserExceptions.NoTargetSpellException) {
-            return;
-        } else if (result instanceof UserExceptions.NoEnoughMagicPointException) {
-            return res.send(lang.actor.nomagicpoint(actor));
-        } else if (result instanceof UserExceptions.TargetDeadException) {
-            return res.send(lang.target.dead(target));
-        } else if (result instanceof Error) {
-            // HACK UserExceptions.TargetDeadExceptionとして認識してくれなかったのでゴリ押し
-            if (/(.*) is dead/.test(result.toString())) {
+        switch (result) {
+            case UserStates.NoTargetSpell:
+                return;
+            case UserStates.NotEnoughMagicPoint:
+                return res.send(lang.actor.nomagicpoint(actor));
+            case UserStates.TargetDead:
                 return res.send(lang.target.dead(target));
-            }
+            case UserStates.ActorDead:
+                return res.send(lang.actor.dead(target));
         }
         res.send(lang.spell.cast(actor, spellName));
         if( result.effects.attack !== null ) {
