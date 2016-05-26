@@ -5,5 +5,6 @@
   "hubot-nullpo",
   "hubot-moji",
   "hubot-plusplus",
-  "hubot-middleware-kuromoji"
+  "hubot-middleware-kuromoji",
+  "hubot-redis-brain"
 ]
