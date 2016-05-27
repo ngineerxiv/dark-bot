@@ -41,7 +41,7 @@ module.exports = (robot) => {
     robot.respond(/炎上 (.+) (.+)/i, (res) => {
         const text1 = encodeURIComponent(res.match[1])
         const text2 = encodeURIComponent(res.match[2])
-        res.send(`https://enjo-generator.herokuapp.com/api/create-enjo?text1=#{text$}&text2=${text2}`);
+        res.send(`https://enjo-generator.herokuapp.com/api/create-enjo?text1=${text1}&text2=${text2}`);
     })
 
     robot.respond(/距離 (.+) (.+)/i, (res) => {
