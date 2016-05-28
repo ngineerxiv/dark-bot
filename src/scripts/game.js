@@ -44,7 +44,6 @@ new Cron("0 0 * * *", () => {
 module.exports = (robot) => {
 
     const userRepository  = new UserRepository(robot.brain, robot.adapter.client ? robot.adapter.client.users : {});
-    const shakai = monsterRepository.getByName("社会");
 
     robot.brain.once("loaded", (data) => {
         const users = userRepository.get().concat(monsterRepository.get());
@@ -94,6 +93,7 @@ module.exports = (robot) => {
     });
 
     robot.hear(/.*/, (res) => {
+        const shakai = monsterRepository.getByName("社会");
         if ( shakai === null ) {
             return;
         }
@@ -110,13 +110,13 @@ module.exports = (robot) => {
             return
         }
 
-        const results = Array(n).map((i) => actor.attack(target))
-        const attackedResults = results.filter((r) => typeof r !== 'symbol').filter((r) => r.attack.hit);
-        const point = attackedResults.reduce((pre, cur) => pre + cur.attack.value, 0);
+        const results           = Array(count).fill(1).map((i) => shakai.attack(target))
+        const attackedResults   = results.filter((r) => typeof r !== 'symbol').filter((r) => r.attack.hit);
+        const point             = attackedResults.reduce((pre, cur) => pre + cur.attack.value, 0);
         if( attackedResults.length > 0 ) {
-            n === 1 ?
+            count === 1 ?
                 res.send(lang.attack.default(shakai, target, point)):
-                res.send(lang.attack.multiple(shakai, target, point, n));
+                res.send(lang.attack.multiple(shakai, target, point, count));
             target.isDead() && res.send(lang.target.dead(target));
         } else {
             res.send(lang.attack.miss(target));
