@@ -45,7 +45,7 @@ new Cron("0 0 * * *", () => {
 
 module.exports = (robot) => {
 
-    const userRepository  = new UserRepository(robot.brain, robot.adapter.client.users);
+    const userRepository  = new UserRepository(robot.brain, robot.adapter.client ? robot.adapter.client.users : {});
     const shakai = monsterRepository.getByName("社会");
 
     robot.brain.once("loaded", (data) => {
