@@ -73,7 +73,7 @@ module.exports = (robot) => {
             case UserStates.TargetDead:
                 return res.send(lang.target.dead(target));
             case UserStates.ActorDead:
-                return res.send(lang.actor.dead(target));
+                return res.send(lang.actor.dead(actor));
         }
         const hit   = result.attack.hit;
         const point = result.attack.value;
