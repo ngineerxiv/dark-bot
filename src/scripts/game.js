@@ -36,9 +36,16 @@ new Cron("0 0 * * 1", () => {
     });
 }, null, true, "Asia/Tokyo");
 
+new Cron("0 0 * * *", () => {
+    game.users.forEach((u) => {
+        u.magicPoint.changed(Infinity);
+    });
+}, null, true, "Asia/Tokyo");
+
+
 module.exports = (robot) => {
 
-    const userRepository  = new UserRepository(robot);
+    const userRepository  = new UserRepository(robot.brain, robot.adapter.client.users);
     const shakai = monsterRepository.getByName("社会");
 
     robot.brain.once("loaded", (data) => {
