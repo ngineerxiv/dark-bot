@@ -34,7 +34,7 @@ class UserRepositoryOnHubot {
                 magicPoint: u.magicPoint.current
             }
         });
-        this.robot.brain.set(HUBOT_NODE_QUEST_USERS, us);
+        this.brain.set(HUBOT_NODE_QUEST_USERS, us);
     }
 
     get() {
@@ -42,8 +42,8 @@ class UserRepositoryOnHubot {
         return Object.keys(this.users).map((id) => {
             const user  = this.users[id];
             const saved = savedUsers[id];
-            const hitPoint    = (!isNaN(saved.hitPoint)) ? saved.hitPoint : MAX_HIT_POINT;
-            const magicPoint    = (!isNaN(saved.magicPoint)) ? saved.magicPoint : MAX_MAGIC_POINT;
+            const hitPoint    = (saved && !isNaN(saved.hitPoint)) ? saved.hitPoint : MAX_HIT_POINT;
+            const magicPoint    = (saved && !isNaN(saved.magicPoint)) ? saved.magicPoint : MAX_MAGIC_POINT;
             return factoryUser(
                 user.id,
                 user.name,
