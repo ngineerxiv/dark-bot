@@ -21,16 +21,6 @@ describe('UserRepository', () => {
             return this.users[k];
         }
     }
-    class MockRobot {
-        constructor(brain, users) {
-            this.brain = brain;
-            this.adapter = {
-                client: {
-                    users: users
-                }
-            };
-        }
-    }
 
     it("should save and get", () => {
         const users = {
@@ -38,18 +28,24 @@ describe('UserRepository', () => {
             "b": {"id": "b", "name": "fuga"},
             "c": {"id": "c", "name": "piyo"}
         };
-        const r = new UserRepository(new MockRobot(new MockBrain(), users));
+        const r = new UserRepository(new MockBrain(), users);
         r.save([
                 {
                     id: "a",
                     hitPoint: {
                         current:10
+                    },
+                    magicPoint: {
+                        current: 10
                     }
                 },
                 {
                     id: "b",
                     hitPoint: {
                         current: 0
+                    },
+                    magicPoint: {
+                        current: 10
                     }
                 }
         ]);

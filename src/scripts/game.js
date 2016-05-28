@@ -36,9 +36,16 @@ new Cron("0 0 * * 1", () => {
     });
 }, null, true, "Asia/Tokyo");
 
+new Cron("0 0 * * *", () => {
+    game.users.forEach((u) => {
+        u.magicPoint.changed(Infinity);
+    });
+}, null, true, "Asia/Tokyo");
+
+
 module.exports = (robot) => {
 
-    const userRepository  = new UserRepository(robot);
+    const userRepository  = new UserRepository(robot.brain, robot.adapter.client ? robot.adapter.client.users : {});
     const shakai = monsterRepository.getByName("社会");
 
     robot.brain.once("loaded", (data) => {
@@ -46,6 +53,9 @@ module.exports = (robot) => {
         users.forEach((u) => {
             u.spells = spellRepository.get();
             u.hitPoint.on("changed", (data) => {
+                userRepository.save(game.users);
+            });
+            u.magicPoint.on("changed", (data) => {
                 userRepository.save(game.users);
             });
         });
@@ -68,8 +78,12 @@ module.exports = (robot) => {
             case UserStates.ActorDead:
                 return res.send(lang.actor.dead(target));
         }
+        const hit   = result.attack.hit;
         const point = result.attack.value;
-        res.send(lang.attack.default(actor, target, point))
+        hit ?
+            res.send(lang.attack.default(actor, target, point)):
+            res.send(lang.attack.miss(target));
+
     });
 
     robot.hear(/^status (.+)/i, (res) => {

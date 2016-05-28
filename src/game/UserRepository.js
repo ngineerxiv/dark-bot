@@ -10,37 +10,46 @@ const HitRate   = DarkQuest.HitRate;
 const HitPoint  = DarkQuest.HitPoint;
 const MagicPoint= DarkQuest.MagicPoint;
 
-const MAX_HP          = 3000;
-const HUBOT_NODE_QUEST_USERS_HP  = "HUBOT_NODE_QUEST_USERS_HP";
+const MAX_HIT_POINT   = 3000;
+const MAX_MAGIC_POINT = 1000;
+const HUBOT_NODE_QUEST_USERS  = "HUBOT_NODE_QUEST_USERS";
 
 function factoryUser(id, name, hitPoint, magicPoint) {
-    const eq      = new Equipment(new Weapon(100, 12, new HitRate(100)));
+    const eq      = new Equipment(new Weapon(100, 12, new HitRate(95)));
     const p       = new Parameter(100, 50);
     return new User(id, name, hitPoint, magicPoint, eq, p);
 }
 
 class UserRepositoryOnHubot {
-    constructor(robot) {
-        this.robot = robot;
+    constructor(brain, users) {
+        this.brain = brain;
+        this.users = users || {};
     }
 
     save(users) {
         const us = {};
         users.forEach((u) => {
-            us[u.id] = u.hitPoint.current;
+            us[u.id] = {
+                hitPoint: u.hitPoint.current,
+                magicPoint: u.magicPoint.current
+            }
         });
-        this.robot.brain.set(HUBOT_NODE_QUEST_USERS_HP, us);
+        this.brain.set(HUBOT_NODE_QUEST_USERS, us);
     }
 
     get() {
-        const savedUsers  = this.robot.brain.get(HUBOT_NODE_QUEST_USERS_HP) || {};
-        const us  = this.robot.adapter.client.users;
-        return Object.keys(us).map((id) => {
-            const user  = us[id];
-            const hp    = (!isNaN(savedUsers[id])) ? savedUsers[id] : MAX_HP;
-            const hitPoint = new HitPoint(hp, MAX_HP);
-            const magicPoint = new MagicPoint(Infinity, Infinity);
-            return factoryUser(user.id, user.name, hitPoint, magicPoint);
+        const savedUsers  = this.brain.get(HUBOT_NODE_QUEST_USERS) || {};
+        return Object.keys(this.users).map((id) => {
+            const user  = this.users[id];
+            const saved = savedUsers[id];
+            const hitPoint    = (saved && !isNaN(saved.hitPoint)) ? saved.hitPoint : MAX_HIT_POINT;
+            const magicPoint    = (saved && !isNaN(saved.magicPoint)) ? saved.magicPoint : MAX_MAGIC_POINT;
+            return factoryUser(
+                user.id,
+                user.name,
+                new HitPoint(hitPoint, MAX_HIT_POINT),
+                new MagicPoint(magicPoint, MAX_MAGIC_POINT)
+            );
         })
     }
 }
