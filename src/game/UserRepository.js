@@ -15,7 +15,7 @@ const MAX_MAGIC_POINT = 1000;
 const HUBOT_NODE_QUEST_USERS  = "HUBOT_NODE_QUEST_USERS";
 
 function factoryUser(id, name, hitPoint, magicPoint) {
-    const eq      = new Equipment(new Weapon(100, 12, new HitRate(100)));
+    const eq      = new Equipment(new Weapon(100, 12, new HitRate(95)));
     const p       = new Parameter(100, 50);
     return new User(id, name, hitPoint, magicPoint, eq, p);
 }

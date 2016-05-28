@@ -55,6 +55,9 @@ module.exports = (robot) => {
             u.hitPoint.on("changed", (data) => {
                 userRepository.save(game.users);
             });
+            u.magicPoint.on("changed", (data) => {
+                userRepository.save(game.users);
+            });
         });
         game.setUsers(users);
     });
@@ -75,8 +78,12 @@ module.exports = (robot) => {
             case UserStates.ActorDead:
                 return res.send(lang.actor.dead(target));
         }
+        const hit   = result.attack.hit;
         const point = result.attack.value;
-        res.send(lang.attack.default(actor, target, point))
+        hit ?
+            res.send(lang.attack.default(actor, target, point)):
+            res.send(lang.attack.miss(target));
+
     });
 
     robot.hear(/^status (.+)/i, (res) => {
