@@ -40,7 +40,7 @@ class UserRepositoryOnHubot {
     get() {
         const savedUsers  = this.brain.get(HUBOT_NODE_QUEST_USERS) || {};
         return Object.keys(this.users).map((id) => {
-            const user  = us[id];
+            const user  = this.users[id];
             const saved = savedUsers[id];
             const hitPoint    = (!isNaN(saved.hitPoint)) ? saved.hitPoint : MAX_HIT_POINT;
             const magicPoint    = (!isNaN(saved.magicPoint)) ? saved.magicPoint : MAX_MAGIC_POINT;
