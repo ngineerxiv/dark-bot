@@ -12,7 +12,6 @@ const Cron      = require("cron").CronJob;
 const NodeQuest = require("node-quest");
 const UserStates  = NodeQuest.UserStates;
 const Game      = NodeQuest.Game;
-const DarkGame  = require("../game/DarkGame.js");
 const SpellRepository = require("../game/SpellRepository.js");
 const UserRepository  = require("../game/UserRepository.js");
 const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
@@ -24,7 +23,6 @@ const negativeWords   = new NegativeWords(negativeWordsRepository, console);
 const spellRepository = new SpellRepository();
 const monsterRepository = new MonsterRepository();
 const game      = new Game();
-const darkGame  = new DarkGame(game);
 const lang      = require("../game/lang/Ja.js");
 const hubotSlack = require("hubot-slack");
 const SlackTextMessage = hubotSlack.SlackTextMessage;
@@ -46,7 +44,6 @@ new Cron("0 0 * * *", () => {
 module.exports = (robot) => {
 
     const userRepository  = new UserRepository(robot.brain, robot.adapter.client ? robot.adapter.client.users : {});
-    const shakai = monsterRepository.getByName("社会");
 
     robot.brain.once("loaded", (data) => {
         const users = userRepository.get().concat(monsterRepository.get());
@@ -92,18 +89,14 @@ module.exports = (robot) => {
             lang.status.default(target) :
             lang.actor.notarget(target);
         res.send(message)
-    });
-
-    robot.hear(/spells/, (res) => {
-        const actor = game.findUser(res.message.user.name);
-        res.send(`使える魔法: ${actor.spells.map((s) => s.name).join(",")}`);
+        res.send(`使える魔法: ${target.spells.map((s) => s.name).join(",")}`);
     });
 
     robot.hear(/.*/, (res) => {
+        const shakai = monsterRepository.getByName("社会");
         if ( shakai === null ) {
             return;
         }
-        shakai.isDead() ? shakai.cured(Infinity): null;
         const target = game.findUser(res.message.user.name)
         if ( !target || target.isDead() ) {
             return;
@@ -116,13 +109,18 @@ module.exports = (robot) => {
         if(count <= 0) {
             return
         }
-        darkGame.attack(
-            shakai, 
-            target,
-            count
-        ).messages.forEach((m) => {
-            res.send(m);
-        });
+
+        const results           = Array(count).fill(1).map((i) => shakai.attack(target))
+        const attackedResults   = results.filter((r) => typeof r !== 'symbol').filter((r) => r.attack.hit);
+        const point             = attackedResults.reduce((pre, cur) => pre + cur.attack.value, 0);
+        if( attackedResults.length > 0 ) {
+            count === 1 ?
+                res.send(lang.attack.default(shakai, target, point)):
+                res.send(lang.attack.multiple(shakai, target, point, count));
+            target.isDead() && res.send(lang.target.dead(target));
+        } else {
+            res.send(lang.attack.miss(target));
+        }
     });
 
     robot.hear(/(.+)/, (res) => {
