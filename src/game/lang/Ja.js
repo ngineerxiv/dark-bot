@@ -22,7 +22,7 @@ module.exports = {
     default: (target) => `[CURE] ${target.name}は いきかえった！`
   },
   status: {
-    default: (target) => `現在のHP: ${target.hitPoint.current} / ${target.hitPoint.max}`
+    default: (target) => `現在のHP: ${target.hitPoint.current} / ${target.hitPoint.max} \n 現在のMP: ${target.magicPoint.current} / ${target.magicPoint.max}`
   },
   spell: {
     cast: (actor, spellName) => `${actor.name} は ${spellName} をとなえた！`
