@@ -9,6 +9,8 @@ let hubotSlack = require("hubot-slack");
 let SlackTextMessage = hubotSlack.SlackTextMessage;
 let timelineChannel  = process.env.TIMELINECHANNEL || "timeline";
 let linkNames        = process.env.LINK_NAMES;
+const optOut = require("../../settings/tloptout.json");
+const optOutList = optOut.channels;
 if (linkNames !== "0" && linkNames !== "1") {
     linkNames = 0;
 };
@@ -36,6 +38,9 @@ module.exports = (robot => {
         }
         let channelId   = res.message.rawMessage.channel
         let channel     = res.envelope.room;
+        if( optOutList.indexOf(channel) !== -1 ) {
+            return
+        }
         let userId      = res.message.user.id;
         let userName    = res.message.user.name;
         let message     = res.message.text;
