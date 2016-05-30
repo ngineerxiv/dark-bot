@@ -36,7 +36,7 @@ new Cron("0 0 * * 1", () => {
 
 new Cron("0 0 * * *", () => {
     game.users.forEach((u) => {
-        u.magicPoint.changed(Infinity);
+        u.magicPoint.change(Infinity);
     });
 }, null, true, "Asia/Tokyo");
 
