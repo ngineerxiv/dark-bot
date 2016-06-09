@@ -37,6 +37,10 @@ class UserRepositoryOnHubot {
         this.brain.set(HUBOT_NODE_QUEST_USERS, us);
     }
 
+    isBot(id) {
+        return this.users[id] && this.users[id].is_bot;
+    }
+
     get() {
         const savedUsers  = this.brain.get(HUBOT_NODE_QUEST_USERS) || {};
         return Object.keys(this.users).map((id) => {
