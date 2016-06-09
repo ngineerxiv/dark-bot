@@ -46,9 +46,12 @@ module.exports = (robot) => {
     const userRepository  = new UserRepository(robot.brain, robot.adapter.client ? robot.adapter.client.users : {});
 
     robot.brain.once("loaded", (data) => {
-        const users = userRepository.get().concat(monsterRepository.get());
+        const users = userRepository.get();
+        const monsters = monsterRepository.get();
         users.forEach((u) => {
-            u.spells = spellRepository.get();
+            if (!userRepository.isBot(u.id)) {
+                u.spells = spellRepository.get();
+            }
             u.hitPoint.on("changed", (data) => {
                 userRepository.save(game.users);
             });
@@ -56,7 +59,7 @@ module.exports = (robot) => {
                 userRepository.save(game.users);
             });
         });
-        game.setUsers(users);
+        game.setUsers(users.concat(monsters));
     });
 
     robot.hear(/^attack (.+)/i, (res) => {
@@ -90,6 +93,31 @@ module.exports = (robot) => {
             lang.actor.notarget(target);
         res.send(message)
         target && res.send(`使える魔法: ${target.spells.map((s) => s.name).join(",")}`);
+    });
+
+    robot.hear(/^神父 (.+)/, (res) => {
+        const priest = monsterRepository.getByName("神父");
+        const target = game.findUser(res.message.user.name);
+        if ( !target.isDead() ) {
+            return;
+        }
+        const result    = priest.cast("アレイズ" , target);
+        switch (result) {
+            case UserStates.NoTargetSpell:
+                return;
+            case UserStates.NotEnoughMagicPoint:
+                return res.send(lang.actor.nomagicpoint(priest));
+            case UserStates.ActorDead:
+                return res.send(lang.actor.dead(priest));
+        }
+        res.send(lang.spell.cast(priest, "アレイズ"));
+
+        const statusEffectResult = result.effects.status.filter((e) => e.effective);
+        if(result.effects.status.length > 0) {
+            (statusEffectResult.length > 0) ?
+                res.send(lang.raise.default(result.target)): 
+                res.send(lang.actor.noeffect(result.actor));
+        }
     });
 
     robot.hear(/.*/, (res) => {
