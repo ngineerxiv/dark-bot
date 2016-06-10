@@ -84,6 +84,7 @@ module.exports = (robot) => {
             res.send(lang.attack.default(actor, target, point)):
             res.send(lang.attack.miss(target));
 
+        target.isDead() && res.send(lang.attack.dead(target));
     });
 
     robot.hear(/^status (.+)/i, (res) => {
@@ -145,7 +146,7 @@ module.exports = (robot) => {
             count === 1 ?
                 res.send(lang.attack.default(shakai, target, point)):
                 res.send(lang.attack.multiple(shakai, target, point, count));
-            target.isDead() && res.send(lang.target.dead(target));
+            target.isDead() && res.send(lang.attack.dead(target));
         } else {
             res.send(lang.attack.miss(target));
         }
