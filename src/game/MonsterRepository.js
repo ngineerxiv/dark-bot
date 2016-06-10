@@ -18,7 +18,7 @@ class MonsterRepositoryOnMemory {
     constructor() {
         this.monsters = [
             new User(0, "社会", new HitPoint(Infinity, Infinity), new MagicPoint(Infinity, Infinity), new Equipment(new Weapon(300, 120, new HitRate(100))), new Parameter(100, 12)),
-            new User(0, "神父", new HitPoint(Infinity, Infinity), new MagicPoint(Infinity, Infinity), new Equipment(new Weapon(0, 0, new HitRate(0))), new Parameter(Infinity, 0), [new Spell("アレイズ", 40, [new StatusEffect(StatusValues.DEAD), new CureEffect(Infinity)])])
+            new User(0, "神父", new HitPoint(Infinity, Infinity), new MagicPoint(Infinity, Infinity), new Equipment(new Weapon(0, 0, new HitRate(100))), new Parameter(800, 10), [new Spell("レイズ", 20, [new StatusEffect(StatusValues.DEAD), new CureEffect(100)])])
         ];
     }
 
