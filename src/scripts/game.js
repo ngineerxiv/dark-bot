@@ -102,7 +102,7 @@ module.exports = (robot) => {
         if ( !target.isDead() ) {
             return;
         }
-        const result    = priest.cast("アレイズ" , target);
+        const result    = priest.cast("レイズ" , target);
         switch (result) {
             case UserStates.NoTargetSpell:
                 return;
@@ -111,7 +111,7 @@ module.exports = (robot) => {
             case UserStates.ActorDead:
                 return res.send(lang.actor.dead(priest));
         }
-        res.send(lang.spell.cast(priest, "アレイズ"));
+        res.send(lang.spell.cast(priest, "レイズ"));
 
         const statusEffectResult = result.effects.status.filter((e) => e.effective);
         if(result.effects.status.length > 0) {
