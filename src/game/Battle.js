@@ -31,6 +31,13 @@ class Battle {
                 target.isDead() && messages.push(this.lang.attack.dead(target));
                 break;
         }
+        if ( !target.isDead() && target.counter ) {
+            messages.push(this.lang.actor.counter(target));
+            messages = target.counter.name ?
+                messages.concat(this.cast(target, actor, target.counter.name)):
+                messages.concat(this.attack(target, actor));
+        }
+
         return messages;
     }
 
@@ -88,6 +95,13 @@ class Battle {
                         messages.push(this.lang.cure.default(result.target));
                     }
         }
+        if ( !target.isDead() && target.counter ) {
+            messages.push(this.lang.actor.counter(target));
+            messages = target.counter.name ?
+                messages.concat(this.cast(target, actor, target.counter.name)):
+                messages.concat(this.attack(target, actor));
+        }
+
         return messages;
     }
 

@@ -3,7 +3,8 @@ module.exports = {
     notarget: (actor) => "しかし だれもいなかった・・・",
     dead: (actor) => `[DEAD] おぉ${actor.name}！死んでしまうとはふがいない`,
     noeffect: (actor) => "しかし なにも おこらなかった！",
-    nomagicpoint: (actor) => "MPが足りない！"
+    nomagicpoint: (actor) => "MPが足りない！",
+    counter: (actor) => `${actor.name} の反撃！`
   },
   target: {
     dead: (target) => `[DEAD] こうかがない・・・${target.name}はただのしかばねのようだ・・・`,
@@ -31,6 +32,6 @@ module.exports = {
   },
   spell: {
     cast: (actor, spellName) => `${actor.name} は ${spellName} をとなえた！`
-  }
+  },
 
 }
