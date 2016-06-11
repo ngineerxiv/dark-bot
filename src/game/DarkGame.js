@@ -10,7 +10,7 @@ const lang      = require("../game/lang/Ja.js");
 const negativeWords   = require("../game/NegativeWords.js").factory();
 
 class DarkGame {
-    constructor(userRepository) {
+    constructor(userRepository, bitnessRepository) {
         this.game = new NodeQuest.Game();
         this.userRepository = userRepository;
         this.monsterRepository = new MonsterRepository();
@@ -20,6 +20,7 @@ class DarkGame {
             new Cron("0 0 * * 1", () => this.game.users.forEach((u) => u.cured(Infinity)), null, true, "Asia/Tokyo"),
             new Cron("0 0 * * *", () => this.game.users.forEach((u) => u.magicPoint.change(Infinity)), null, true, "Asia/Tokyo")
         ];
+        this.bitnessRepository = bitnessRepository;
     }
 
     loadUsers() {
@@ -37,6 +38,7 @@ class DarkGame {
             });
         });
         this.game.setUsers(users.concat(monsters));
+        this.bitnessRepository.load();
         return this.game;
     }
 
@@ -62,14 +64,22 @@ class DarkGame {
         const message = target ?
             lang.status.default(target) :
             lang.actor.notarget(target);
-        return messageSender(message);
+        const bitness = this.bitnessRepository.get(target.id);
+        return messageSender([message, lang.status.bitness(bitness)].join("\n"));
     }
 
     prayToPriest(actorName, messageSender) {
         const priest = this.monsterRepository.getByName("神父");
         const target = this.game.findUser(actorName);
-        const result = this.battle.cast(priest, target, "レイズ");
-        return messageSender(result.messages.join("\n"));
+        let message = "";
+        if( this.bitnessRepository.get(target.id) < 300 ) {
+            message = lang.bitness.notenough();
+        } else {
+            const result = this.battle.cast(priest, target, "レイズ");
+            this.bitnessRepository.decrease(target.id, 300);
+            message = result.messages.join("\n");
+        }
+        return messageSender(message);
     }
 
     takePainByWorld(targetName, basicFormedMessages, messageSender) {
@@ -83,6 +93,8 @@ class DarkGame {
             return
         }
         const result = this.battle.multipleAttack(shakai, target, count);
+        const damage = result.result.filter((r) => typeof r !== 'symbol').filter((r) => r.attack.hit).reduce((pre, cur) => pre + cur.attack.value, 0);
+        this.bitnessRepository.increase(target.id, damage);
         return messageSender(result.messages.join("\n"));
     }
 }

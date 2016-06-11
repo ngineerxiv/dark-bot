@@ -28,10 +28,13 @@ module.exports = {
              `現在のHP: ${target.hitPoint.current} / ${target.hitPoint.max}`,
              `現在のMP: ${target.magicPoint.current} / ${target.magicPoint.max}`,
              `使える魔法: ${target.spells.map((s) => s.name).join(",")}`
-    ].join("\n")
+    ].join("\n"),
+    bitness: (value) => `社会から受けたつらさ: ${value}`
   },
   spell: {
     cast: (actor, spellName) => `${actor.name} は ${spellName} をとなえた！`
   },
-
+  bitness: {
+    notenough: () => "しかし いのりはとどかなかった"
+  }
 }
