@@ -26,9 +26,7 @@ describe('Battle', () => {
         game.setUsers([u1, u2]);
 
         const battle = new Battle(game, lang);
-        battle.attack(u1, u2, (message) => {
-            assert.equal(message, lang.attack.default(u1, u2, 100));
-        });
+        assert.deepEqual(battle.attack(u1, u2), [lang.attack.default(u1, u2, 100)]);
     })
 
     it("should be failed to attack user when target is dead", () => {
@@ -52,9 +50,7 @@ describe('Battle', () => {
         game.setUsers([u1, u2]);
 
         const battle = new Battle(game, lang);
-        battle.attack(u1, u2, (message) => {
-            assert.equal(message, lang.target.dead(u2));
-        });
+        assert.deepEqual(battle.attack(u1, u2), [lang.target.dead(u2)]);
     })
 
     it("should be success to cast a spell to user", () => {
@@ -79,12 +75,11 @@ describe('Battle', () => {
         game.setUsers([u1, u2]);
 
         const battle = new Battle(game, lang);
-        battle.cast(u1, u2, "fire",(message) => {
-            assert.equal(message, [
-                    lang.spell.cast(u1, "fire"),
-                    lang.target.damaged(u2, 105)
-            ].join("\n"));
-        });
+
+        assert.deepEqual(battle.cast(u1, u2, "fire"), [
+                lang.spell.cast(u1, "fire"),
+                lang.target.damaged(u2, 105)
+        ]);
     })
 });
 
