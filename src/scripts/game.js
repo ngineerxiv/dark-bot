@@ -18,6 +18,7 @@ const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
 const MonsterRepository = require("../game/MonsterRepository.js");
 const NegativeWords   = require("../game/NegativeWords.js");
 const UserLoader = require("../game/UserLoader.js");
+const Battle = require("../game/Battle.js");
 
 const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
 const negativeWords   = new NegativeWords(negativeWordsRepository, console);
@@ -46,6 +47,7 @@ module.exports = (robot) => {
 
     const userRepository  = new UserRepository(robot.brain, robot.adapter.client ? robot.adapter.client.users : {});
     const userLoader = new UserLoader(game, userRepository, monsterRepository, spellRepository);
+    const battle = new Battle(game, lang);
 
     robot.brain.once("loaded", (data) => userLoader.loadUsers());
 
@@ -74,13 +76,7 @@ module.exports = (robot) => {
         target.isDead() && res.send(lang.attack.dead(target));
     });
 
-    robot.hear(/^status (.+)/i, (res) => {
-        const target    = game.findUser(res.match[1])
-        const message   = target ?
-            lang.status.default(target) :
-            lang.actor.notarget(target);
-        res.send(message)
-    });
+    robot.hear(/^status (.+)/i, (res) => battle.status(game.findUser(res.match[1]), (m) => res.send(m)));
 
     robot.hear(/^神父 (.+)/, (res) => {
         const priest = monsterRepository.getByName("神父");
