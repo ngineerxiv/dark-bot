@@ -19,34 +19,34 @@ module.exports = (robot) => {
     robot.brain.once("loaded", (data) => darkGame.loadUsers());
 
     robot.hear(/^attack (.+)/i, (res) => {
-        darkGame.attackToUser(res.message.user.name, res.match[1], (m) => res.send(m));
+        darkGame.attackToUser(res.message.user.name.replace(/@/g, ""), res.match[1].replace(/@/g, ""), (m) => res.send(m));
     });
 
     robot.hear(/^status (.+)/i, (res) => {
-        darkGame.statusOfUser(res.match[1], (m) => res.send(m))
+        darkGame.statusOfUser(res.match[1].replace(/@/g, ""), (m) => res.send(m))
     });
 
     robot.hear(/^pray$/i, (res) => {
-        darkGame.prayToPriest(res.message.user.name, (m) => res.send(m));
+        darkGame.prayToPriest(res.message.user.name.replace(/@/g, ""), (m) => res.send(m));
     });
 
     robot.hear(/^神父 (.+)/, (res) => {
-        darkGame.prayToPriest(res.message.user.name, (m) => res.send(m));
+        darkGame.prayToPriest(res.message.user.name.replace(/@/g, ""), (m) => res.send(m));
     });
 
     robot.hear(/.*/, (res) => {
         darkGame.takePainByWorld(
-                res.message.user.name, 
+                res.message.user.name.replace(/@/g, ""), 
                 (res.message.tokenized || []).map((t) => t.basic_form),
                 (m) => res.send(m)
                 )
     });
 
     robot.hear(/(.+)/, (res) => {
-        const messages = (res.message.rawText || "").split(" ");
+        const messages = (res.message.text || "").split(" ");
         (messages.length >= 2) && darkGame.castToUser(
-                res.message.user.name,
-                messages[1],
+                res.message.user.name.replace(/@/g, ""),
+                messages[1].replace(/@/g, ""),
                 messages[0],
                 (m) => res.send(m)
                 );
