@@ -1,4 +1,6 @@
 "use strict"
+const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
+const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
 const guessWords    = ['そう'];
 const denialWords   = ['ない'];
 const ableToGoHome  = ['帰れる', 'かえれる'];
@@ -37,6 +39,10 @@ class NegativeWords {
             this.negativeWords.indexOf(token) !== -1 &&
             (denialWords.indexOf(next) === -1 && guessWords.indexOf(next) === -1)
         ) || (ableToGoHome.indexOf(token) !== -1 && denialWords.indexOf(next) !== -1);
+    }
+
+    static factory() {
+        return new NegativeWords(negativeWordsRepository, console);
     }
 };
 
