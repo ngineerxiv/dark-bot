@@ -65,26 +65,7 @@ module.exports = (robot) => {
     robot.hear(/^神父 (.+)/, (res) => {
         const priest = monsterRepository.getByName("神父");
         const target = game.findUser(res.message.user.name);
-        if ( !target.isDead() ) {
-            return;
-        }
-        const result    = priest.cast("レイズ" , target);
-        switch (result) {
-            case UserStates.NoTargetSpell:
-                return;
-            case UserStates.NotEnoughMagicPoint:
-                return res.send(lang.actor.nomagicpoint(priest));
-            case UserStates.ActorDead:
-                return res.send(lang.actor.dead(priest));
-        }
-        res.send(lang.spell.cast(priest, "レイズ"));
-
-        const statusEffectResult = result.effects.status.filter((e) => e.effective);
-        if(result.effects.status.length > 0) {
-            (statusEffectResult.length > 0) ?
-                res.send(lang.raise.default(result.target)): 
-                res.send(lang.actor.noeffect(result.actor));
-        }
+        battle.cast(priest, target, "レイズ", (m) => res.send(m));
     });
 
     robot.hear(/.*/, (res) => {
