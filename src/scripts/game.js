@@ -9,12 +9,16 @@
 
 const DarkGame  = require("../game/DarkGame.js");
 const UserRepository  = require("../game/UserRepository.js");
+const BitnessRepository =require("../game/BitnessRepository.js");
 
 module.exports = (robot) => {
-    const darkGame = new DarkGame(new UserRepository(
+    const darkGame = new DarkGame(
+            new UserRepository(
                 robot.brain, 
                 robot.adapter.client ? robot.adapter.client.users : {}
-                ));
+                ),
+            new BitnessRepository(robot.brain)
+            );
 
     robot.brain.once("loaded", (data) => darkGame.loadUsers());
 

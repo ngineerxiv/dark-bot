@@ -71,7 +71,7 @@ class Battle {
         return {
             messages: messages,
             result: results,
-            counter: null
+            counter: null,
         };
     }
 
