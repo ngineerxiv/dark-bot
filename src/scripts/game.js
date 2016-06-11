@@ -43,7 +43,7 @@ module.exports = (robot) => {
     });
 
     robot.hear(/(.+)/, (res) => {
-        const messages = (res.message.rawText || "").split(" ");
+        const messages = (res.message.text || "").split(" ");
         (messages.length >= 2) && darkGame.castToUser(
                 res.message.user.name.replace(/@/g, ""),
                 messages[1].replace(/@/g, ""),
