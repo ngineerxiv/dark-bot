@@ -80,7 +80,6 @@ module.exports = (robot) => {
             lang.status.default(target) :
             lang.actor.notarget(target);
         res.send(message)
-        target && res.send(`使える魔法: ${target.spells.map((s) => s.name).join(",")}`);
     });
 
     robot.hear(/^神父 (.+)/, (res) => {
