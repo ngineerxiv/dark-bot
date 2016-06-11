@@ -26,6 +26,10 @@ module.exports = (robot) => {
         darkGame.statusOfUser(res.match[1], (m) => res.send(m))
     });
 
+    robot.hear(/^pray$/i, (res) => {
+        darkGame.prayToPriest(res.message.user.name, (m) => res.send(m));
+    });
+
     robot.hear(/^神父 (.+)/, (res) => {
         darkGame.prayToPriest(res.message.user.name, (m) => res.send(m));
     });
