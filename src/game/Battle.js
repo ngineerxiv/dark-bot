@@ -11,7 +11,11 @@ class Battle {
 
     attack(actor, target) {
         if (!target) {
-            return [this.lang.actor.notarget(actor)];
+            return {
+                messages: [this.lang.actor.notarget(actor)],
+                result: null,
+                counter: null
+            }
         }
         const result = actor.attack(target);
         let messages = [];
@@ -31,18 +35,26 @@ class Battle {
                 target.isDead() && messages.push(this.lang.attack.dead(target));
                 break;
         }
+        let counterResult = null;
         if ( !target.isDead() && target.counter ) {
             messages.push(this.lang.actor.counter(target));
-            messages = target.counter.name ?
-                messages.concat(this.cast(target, actor, target.counter.name)):
-                messages.concat(this.attack(target, actor));
+            const counter = target.counter.name ?
+                this.cast(target, actor, target.counter.name):
+                this.attack(target, actor);
+            counterResult = counter.result;
+            messages = messages.concat(counter.messages);
         }
 
-        return messages;
+        return {
+            messages: messages,
+            result: result,
+            counter: counterResult
+        };
     }
 
     // TODO actorが死んでいる時の処理
     // 現状モンスターしか使わないAPIなので、問題ないがUserが使う際には必要
+    // returnの値も適当なのでFIXME
     multipleAttack(actor, target, n) {
         const results           = Array(n).fill(1).map((i) => actor.attack(target))
         const attackedResults   = results.filter((r) => typeof r !== 'symbol').filter((r) => r.attack.hit);
@@ -56,14 +68,26 @@ class Battle {
         } else {
             messages.push(this.lang.attack.miss(target));
         }
-        return messages;
+        return {
+            messages: messages,
+            result: results,
+            counter: null
+        };
     }
 
     cast(actor, target, spellName) {
         if (actor.spells.filter((s) => s.name === spellName).length <= 0) {
-            return [];
+            return {
+                messages: [],
+                result: null,
+                counter: null
+            };
         } else if (!target) {
-            return [this.lang.actor.notarget(actor)];
+            return {
+                messages: [this.lang.actor.notarget(actor)],
+                result: null,
+                counter: null
+            };
         }
 
         const result    = actor.cast(spellName, target);
@@ -95,21 +119,21 @@ class Battle {
                         messages.push(this.lang.cure.default(result.target));
                     }
         }
+        let counterResult = null;
         if ( !target.isDead() && target.counter ) {
             messages.push(this.lang.actor.counter(target));
-            messages = target.counter.name ?
-                messages.concat(this.cast(target, actor, target.counter.name)):
-                messages.concat(this.attack(target, actor));
+            const counter = target.counter.name ?
+                this.cast(target, actor, target.counter.name):
+                this.attack(target, actor);
+            messages = messages.concat(counter.messages);
+            counterResult = counter.result;
         }
 
-        return messages;
-    }
-
-    status(target) {
-        const message   = target ?
-            this.lang.status.default(target) :
-            this.lang.actor.notarget(target);
-        return [message]
+        return {
+            messages: messages,
+            result: result,
+            counter: counterResult
+        };
     }
 }
 
