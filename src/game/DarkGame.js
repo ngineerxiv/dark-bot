@@ -5,7 +5,6 @@ const Cron      = require("cron").CronJob;
 const SpellRepository = require("../game/SpellRepository.js");
 const UserRepository  = require("../game/UserRepository.js");
 const MonsterRepository = require("../game/MonsterRepository.js");
-const UserLoader = require("../game/UserLoader.js");
 const Battle    = require("../game/Battle.js");
 const lang      = require("../game/lang/Ja.js");
 const negativeWords   = require("../game/NegativeWords.js").factory();
@@ -16,7 +15,6 @@ class DarkGame {
         this.userRepository = userRepository;
         this.monsterRepository = new MonsterRepository();
         this.spellRepository = new SpellRepository();
-        this.userLoader = new UserLoader(this.game, this.userRepository, this.monsterRepository, this.spellRepository);
         this.battle = new Battle(this.game, lang);
         this.jobs = [
             new Cron("0 0 * * 1", () => this.game.users.forEach((u) => u.cured(Infinity)), null, true, "Asia/Tokyo"),
@@ -25,7 +23,21 @@ class DarkGame {
     }
 
     loadUsers() {
-        return this.userLoader.loadUsers();
+        const users = this.userRepository.get();
+        const monsters = this.monsterRepository.get();
+        users.forEach((u) => {
+            if (!this.userRepository.isBot(u.id)) {
+                u.spells = this.spellRepository.get();
+            }
+            u.hitPoint.on("changed", (data) => {
+                this.userRepository.save(this.game.users);
+            });
+            u.magicPoint.on("changed", (data) => {
+                this.userRepository.save(this.game.users);
+            });
+        });
+        this.game.setUsers(users.concat(monsters));
+        return this.game;
     }
 
     attackToUser(actorName, targetName, messageSender) {
