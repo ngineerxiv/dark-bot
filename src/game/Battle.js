@@ -9,9 +9,9 @@ class Battle {
         this.lang = lang;
     }
 
-    attack(actor, target, messageSender) {
+    attack(actor, target) {
         if (!target) {
-            return messageSender(this.lang.actor.notarget(actor));
+            return [this.lang.actor.notarget(actor)];
         }
         const result = actor.attack(target);
         let messages = [];
@@ -31,12 +31,12 @@ class Battle {
                 target.isDead() && messages.push(this.lang.attack.dead(target));
                 break;
         }
-        return messageSender(messages.join("\n"));
+        return messages;
     }
 
     // TODO actorが死んでいる時の処理
     // 現状モンスターしか使わないAPIなので、問題ないがUserが使う際には必要
-    multipleAttack(actor, target, n, messageSender) {
+    multipleAttack(actor, target, n) {
         const results           = Array(n).fill(1).map((i) => actor.attack(target))
         const attackedResults   = results.filter((r) => typeof r !== 'symbol').filter((r) => r.attack.hit);
         const point             = attackedResults.reduce((pre, cur) => pre + cur.attack.value, 0);
@@ -49,14 +49,14 @@ class Battle {
         } else {
             messages.push(this.lang.attack.miss(target));
         }
-        return messageSender(messages.join("\n"));
+        return messages;
     }
 
-    cast(actor, target, spellName, messageSender) {
+    cast(actor, target, spellName) {
         if (actor.spells.filter((s) => s.name === spellName).length <= 0) {
-            return;
+            return [];
         } else if (!target) {
-            return messageSender(this.lang.actor.notarget(actor));
+            return [this.lang.actor.notarget(actor)];
         }
 
         const result    = actor.cast(spellName, target);
@@ -88,14 +88,14 @@ class Battle {
                         messages.push(this.lang.cure.default(result.target));
                     }
         }
-        return messageSender(messages.join("\n"));
+        return messages;
     }
 
-    status(target, messageSender) {
+    status(target) {
         const message   = target ?
             this.lang.status.default(target) :
             this.lang.actor.notarget(target);
-        return messageSender(message)
+        return [message]
     }
 }
 

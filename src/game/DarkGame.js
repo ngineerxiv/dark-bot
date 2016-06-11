@@ -46,23 +46,23 @@ class DarkGame {
             return
         }
         const target = this.game.findUser(targetName);
-        return this.battle.attack(actor, target, messageSender);
+        return messageSender(this.battle.attack(actor, target).join("\n"));
     }
 
     castToUser(actorName, targetName, spellName, messageSender) {
         const actor  = this.game.findUser(actorName);
         const target = this.game.findUser(targetName);
-        return this.battle.cast(actor, target, spellName, messageSender);
+        return messageSender(this.battle.cast(actor, target, spellName).join("\n"));
     }
 
     statusOfUser(targetName, messageSender) {
-        return this.battle.status(this.game.findUser(targetName), messageSender)
+        return messageSender(this.battle.status(this.game.findUser(targetName)).join("\n"))
     }
 
     prayToPriest(actorName, messageSender) {
         const priest = this.monsterRepository.getByName("神父");
         const target = this.game.findUser(actorName);
-        this.battle.cast(priest, target, "レイズ", messageSender);
+        return messageSender(this.battle.cast(priest, target, "レイズ").join("\n"));
     }
 
     takePainByWorld(targetName, basicFormedMessages, messageSender) {
@@ -75,7 +75,7 @@ class DarkGame {
         if(count <= 0) {
             return
         }
-        return this.battle.multipleAttack(shakai, target, count, messageSender);
+        return messageSender(this.battle.multipleAttack(shakai, target, count).join("\n"));
     }
 }
 
