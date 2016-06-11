@@ -10,21 +10,15 @@
 
 const Cron      = require("cron").CronJob;
 const NodeQuest = require("node-quest");
-const UserStates  = NodeQuest.UserStates;
-const Game      = NodeQuest.Game;
 const SpellRepository = require("../game/SpellRepository.js");
 const UserRepository  = require("../game/UserRepository.js");
-const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
 const MonsterRepository = require("../game/MonsterRepository.js");
-const NegativeWords   = require("../game/NegativeWords.js");
 const UserLoader = require("../game/UserLoader.js");
-const Battle = require("../game/Battle.js");
-
-const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
-const negativeWords   = new NegativeWords(negativeWordsRepository, console);
-const game      = new Game();
+const Battle    = require("../game/Battle.js");
+const game      = new NodeQuest.Game();
 const lang      = require("../game/lang/Ja.js");
 const SlackTextMessage = require("hubot-slack").SlackTextMessage;
+const negativeWords   = require("../game/NegativeWords.js").factory();
 function isSlackTextMessage(message) {
     return message instanceof SlackTextMessage;
 }
@@ -70,33 +64,15 @@ module.exports = (robot) => {
 
     robot.hear(/.*/, (res) => {
         const shakai = monsterRepository.getByName("社会");
-        if ( shakai === null ) {
-            return;
-        }
         const target = game.findUser(res.message.user.name)
         if ( !target || target.isDead() ) {
             return;
         }
-
-        const tokens  = (res.message.tokenized || []).map((t) => {
-            return t.basic_form;
-        });
-        const count   = negativeWords.countNegativeWords(tokens);
+        const count   = negativeWords.countNegativeWords((res.message.tokenized || []).map((t) => t.basic_form));
         if(count <= 0) {
             return
         }
-
-        const results           = Array(count).fill(1).map((i) => shakai.attack(target))
-        const attackedResults   = results.filter((r) => typeof r !== 'symbol').filter((r) => r.attack.hit);
-        const point             = attackedResults.reduce((pre, cur) => pre + cur.attack.value, 0);
-        if( attackedResults.length > 0 ) {
-            count === 1 ?
-                res.send(lang.attack.default(shakai, target, point)):
-                res.send(lang.attack.multiple(shakai, target, point, count));
-            target.isDead() && res.send(lang.attack.dead(target));
-        } else {
-            res.send(lang.attack.miss(target));
-        }
+        battle.multipleAttack(shakai, target, count, (m) => res.send(m));
     });
 
     robot.hear(/(.+)/, (res) => {

@@ -34,6 +34,24 @@ class Battle {
         return messageSender(messages.join("\n"));
     }
 
+    // TODO actorが死んでいる時の処理
+    // 現状モンスターしか使わないAPIなので、問題ないがUserが使う際には必要
+    multipleAttack(actor, target, n, messageSender) {
+        const results           = Array(n).fill(1).map((i) => actor.attack(target))
+        const attackedResults   = results.filter((r) => typeof r !== 'symbol').filter((r) => r.attack.hit);
+        const point             = attackedResults.reduce((pre, cur) => pre + cur.attack.value, 0);
+        let messages = [];
+        if( attackedResults.length > 0 ) {
+            n === 1 ?
+                messages.push(this.lang.attack.default(actor, target, point)):
+                messages.push(this.lang.attack.multiple(actor, target, point, n));
+            target.isDead() && messages.push(this.lang.attack.dead(target));
+        } else {
+            messages.push(this.lang.attack.miss(target));
+        }
+        return messageSender(messages.join("\n"));
+    }
+
     cast(actor, target, spellName, messageSender) {
         if (actor.spells.filter((s) => s.name === spellName).length <= 0) {
             return;
