@@ -22,13 +22,12 @@ const Battle = require("../game/Battle.js");
 
 const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
 const negativeWords   = new NegativeWords(negativeWordsRepository, console);
-const spellRepository = new SpellRepository();
-const monsterRepository = new MonsterRepository();
 const game      = new Game();
 const lang      = require("../game/lang/Ja.js");
-const hubotSlack = require("hubot-slack");
-const SlackTextMessage = hubotSlack.SlackTextMessage;
-const isSlackTextMessage = (message) => (message instanceof SlackTextMessage);
+const SlackTextMessage = require("hubot-slack").SlackTextMessage;
+function isSlackTextMessage(message) {
+    return message instanceof SlackTextMessage;
+}
 
 new Cron("0 0 * * 1", () => {
     game.users.forEach((u) => {
@@ -46,7 +45,8 @@ new Cron("0 0 * * *", () => {
 module.exports = (robot) => {
 
     const userRepository  = new UserRepository(robot.brain, robot.adapter.client ? robot.adapter.client.users : {});
-    const userLoader = new UserLoader(game, userRepository, monsterRepository, spellRepository);
+    const monsterRepository = new MonsterRepository();
+    const userLoader = new UserLoader(game, userRepository, monsterRepository, new SpellRepository());
     const battle = new Battle(game, lang);
 
     robot.brain.once("loaded", (data) => userLoader.loadUsers());
@@ -57,23 +57,7 @@ module.exports = (robot) => {
             return
         }
         const target = game.findUser(res.match[1]);
-        if (!target) {
-            return res.send(lang.actor.notarget(actor));
-        }
-        const result = actor.attack(target)
-        switch (result) {
-            case UserStates.TargetDead:
-                return res.send(lang.target.dead(target));
-            case UserStates.ActorDead:
-                return res.send(lang.actor.dead(actor));
-        }
-        const hit   = result.attack.hit;
-        const point = result.attack.value;
-        hit ?
-            res.send(lang.attack.default(actor, target, point)):
-            res.send(lang.attack.miss(target));
-
-        target.isDead() && res.send(lang.attack.dead(target));
+        battle.attack(actor, target, (m) => res.send(m));
     });
 
     robot.hear(/^status (.+)/i, (res) => battle.status(game.findUser(res.match[1]), (m) => res.send(m)));
@@ -150,35 +134,6 @@ module.exports = (robot) => {
         ).filter(
             (user) => user !== null
         ).pop();
-        if (actor.spells.filter((s) => s.name === spellName).length <= 0) {
-            return;
-        } else if (!target) {
-            return res.send(lang.actor.notarget(actor));
-        }
-
-        const result    = actor.cast(spellName, target);
-        switch (result) {
-            case UserStates.NoTargetSpell:
-                return;
-            case UserStates.NotEnoughMagicPoint:
-                return res.send(lang.actor.nomagicpoint(actor));
-            case UserStates.TargetDead:
-                return res.send(lang.target.dead(target));
-            case UserStates.ActorDead:
-                return res.send(lang.actor.dead(actor));
-        }
-        res.send(lang.spell.cast(actor, spellName));
-        if( result.effects.attack !== null ) {
-            res.send(lang.target.damaged(result.target, result.effects.attack));
-            result.target.isDead() && res.send(lang.attack.dead(result.target));
-        }
-        const statusEffectResult = result.effects.status.filter((e) => e.effective)
-        if(result.effects.status.length > 0) {
-            (statusEffectResult.length > 0) ?
-                res.send(lang.raise.default(result.target)): 
-                res.send(lang.actor.noeffect(result.actor));
-        } else if( result.effects.cure !== null) {
-            res.send(lang.cure.default(result.target));
-        }
+        battle.cast(actor, target, spellName, (m) => res.send(m));
     });
 }
