@@ -17,6 +17,7 @@ const UserRepository  = require("../game/UserRepository.js");
 const NegativeWordsRepository = require("../game/NegativeWordsRepository.js");
 const MonsterRepository = require("../game/MonsterRepository.js");
 const NegativeWords   = require("../game/NegativeWords.js");
+const UserLoader = require("../game/UserLoader.js");
 
 const negativeWordsRepository = new NegativeWordsRepository("http://yamiga.waka.ru.com/json/darkbot.json");
 const negativeWords   = new NegativeWords(negativeWordsRepository, console);
@@ -44,23 +45,9 @@ new Cron("0 0 * * *", () => {
 module.exports = (robot) => {
 
     const userRepository  = new UserRepository(robot.brain, robot.adapter.client ? robot.adapter.client.users : {});
+    const userLoader = new UserLoader(game, userRepository, monsterRepository, spellRepository);
 
-    robot.brain.once("loaded", (data) => {
-        const users = userRepository.get();
-        const monsters = monsterRepository.get();
-        users.forEach((u) => {
-            if (!userRepository.isBot(u.id)) {
-                u.spells = spellRepository.get();
-            }
-            u.hitPoint.on("changed", (data) => {
-                userRepository.save(game.users);
-            });
-            u.magicPoint.on("changed", (data) => {
-                userRepository.save(game.users);
-            });
-        });
-        game.setUsers(users.concat(monsters));
-    });
+    robot.brain.once("loaded", (data) => userLoader.loadUsers());
 
     robot.hear(/^attack (.+)/i, (res) => {
         const actor = game.findUser(res.message.user.name);
