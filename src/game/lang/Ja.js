@@ -29,7 +29,7 @@ module.exports = {
              `現在のMP: ${target.magicPoint.current} / ${target.magicPoint.max}`,
              `使える魔法: ${target.spells.map((s) => s.name).join(",")}`
     ].join("\n"),
-    bitness: (value) => `社会から受けたつらさ: ${value}`
+    bitness: (value) => `信仰(社会から受けたつらさ): ${value}`
   },
   spell: {
     cast: (actor, spellName) => `${actor.name} は ${spellName} をとなえた！`
