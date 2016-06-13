@@ -7,6 +7,7 @@ const UserRepository  = require("../game/UserRepository.js");
 const MonsterRepository = require("../game/MonsterRepository.js");
 const Battle    = require("../game/Battle.js");
 const lang      = require("../game/lang/Ja.js");
+const StatusValues = NodeQuest.StatusValues;
 const negativeWords   = require("../game/NegativeWords.js").factory();
 
 class DarkGame {
@@ -17,7 +18,7 @@ class DarkGame {
         this.spellRepository = new SpellRepository();
         this.battle = new Battle(this.game, lang);
         this.jobs = [
-            new Cron("0 0 * * 1", () => this.game.users.forEach((u) => u.cured(Infinity)), null, true, "Asia/Tokyo"),
+            new Cron("0 0 * * 1", () => this.cureAll(), null, true, "Asia/Tokyo"),
             new Cron("0 0 * * *", () => this.game.users.forEach((u) => u.magicPoint.change(Infinity)), null, true, "Asia/Tokyo")
         ];
         this.bitnessRepository = bitnessRepository;
@@ -66,6 +67,14 @@ class DarkGame {
             lang.actor.notarget(target);
         const bitness = this.bitnessRepository.get(target.id);
         return messageSender([message, lang.status.bitness(bitness)].join("\n"));
+    }
+
+    cureAll() {
+        const holiday   = this.monsterRepository.getByName("休日");
+        this.game.users.forEach((u) => {
+            holiday.cast("アレイズ", u);
+            holiday.cast("フルケア", u);
+        })
     }
 
     prayToPriest(actorName, messageSender) {
