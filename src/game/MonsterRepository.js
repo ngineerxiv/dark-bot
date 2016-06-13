@@ -22,8 +22,13 @@ class MonsterRepositoryOnMemory {
                 new Spell("レイズ", 20, [new StatusEffect(StatusValues.DEAD), new CureEffect(100)]),
                 new Spell("神の裁き", 0, new AttackEffect(Infinity))
         ]);
+        const holiday = new User(0, "休日", new HitPoint(Infinity, Infinity), new MagicPoint(Infinity, Infinity), new Equipment(new Weapon(0, 0, new HitRate(100))), new Parameter(Infinity, 0), [
+            new Spell("アレイズ", 20, [new StatusEffect(StatusValues.DEAD), new CureEffect(Infinity)]),
+            new Spell("フルケア", 100, new CureEffect(Infinity))
+        ]);
+
         priest.counter = new Spell("神の裁き", 0, new AttackEffect(Infinity));
-        this.monsters = [world, priest];
+        this.monsters = [world, priest, holiday];
     }
 
     get() {
