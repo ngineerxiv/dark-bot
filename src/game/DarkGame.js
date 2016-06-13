@@ -7,6 +7,7 @@ const UserRepository  = require("../game/UserRepository.js");
 const MonsterRepository = require("../game/MonsterRepository.js");
 const Battle    = require("../game/Battle.js");
 const lang      = require("../game/lang/Ja.js");
+const StatusValues = NodeQuest.StatusValues;
 const negativeWords   = require("../game/NegativeWords.js").factory();
 
 class DarkGame {
@@ -17,7 +18,10 @@ class DarkGame {
         this.spellRepository = new SpellRepository();
         this.battle = new Battle(this.game, lang);
         this.jobs = [
-            new Cron("0 0 * * 1", () => this.game.users.forEach((u) => u.cured(Infinity)), null, true, "Asia/Tokyo"),
+            new Cron("0 0 * * 1", () => this.game.users.forEach((u) => {
+                u.status.clear(StatusValues.DEAD)
+                u.cured(Infinity);
+            }), null, true, "Asia/Tokyo"),
             new Cron("0 0 * * *", () => this.game.users.forEach((u) => u.magicPoint.change(Infinity)), null, true, "Asia/Tokyo")
         ];
         this.bitnessRepository = bitnessRepository;
