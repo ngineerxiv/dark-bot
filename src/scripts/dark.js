@@ -64,7 +64,7 @@ module.exports = (robot) => {
             const json = JSON.parse(body);
             if( json.kusokora ) {
                 const url = res.random(json.kusokora);
-                res.send(`${url}?cb=${uuid.v4()}`);
+                res.send(`${url}#cb=${uuid.v4()}`);
             } else {
                 res.send("ray ruby `curl -X POST https://ngineerxiv-dark.appspot.com/api/v1/kusokora -H 'Content-Length: 0'`");
             }
