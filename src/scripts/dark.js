@@ -57,4 +57,13 @@ module.exports = (robot) => {
         res.send((res.random(isaos))())
     })
 
+    robot.respond(/PAPIX$/i, (res) => {
+        const req = robot.http("https://ngineerxiv-dark.appspot.com/api/v1/kusokora").get();
+        req((err, response, body) => {
+            err && hubot.logger.error(err);
+            const json = JSON.parse(body);
+            res.send(res.random(json.kusokora));
+        });
+    });
+
 }
