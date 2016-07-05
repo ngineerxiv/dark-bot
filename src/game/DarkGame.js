@@ -91,13 +91,13 @@ class DarkGame {
         return messageSender(message);
     }
 
-    takePainByWorld(targetName, basicFormedMessages, messageSender) {
+    takePainByWorld(targetName, kuromojiFormedMessages, messageSender) {
         const shakai = this.monsterRepository.getByName("社会");
         const target = this.game.findUser(targetName)
         if ( !target || target.isDead() ) {
             return;
         }
-        const count   = negativeWords.countNegativeWords(basicFormedMessages);
+        const count = negativeWords.countPain(kuromojiFormedMessages);
         if(count <= 0) {
             return
         }
