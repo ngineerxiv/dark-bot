@@ -41,7 +41,7 @@ module.exports = (robot) => {
     robot.hear(/.*/, (res) => {
         darkGame.takePainByWorld(
                 res.message.user.name.replace(/@/g, ""), 
-                (res.message.tokenized || []).map((t) => t.basic_form),
+                (res.message.tokenized || []),
                 (m) => res.send(m)
                 )
     });
