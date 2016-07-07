@@ -19,7 +19,7 @@ class DarkGame {
         this.battle = new Battle(this.game, lang);
         this.jobs = [
             new Cron("0 0 * * 1", () => this.cureAll(), null, true, "Asia/Tokyo"),
-            new Cron("0 0 * * *", () => this.game.users.forEach((u) => u.magicPoint.change(Infinity)), null, true, "Asia/Tokyo")
+            new Cron("4 0 * * *", () => this.game.users.forEach((u) => u.magicPoint.change(Infinity)), null, true, "Asia/Tokyo")
         ];
         this.bitnessRepository = bitnessRepository;
     }
