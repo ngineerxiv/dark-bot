@@ -7,6 +7,7 @@ const Weapon    = DarkQuest.Weapon;
 const User      = DarkQuest.User;
 const Status    = DarkQuest.Status;
 const HitRate   = DarkQuest.HitRate;
+const Critical  = DarkQuest.Critical;
 const HitPoint  = DarkQuest.HitPoint;
 const MagicPoint= DarkQuest.MagicPoint;
 const Spell     = DarkQuest.Spell;
@@ -17,7 +18,12 @@ const StatusValues = DarkQuest.StatusValues;
 
 class MonsterRepositoryOnMemory {
     constructor() {
-        const world = new User(0, "社会", new HitPoint(Infinity, Infinity), new MagicPoint(Infinity, Infinity), new Equipment(new Weapon(300, 120, new HitRate(100))), new Parameter(100, 12));
+        const world = new User(0, "社会", 
+            new HitPoint(Infinity, Infinity), 
+            new MagicPoint(Infinity, Infinity), 
+            new Equipment(new Weapon(300, 120, new HitRate(95), new Critical(20))), 
+            new Parameter(100, 12)
+        );
         const priest = new User(0, "神父", new HitPoint(Infinity, Infinity), new MagicPoint(Infinity, Infinity), new Equipment(new Weapon(0, 0, new HitRate(100))), new Parameter(800, 10), [
                 new Spell("レイズ", 20, [new StatusEffect(StatusValues.DEAD), new CureEffect(100)]),
                 new Spell("神の裁き", 0, new AttackEffect(Infinity))
