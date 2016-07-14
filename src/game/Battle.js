@@ -31,9 +31,13 @@ class Battle {
             default:
                 const hit   = result.attack.hit;
                 const point = result.attack.value;
-                hit ?
-                    messages.push(this.lang.attack.default(actor, target, point)):
-                    messages.push(this.lang.attack.miss(target));
+                const critical = result.attack.critical;
+                hit ? (
+                    critical ?
+                    messages.push(this.lang.attack.critical(actor, target, point)):
+                    messages.push(this.lang.attack.default(actor, target, point))
+                ):
+                messages.push(this.lang.attack.miss(target));
                 target.isDead() && messages.push(this.lang.attack.dead(target));
                 break;
         }
