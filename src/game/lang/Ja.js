@@ -14,6 +14,7 @@ module.exports = {
   attack: {
     default: (actor, target, point) => `[ATTACK] ${actor.name}のこうげき！${target.name}に${point}のダメージ！ 残り:${target.hitPoint.current} / ${target.hitPoint.max}`,
     multiple: (actor, target, point, n) => `[ATTACK] ${actor.name}の${n}れんぞくこうげき！${target.name}に${point}のダメージ！ 残り:${target.hitPoint.current} / ${target.hitPoint.max}`,
+    critical: (actor, target, point) => `[ATTACK] ${actor.name}のこうげき！かいしんのいちげき！${target.name}に${point}のダメージ！ 残り:${target.hitPoint.current} / ${target.hitPoint.max}`,
     dead: (target) => `[DEAD] ${target.name}はしんでしまった`,
     miss: (target) => `[MISS] ${target.name}はひらりと身をかわした`
   },
