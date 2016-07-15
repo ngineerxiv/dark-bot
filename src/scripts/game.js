@@ -23,11 +23,11 @@ module.exports = (robot) => {
     robot.brain.once("loaded", (data) => darkGame.loadUsers());
 
     robot.hear(/^attack (.+)/i, (res) => {
-        darkGame.attackToUser(res.message.user.name.replace(/@/g, ""), res.match[1].replace(/@/g, ""), (m) => res.send(m));
+        darkGame.attackToUser(res.message.user.name.replace(/@/g, ""), res.match[1].trim().replace(/@/g, ""), (m) => res.send(m));
     });
 
     robot.hear(/^status (.+)/i, (res) => {
-        darkGame.statusOfUser(res.match[1].replace(/@/g, ""), (m) => res.send(m))
+        darkGame.statusOfUser(res.match[1].trim().replace(/@/g, ""), (m) => res.send(m))
     });
 
     robot.hear(/^pray$/i, (res) => {
@@ -50,7 +50,7 @@ module.exports = (robot) => {
         const messages = (res.message.text || "").split(" ");
         (messages.length >= 2) && darkGame.castToUser(
                 res.message.user.name.replace(/@/g, ""),
-                messages[1].replace(/@/g, ""),
+                messages[1].trim().replace(/@/g, ""),
                 messages[0],
                 (m) => res.send(m)
                 );
