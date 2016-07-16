@@ -7,6 +7,8 @@
 //   game pray - 祈る。死んでいる時に祈りが届けば復活できる。(社会から受けたつらさを消費する)
 //   game 神父 {user} - prayと同等の効果
 //   game {spell} {user} - {spell}を唱えて{user}にかける。利用可能な{spell}はstatusで確認する
+//   game job list - 転職可能なjob一覧が出る
+//   game job change {job} - 転職する。(ただし社会から受けたつらさを消費する)
 //
 
 "use strict"
