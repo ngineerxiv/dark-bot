@@ -4,37 +4,42 @@ const NodeQuest = require("node-quest");
 const Cron      = require("cron").CronJob;
 const SpellRepository = require("../game/SpellRepository.js");
 const UserRepository  = require("../game/UserRepository.js");
+const JobRepository   = require("../game/JobRepository.js");
 const MonsterRepository = require("../game/MonsterRepository.js");
 const Battle    = require("../game/Battle.js");
 const lang      = require("../game/lang/Ja.js");
 const StatusValues = NodeQuest.StatusValues;
 const negativeWords   = require("../game/NegativeWords.js").factory();
+const UserLoader = require("../game/UserLoader.js");
 
 class DarkGame {
     constructor(userRepository, bitnessRepository) {
-        this.game = new NodeQuest.Game();
-        this.userRepository = userRepository;
-        this.monsterRepository = new MonsterRepository();
-        this.spellRepository = new SpellRepository();
-        this.battle = new Battle(this.game, lang);
-        this.jobs = [
+        this.game               = new NodeQuest.Game();
+        this.spellRepository    = new SpellRepository();
+        this.jobRepository      = new JobRepository();
+        this.userLoader         = new UserLoader(userRepository, this.spellRepository, this.jobRepository)
+        this.userRepository     = userRepository;
+        this.monsterRepository  = new MonsterRepository();
+        this.battle             = new Battle(this.game, lang);
+        this.cronJobs           = [
             new Cron("0 0 * * 1", () => this.cureAll(), null, true, "Asia/Tokyo"),
             new Cron("0 4 * * *", () => this.game.users.forEach((u) => u.magicPoint.change(Infinity)), null, true, "Asia/Tokyo")
         ];
-        this.bitnessRepository = bitnessRepository;
+        this.bitnessRepository  = bitnessRepository;
     }
 
     loadUsers() {
-        const users = this.userRepository.get();
+        const users = this.userLoader.load();
         const monsters = this.monsterRepository.get();
         users.forEach((u) => {
-            if (!this.userRepository.isBot(u.id)) {
-                u.spells = this.spellRepository.get();
-            }
             u.hitPoint.on("changed", (data) => {
                 this.userRepository.save(this.game.users);
             });
             u.magicPoint.on("changed", (data) => {
+                this.userRepository.save(this.game.users);
+            });
+
+            u.on("jobChanged", (data) => {
                 this.userRepository.save(this.game.users);
             });
         });
@@ -66,8 +71,40 @@ class DarkGame {
             lang.status.default(target) :
             lang.actor.notarget(target);
         const bitness = this.bitnessRepository.get(target.id);
-        return messageSender([message, lang.status.bitness(bitness)].join("\n"));
+        return messageSender([
+                message, 
+                lang.status.bitness(bitness)
+        ].join("\n"));
     }
+
+    listJobs(messageSender) {
+        return messageSender(lang.job.list(this.jobRepository.getAll().map((j) => j.name).join(",")));
+    }
+
+    changeJob(targetName, jobName, messageSender) {
+        const target    = this.game.findUser(targetName);
+        const job       = this.jobRepository.getByName(jobName);
+        if ( !job ) {
+            return messageSender(lang.job.notfound(jobName));
+        }
+
+        const bitness = this.bitnessRepository.get(target.id);
+        const requiredBitness = 2000;
+        let message;
+        if( bitness < requiredBitness ) {
+            message = lang.job.notenough(bitness, requiredBitness);
+        } else {
+            target.changeJob(job);
+            target.emit("jobChanged", {
+                target: target,
+                job: job
+            });
+            this.bitnessRepository.decrease(target.id, requiredBitness);
+            message = lang.job.changed(target, job);
+        }
+        return messageSender(message);
+    }
+
 
     cureAll() {
         const holiday   = this.monsterRepository.getByName("休日");
@@ -106,6 +143,7 @@ class DarkGame {
         this.bitnessRepository.increase(target.id, damage);
         return messageSender(result.messages.join("\n"));
     }
+
 }
 
 module.exports = DarkGame;
