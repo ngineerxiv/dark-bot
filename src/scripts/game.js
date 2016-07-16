@@ -1,8 +1,12 @@
 // Description:
 //   遊ぶ
 // Commands:
-//   attack {user} - attack
-//   status {user} - HP,MP,使える魔法の確認
+//   hubot game help - RPG機能の説明が出る
+//   game attack {user} - {user}への攻撃 '@' と ' ' は無視される e.g. attack @dark, attack dark
+//   game status {user} - {user}のHP, MP, 使用可能な魔法, 社会から受けたつらさを確認する
+//   game pray - 祈る。死んでいる時に祈りが届けば復活できる。(社会から受けたつらさを消費する)
+//   game 神父 {user} - prayと同等の効果
+//   game {spell} {user} - {spell}を唱えて{user}にかける。利用可能な{spell}はstatusで確認する
 //
 
 "use strict"
@@ -54,5 +58,16 @@ module.exports = (robot) => {
                 messages[0],
                 (m) => res.send(m)
                 );
+    });
+
+    robot.respond(/game help$/, (res) => {
+        const gameHelps = robot.commands
+            .sort()
+            .filter((cmd) => /game/.test(cmd))
+            .filter((cmd) => !/help/.test(cmd))
+            .map((cmd) => cmd.replace(/game/, ""))
+            .map((cmd) => cmd.trim())
+            ;
+        res.send(gameHelps.join("\n"));
     });
 }
