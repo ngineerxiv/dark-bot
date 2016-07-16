@@ -82,7 +82,7 @@ class Battle {
     }
 
     cast(actor, target, spellName) {
-        if (actor.spells.filter((s) => s.name === spellName).length <= 0) {
+        if (actor.getLearnedSpells().filter((s) => s.name === spellName).length <= 0) {
             return {
                 messages: [],
                 result: null,

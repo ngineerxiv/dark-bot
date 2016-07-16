@@ -60,6 +60,18 @@ module.exports = (robot) => {
                 );
     });
 
+    robot.hear(/^job list/, (res) => {
+        darkGame.listJobs((m) => res.send(m));
+    });
+
+    robot.hear(/^job change (.+)$/, (res) => {
+        darkGame.changeJob(
+                res.message.user.name.replace(/@/g, ""), 
+                res.match[1].trim().replace(/@/g, ""), 
+                (m) => res.send(m)
+                );
+    })
+
     robot.respond(/game help$/, (res) => {
         const gameHelps = robot.commands
             .sort()

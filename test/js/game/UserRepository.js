@@ -50,17 +50,7 @@ describe('UserRepository', () => {
                 }
         ]);
         const actual = r.get();
-        assert.equal(actual.length, 3);
-        const vals = actual.map((u) => [
-            u.id,
-            u.name,
-            u.hitPoint.current
-        ]);
-        assert.deepEqual(vals, [
-                ["a", "hoge", 10],
-                ["b", "fuga", 0],
-                ["c", "piyo", 3000]
-        ]);
+        assert.equal(Object.keys(actual).length, 2);
     })
 
 
