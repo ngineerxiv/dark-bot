@@ -11,7 +11,7 @@ const HitPoint  = DarkQuest.HitPoint;
 const MagicPoint= DarkQuest.MagicPoint;
 const Critical  = DarkQuest.Critical;
 
-const MAX_HIT_POINT   = 3000;
+const MAX_HIT_POINT   = 5000;
 const MAX_MAGIC_POINT = 1000;
 
 class UserLoader {
