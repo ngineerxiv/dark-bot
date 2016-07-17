@@ -67,12 +67,12 @@ class DarkGame {
 
     statusOfUser(targetName, messageSender) {
         const target = this.game.findUser(targetName);
-        const message = target ?
-            lang.status.default(target) :
-            lang.actor.notarget(target);
+        if ( !target ) {
+            return messageSender(lang.actor.notarget(target));
+        }
         const bitness = this.bitnessRepository.get(target.id);
         return messageSender([
-                message, 
+                lang.status.default(target), 
                 lang.status.bitness(bitness)
         ].join("\n"));
     }
