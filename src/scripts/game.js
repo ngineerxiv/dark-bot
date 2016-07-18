@@ -84,4 +84,18 @@ module.exports = (robot) => {
             ;
         res.send(gameHelps.join("\n"));
     });
+
+    robot.router.get("/game/api/v1/users", (req, res) => {
+        const users = darkGame.game.users.map((user) => {
+            const u = Object.assign({}, user);
+            u.spells = user.getLearnedSpells();
+            return u;
+        });
+        res.end(JSON.stringify(users, (k, v) => {
+            if ( v === Infinity ) {
+                return "Infinity";
+            }
+            return v;
+        }));
+    });
 }
