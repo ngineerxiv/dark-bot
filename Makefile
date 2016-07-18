@@ -54,7 +54,7 @@ deploy: ## deploy script for Jenkins
 	$(MAKE) test
 
 ping: ## ping script for Jenkins
-	timeout 60 sh - c 'until curl $(basic) -i localhost:8081/hubot/ping | grep "PONG") do sleep 2; done'
+	timeout 60 sh -c 'until curl $(basic) -i localhost:8081/hubot/ping | grep "PONG") do sleep 2; done'
 
 update: ## update script for Jenkins
 	$(npm) update
