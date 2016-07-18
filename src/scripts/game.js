@@ -84,4 +84,13 @@ module.exports = (robot) => {
             ;
         res.send(gameHelps.join("\n"));
     });
+
+    robot.router.get("/game/api/v1/all", (req, res) => {
+        res.end(JSON.stringify(darkGame.game, (k, v) => {
+            if ( v === Infinity ) {
+                return "Infinity";
+            }
+            return v;
+        }));
+    });
 }
