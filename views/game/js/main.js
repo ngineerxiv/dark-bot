@@ -2,15 +2,15 @@
     "use strict";
 
     function loadUsers(callback) {
-        const XHR = new XMLHttpRequest();
-        XHR.addEventListener('load', function(event) {
+        const req = new XMLHttpRequest();
+        req.addEventListener('load', function(event) {
             callback(JSON.parse(event.target.response));
         });
-        XHR.addEventListener('error', function(event) {
+        req.addEventListener('error', function(event) {
             console.log(event);
         });
-        XHR.open('GET', '/game/api/v1/users');
-        XHR.send();
+        req.open('GET', '/game/api/v1/users');
+        req.send();
     };
 
     class UserStatusTable extends React.Component {
