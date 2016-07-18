@@ -2,6 +2,7 @@ npm=$(shell which npm)
 monitoring-code=local
 credential=./credentials/development
 deploy-branch="master"
+basic='--user $(basic_user):$(basic_pass)'
 
 .PHONY:test help
 
@@ -53,7 +54,7 @@ deploy: ## deploy script for Jenkins
 	$(MAKE) test
 
 ping: ## ping script for Jenkins
-	./bin/ping
+	timeout 60 sh - c 'until curl $(basic) -i localhost:8081 | grep "PONG") do sleep 2; done'
 
 update: ## update script for Jenkins
 	$(npm) update
