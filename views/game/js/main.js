@@ -2,14 +2,15 @@
     "use strict";
 
     function loadUsers(callback) {
-        fetch("/game/api/v1/users")
-        .then(response => response.json())
-        .then(json => {
-            callback(json);
-        })
-        .catch(error => {
-            console.log(error);
+        const XHR = new XMLHttpRequest();
+        XHR.addEventListener('load', function(event) {
+            callback(JSON.parse(event.target.response));
         });
+        XHR.addEventListener('error', function(event) {
+            console.log(event);
+        });
+        XHR.open('GET', '/game/api/v1/users');
+        XHR.send();
     };
 
     class UserStatusTable extends React.Component {
@@ -27,11 +28,9 @@
         }
 
         render() {
-            console.log(this.state.users);
             const rows = this.state.users.map((u) => {
                 return (
                     <UserStatusRow
-                    id={u.id}
                     name={u.name}
                     hitPoint={u.hitPoint.current}
                     maxHitPoint={u.hitPoint.max}
@@ -51,7 +50,6 @@
                 <table className="table table-hover">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>名前</th>
                             <th>HitPoint</th>
                             <th>MagicPoint</th>
@@ -76,7 +74,6 @@
         render() {
             return (
                 <tr>
-                    <th>{this.props.id}</th>
                     <th>{this.props.name}</th>
                     <th>{this.props.hitPoint} / {this.props.maxHitPoint}</th>
                     <th>{this.props.magicPoint} / {this.props.maxMagicPoint}</th>
