@@ -4,7 +4,7 @@ credential=./credentials/development
 deploy-branch="master"
 basic_user=
 basic_pass=
-basic='--user $(basic_user):$(basic_pass)'
+basic="--user $(basic_user):$(basic_pass)"
 
 .PHONY:test help
 
