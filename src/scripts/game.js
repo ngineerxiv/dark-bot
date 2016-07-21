@@ -18,13 +18,12 @@ const UserRepository  = require("../game/UserRepository.js");
 const BitnessRepository =require("../game/BitnessRepository.js");
 
 module.exports = (robot) => {
+    const bitnessRepository = new BitnessRepository(robot.brain);
+    const userRepository    = new UserRepository(robot.brain, robot.adapter.client ? robot.adapter.client.users : {});
     const darkGame = new DarkGame(
-            new UserRepository(
-                robot.brain, 
-                robot.adapter.client ? robot.adapter.client.users : {}
-                ),
-            new BitnessRepository(robot.brain)
-            );
+        userRepository,
+        bitnessRepository
+    );
 
     robot.brain.once("loaded", (data) => darkGame.loadUsers());
 
@@ -89,6 +88,7 @@ module.exports = (robot) => {
         const users = darkGame.game.users.map((user) => {
             const u = Object.assign({}, user);
             u.spells = user.getLearnedSpells();
+            u.bitness = bitnessRepository.get(u.id) || 0;
             return u;
         });
         res.end(JSON.stringify(users, (k, v) => {
