@@ -72,4 +72,8 @@ module.exports = (robot) => {
         });
     });
 
+    robot.respond(/stenyan (.+)$/, (res) => {
+        const target = res.match[1];
+        res.send(`ウェーイww君${target}っぽいね？てかLINEやってる？笑`);
+    });
 }
