@@ -1,4 +1,5 @@
 npm=$(shell which npm)
+node=$(shell which node)
 monitoring-code=local
 credential=./credentials/development
 deploy-branch="master"
@@ -43,7 +44,7 @@ start-local: ## start hubot with shell adapter
 	source $(credential);./bin/hubot
 
 run-new-channels:
-	./bin/start-new-channels $(credential)
+	source $(credential);$(node) ./src/dark/bin/NewChennels.js
 
 ######################################
 ##########  Jenkins scripts  #########
