@@ -5,11 +5,12 @@ deploy-branch="master"
 basic_user=
 basic_pass=
 ENV=development
+config_production=/credentials/dark-bot-config-prod.json
 
 .PHONY:test help
 
 help:
-	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[0-9a-zA-Z_/\.-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 
 ###########################################
@@ -34,14 +35,14 @@ install: ## install dark bot
 ##########  main scripts  ##########
 ####################################
 
-start: credentials/prod.json ## start hubot with slack adapter.
+start: config/production.json ## start hubot with slack adapter.
 	env NODE_ENV=$(ENV) ./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
 start-local: ## start hubot with shell adapter
 	source $(credential);./bin/hubot
 
-credentials/prod.json: /credentials/dark-bot-config-prod.json
-	cp -f $< $@
+config/production.json: ## If you wanna confirm to go well or not, please use `make config/production.json config_production=config/development.json`
+	cp -f $(config_production) $@
 
 run-new-channels:
 	./bin/start-new-channels $(credential)
