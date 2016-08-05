@@ -5,18 +5,20 @@ credential=./credentials/development
 deploy-branch="master"
 basic_user=
 basic_pass=
+ENV=development
+config_production=/credentials/dark-bot-config-prod.json
 
 .PHONY:test help
 
 help:
-	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[0-9a-zA-Z_/\.-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 
 ###########################################
 ##########  Development scripts  ##########
 ###########################################
 
-test: settings/poems.json ## run dark's all tests
+test: ## run dark's all tests
 	./bin/hubot --config-check
 	$(npm) run compile
 	$(npm) run test-js
@@ -27,21 +29,21 @@ watch-test-js:
 watch-compile:
 	$(npm) run compile-watch
 
-install: settings/poems.json ## install dark bot
+install: ## install dark bot
 	$(npm) install
-
-settings/poems.json:
-	cp -f settings/poems.json.sample settings/poems.json
 
 ####################################
 ##########  main scripts  ##########
 ####################################
 
-start: ## start hubot with slack adapter.
-	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
+start: config/production.json ## start hubot with slack adapter.
+	env NODE_ENV=$(ENV) ./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
 start-local: ## start hubot with shell adapter
 	source $(credential);./bin/hubot
+
+config/production.json: ## If you wanna confirm to go well or not, please use `make config/production.json config_production=config/development.json`
+	cp -f $(config_production) $@
 
 run-new-channels:
 	source $(credential);$(node) ./src/dark/bin/NewChennels.js

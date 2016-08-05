@@ -12,6 +12,7 @@
   },
   "description": "Dark",
   "dependencies": {
+    "config": "^1.21.0",
     "cron": "^1.1.0",
     "eastasianwidth": "^0.1.1",
     "eventemitter2": "^2.0.0",
