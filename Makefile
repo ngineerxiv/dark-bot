@@ -4,7 +4,7 @@ credential=./credentials/development
 deploy-branch="master"
 basic_user=
 basic_pass=
-ENV=dev
+ENV=development
 
 .PHONY:test help
 
@@ -34,11 +34,14 @@ install: ## install dark bot
 ##########  main scripts  ##########
 ####################################
 
-start: ## start hubot with slack adapter.
+start: credentials/prod.json ## start hubot with slack adapter.
 	env NODE_ENV=$(ENV) ./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
 start-local: ## start hubot with shell adapter
 	source $(credential);./bin/hubot
+
+credentials/prod.json: /credentials/dark-bot-config-prod.json:
+	cp -f $< $@
 
 run-new-channels:
 	./bin/start-new-channels $(credential)
