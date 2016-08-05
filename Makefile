@@ -4,6 +4,7 @@ credential=./credentials/development
 deploy-branch="master"
 basic_user=
 basic_pass=
+ENV=development
 
 .PHONY:test help
 
@@ -15,7 +16,7 @@ help:
 ##########  Development scripts  ##########
 ###########################################
 
-test: settings/poems.json ## run dark's all tests
+test: ## run dark's all tests
 	./bin/hubot --config-check
 	$(npm) run compile
 	$(npm) run test-js
@@ -26,21 +27,21 @@ watch-test-js:
 watch-compile:
 	$(npm) run compile-watch
 
-install: settings/poems.json ## install dark bot
+install: ## install dark bot
 	$(npm) install
-
-settings/poems.json:
-	cp -f settings/poems.json.sample settings/poems.json
 
 ####################################
 ##########  main scripts  ##########
 ####################################
 
-start: ## start hubot with slack adapter.
-	./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
+start: credentials/prod.json ## start hubot with slack adapter.
+	env NODE_ENV=$(ENV) ./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
 
 start-local: ## start hubot with shell adapter
 	source $(credential);./bin/hubot
+
+credentials/prod.json: /credentials/dark-bot-config-prod.json
+	cp -f $< $@
 
 run-new-channels:
 	./bin/start-new-channels $(credential)

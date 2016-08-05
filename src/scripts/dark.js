@@ -12,7 +12,7 @@
 "use strict"
 
 const uuid = require("node-uuid");
-const json = require('../../settings/poems.json')
+const config = require("config");
 const Levenshtein = require("levenshtein");
 
 const gomas = [
@@ -31,7 +31,7 @@ const isaos = [
 module.exports = (robot) => {
 
     robot.respond(/poem$/i, (res) => {
-        res.send(res.random(json.poem))
+        res.send(res.random(config.poem))
     })
 
     robot.hear(/なん(\.|。|・)*だと(\.|。|・)*$/i, (res) => {
