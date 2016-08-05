@@ -40,7 +40,7 @@ start: credentials/prod.json ## start hubot with slack adapter.
 start-local: ## start hubot with shell adapter
 	source $(credential);./bin/hubot
 
-credentials/prod.json: /credentials/dark-bot-config-prod.json:
+credentials/prod.json: /credentials/dark-bot-config-prod.json
 	cp -f $< $@
 
 run-new-channels:
