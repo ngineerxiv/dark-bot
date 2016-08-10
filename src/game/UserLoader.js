@@ -15,10 +15,11 @@ const MAX_HIT_POINT   = 5000;
 const MAX_MAGIC_POINT = 1000;
 
 class UserLoader {
-    constructor(userRepository, spellRepository, jobRepository) {
+    constructor(userRepository, spellRepository, jobRepository, weaponRepository) {
         this.userRepository     = userRepository;
         this.spellRepository    = spellRepository;
         this.jobRepository      = jobRepository;
+        this.weaponRepository   = weaponRepository;
     }
 
     load() {
@@ -30,6 +31,7 @@ class UserLoader {
             const hitPoint      = (saved && !isNaN(saved.hitPoint)) ? saved.hitPoint : MAX_HIT_POINT;
             const magicPoint    = (saved && !isNaN(saved.magicPoint)) ? saved.magicPoint : MAX_MAGIC_POINT;
             const job           = saved ? this.jobRepository.getByName(saved.jobName) : null;
+            const weapon        = this.weaponRepository.getByName("素手");
             let spells = [];
 
             if (!this.userRepository.isBot(id)) {
@@ -40,7 +42,7 @@ class UserLoader {
                     user.name, 
                     new HitPoint(hitPoint, MAX_HIT_POINT), 
                     new MagicPoint(magicPoint, MAX_MAGIC_POINT), 
-                    new Equipment(new Weapon(100, 50, new HitRate(90), new Critical(10))),
+                    new Equipment(new Weapon("素手", 100, 50, new HitRate(90), new Critical(10))),
                     new Parameter(100, 50, 200, 0),
                     spells,
                     new Status(),
