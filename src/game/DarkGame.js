@@ -11,14 +11,21 @@ const lang      = require("../game/lang/Ja.js");
 const StatusValues = NodeQuest.StatusValues;
 const negativeWords   = require("../game/NegativeWords.js").factory();
 const UserLoader = require("../game/UserLoader.js");
+const WeaponRepository = require("../game/WeaponRepository.js");
 
 class DarkGame {
     constructor(userRepository, bitnessRepository) {
         this.game               = new NodeQuest.Game();
         this.spellRepository    = new SpellRepository();
         this.jobRepository      = new JobRepository();
-        this.userLoader         = new UserLoader(userRepository, this.spellRepository, this.jobRepository)
+        this.weaponRepository   = new WeaponRepository();
         this.userRepository     = userRepository;
+        this.userLoader         = new UserLoader(
+            this.userRepository,
+            this.spellRepository,
+            this.jobRepository,
+            this.weaponRepository
+        );
         this.monsterRepository  = new MonsterRepository();
         this.battle             = new Battle(this.game, lang);
         this.cronJobs           = [
