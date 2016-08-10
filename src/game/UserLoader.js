@@ -40,7 +40,7 @@ class UserLoader {
                     user.name, 
                     new HitPoint(hitPoint, MAX_HIT_POINT), 
                     new MagicPoint(magicPoint, MAX_MAGIC_POINT), 
-                    new Equipment(new Weapon(100, 50, new HitRate(90), new Critical(10))),
+                    new Equipment(new Weapon("素手", 100, 50, new HitRate(90), new Critical(10))),
                     new Parameter(100, 50, 200, 0),
                     spells,
                     new Status(),
