@@ -37,7 +37,7 @@ install: ## install dark bot
 ####################################
 
 start: config/production.json ## start hubot with slack adapter.
-	trap 'kill $(jobs -p)' EXIT;source $(credential);env NODE_ENV=$(ENV) ./bin/hubot --adapter slack --monitoring-code=$(monitoring-code)
+	source $(credential);env NODE_ENV=$(ENV) ./bin/hubot --adapter slack --monitoring-code=$(monitoring-code)
 
 start-local: ## start hubot with shell adapter
 	source $(credential);./bin/hubot
