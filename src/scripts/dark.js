@@ -76,4 +76,10 @@ module.exports = (robot) => {
         const target = res.match[1];
         res.send(`ウェーイww君${target}っぽいね？てかLINEやってる？笑`);
     });
+
+    robot.hear(/^di (.+)$/, (res) => {
+        const message = res.message;
+        const matched = res.match[1];
+        message.text = `${robot.name} image ${matched}`;
+    });
 }
