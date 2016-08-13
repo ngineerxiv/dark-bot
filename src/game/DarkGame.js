@@ -58,7 +58,8 @@ class DarkGame {
     attackToUser(actorName, targetName, messageSender) {
         const actor = this.game.findUser(actorName);
         if (!actor) {
-            return
+            this.loadUsers();
+            return;
         }
         const target = this.game.findUser(targetName);
         const result = this.battle.attack(actor, target);
@@ -67,6 +68,10 @@ class DarkGame {
 
     castToUser(actorName, targetName, spellName, messageSender) {
         const actor  = this.game.findUser(actorName);
+        if (!actor) {
+            this.loadUsers();
+            return;
+        }
         const target = this.game.findUser(targetName);
         const result = this.battle.cast(actor, target, spellName);
         return messageSender(result.messages.join("\n"));
@@ -90,6 +95,10 @@ class DarkGame {
 
     changeJob(targetName, jobName, messageSender) {
         const target    = this.game.findUser(targetName);
+        if ( !target) {
+            this.loadUsers();
+            return;
+        }
         const job       = this.jobRepository.getByName(jobName);
         if ( !job ) {
             return messageSender(lang.job.notfound(jobName));
@@ -139,6 +148,7 @@ class DarkGame {
         const shakai = this.monsterRepository.getByName("社会");
         const target = this.game.findUser(targetName)
         if ( !target || target.isDead() ) {
+            this.loadUsers();
             return;
         }
         const count = negativeWords.countPain(kuromojiFormedMessages);
