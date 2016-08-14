@@ -8,6 +8,8 @@ const CureEffect   = Game.Effect.CureEffect;
 const StatusEffect = Game.Effect.StatusEffect;
 const StatusValues = Game.StatusValues;
 const ParameterAdjust = Game.Parameter;
+const Feedback = require("./spell/Feedback.js");
+const DrainFeedback = Feedback.DrainFeedback;
 
 class SpellRepositoryOnMemory {
     constructor() {
@@ -54,6 +56,7 @@ class SpellRepositoryOnMemory {
                     new Spell("サンダラ", 30, new AttackEffect(270)),
                     new Spell("サンダガ", 100, new AttackEffect(900)),
                     new Spell("サンダジャ", 200, new AttackEffect(1800)),
+                    new Spell("ドレイン", 20, new AttackEffect(180, new DrainFeedback())),
                     new Spell("メテオ", 270, new AttackEffect(2400)),
                     new Spell("アルテマ", 330, new AttackEffect(3000)),
                     new Spell("メルトン", 300, new AttackEffect(2700)),

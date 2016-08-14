@@ -7,6 +7,8 @@ const AttackEffect = Game.Effect.AttackEffect;
 const CureEffect   = Game.Effect.CureEffect;
 const StatusEffect = Game.Effect.StatusEffect;
 const StatusValues = Game.StatusValues;
+const Feedback     = Game.Feedback;
+const FeedbackResult    = Game.FeedbackResult;
 
 class SpellRepositoryOnMemory {
     constructor() {
