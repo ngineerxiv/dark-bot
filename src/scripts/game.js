@@ -1,14 +1,13 @@
 // Description:
 //   遊ぶ
 // Commands:
-//   hubot game help - RPG機能の説明が出る
-//   game attack {user} - {user}への攻撃 '@' と ' ' は無視される e.g. attack @dark, attack dark
-//   game status {user} - {user}のHP, MP, 使用可能な魔法, 社会から受けたつらさを確認する
-//   game pray - 祈る。死んでいる時に祈りが届けば復活できる。(社会から受けたつらさを消費する)
-//   game 神父 {user} - prayと同等の効果
-//   game {spell} {user} - {spell}を唱えて{user}にかける。利用可能な{spell}はstatusで確認する
-//   game job list - 転職可能なjob一覧が出る
-//   game job change {job} - 転職する。(ただし社会から受けたつらさを消費する)
+//   attack {user} - {user}への攻撃 '@' と ' ' は無視される e.g. attack @dark, attack dark
+//   status {user} - {user}のHP, MP, 使用可能な魔法, 社会から受けたつらさを確認する
+//   pray - 祈る。死んでいる時に祈りが届けば復活できる。(社会から受けたつらさを消費する)
+//   神父 {user} - prayと同等の効果
+//   {spell} {user} - {spell}を唱えて{user}にかける。利用可能な{spell}はstatusで確認する
+//   job list - 転職可能なjob一覧が出る
+//   job change {job} - 転職する。(ただし社会から受けたつらさを消費する)
 //
 
 "use strict"
@@ -72,17 +71,6 @@ module.exports = (robot) => {
                 (m) => res.send(m)
                 );
     })
-
-    robot.respond(/game help$/, (res) => {
-        const gameHelps = robot.commands
-            .sort()
-            .filter((cmd) => /game/.test(cmd))
-            .filter((cmd) => !/help/.test(cmd))
-            .map((cmd) => cmd.replace(/game/, ""))
-            .map((cmd) => cmd.trim())
-            ;
-        res.send(gameHelps.join("\n"));
-    });
 
     robot.router.get("/game/api/v1/users", (req, res) => {
         const users = darkGame.game.users.map((user) => {
