@@ -23,7 +23,7 @@
 
         componentDidMount() {
             loadUsers((json) => {
-                const users = json.sort((x, y) => {
+                const users = json.filter((u) => u.bitness > 0).sort((x, y) => {
                     if (x.bitness > y.bitness) {
                         return -1;
                     } else if (x.bitness < y.bitness) {

@@ -23,15 +23,7 @@
 
         componentDidMount() {
             loadUsers((json) => {
-                const users = json.sort((x, y) => {
-                    if (x.bitness > y.bitness) {
-                        return -1;
-                    } else if (x.bitness < y.bitness) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                });
+                const users = json.filter((u) => u.bitness > 0 || u.id === 0);
                 this.setState({
                     users:users
                 })
