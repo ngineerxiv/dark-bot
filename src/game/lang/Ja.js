@@ -4,7 +4,11 @@ module.exports = {
     dead: (actor) => `[DEAD] おぉ${actor.name}！死んでしまうとはふがいない`,
     noeffect: (actor) => "しかし なにも おこらなかった！",
     nomagicpoint: (actor) => "MPが足りない！",
-    counter: (actor) => `${actor.name} の反撃！`
+    counter: (actor) => `${actor.name} の反撃！`,
+    feedback: {
+        damaged : (actor, p) => `${actor.name}に ${p} のダメージ！ 残り：${actor.hitPoint.current} / ${actor.hitPoint.max}`,
+        cured: (actor, p) => `${actor.name}のキズがかいふくした！残り：${actor.hitPoint.current} / ${actor.hitPoint.max}`
+    }
   },
   target: {
     dead: (target) => `[DEAD] こうかがない・・・${target.name}はただのしかばねのようだ・・・`,

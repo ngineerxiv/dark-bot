@@ -118,14 +118,24 @@ class Battle {
                     messages.push(this.lang.target.damaged(result.target, result.effects.attack));
                     result.target.isDead() && messages.push(this.lang.attack.dead(result.target));
                 }
-                const statusEffectResult = result.effects.status.filter((e) => e.effective)
-                    if(result.effects.status.length > 0) {
-                        (statusEffectResult.length > 0) ?
-                            messages.push(this.lang.raise.default(result.target)): 
-                            messages.push(this.lang.actor.noeffect(result.actor));
-                    } else if( result.effects.cure !== null) {
-                        messages.push(this.lang.cure.default(result.target));
-                    }
+                const statusEffectResult = result.effects.status.filter((e) => e.effective);
+                if(result.effects.status.length > 0) {
+                    (statusEffectResult.length > 0) ?
+                        messages.push(this.lang.raise.default(result.target)): 
+                        messages.push(this.lang.actor.noeffect(result.actor));
+                } else if( result.effects.cure !== null) {
+                    messages.push(this.lang.cure.default(result.target));
+                }
+
+                const feedback = result.feedbacks.reduce((pre, cur) => {
+                    return {
+                        "damaged": pre.damaged + cur.damaged,
+                        "cured": pre.cured + cur.cured
+                    };
+                }, {"damaged": 0, "cured": 0})
+                feedback.damaged > 0 && messages.push(this.lang.actor.feedback.damaged(actor, feedback.damaged));
+                feedback.cured > 0 && messages.push(this.lang.actor.feedback.cured(actor, feedback.cured));
+                break;
         }
         let counterResult = null;
         if ( !target.isDead() && target.counter ) {

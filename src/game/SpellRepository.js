@@ -7,6 +7,17 @@ const AttackEffect = Game.Effect.AttackEffect;
 const CureEffect   = Game.Effect.CureEffect;
 const StatusEffect = Game.Effect.StatusEffect;
 const StatusValues = Game.StatusValues;
+const Feedback     = Game.Feedback;
+const FeedbackResult    = Game.FeedbackResult;
+
+class DrainFeedback extends Feedback {
+    apply(castResult) {
+        return (actor) => {
+            const result = actor.cured(castResult.attack.value);
+            return new FeedbackResult(0, result.value);
+        }
+    }
+}
 
 class SpellRepositoryOnMemory {
     constructor() {
