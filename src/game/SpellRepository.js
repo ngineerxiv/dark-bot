@@ -10,15 +10,6 @@ const StatusValues = Game.StatusValues;
 const Feedback     = Game.Feedback;
 const FeedbackResult    = Game.FeedbackResult;
 
-class DrainFeedback extends Feedback {
-    apply(castResult) {
-        return (actor) => {
-            const result = actor.cured(castResult.attack.value);
-            return new FeedbackResult(0, result.value);
-        }
-    }
-}
-
 class SpellRepositoryOnMemory {
     constructor() {
         this.spells    = [
