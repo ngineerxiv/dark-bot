@@ -62,9 +62,11 @@ module.exports = (robot) => {
         req((err, response, body) => {
             err && hubot.logger.error(err);
             const json = JSON.parse(body);
-            if( json.kusokora ) {
+            if( json.kusokora && json.kusokora.length > 0) {
                 const url = res.random(json.kusokora);
                 res.send(`${url}#cb=${uuid.v4()}`);
+            } else if (json.kusokora.length === 0) {
+                res.send(`kusokoraが空らしい・・・`);
             } else {
                 res.send("ray ruby `curl -X POST https://ngineerxiv-dark.appspot.com/api/v1/kusokora -H 'Content-Length: 0'`");
             }
