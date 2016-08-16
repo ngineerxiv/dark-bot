@@ -15,6 +15,7 @@ const AttackEffect = DarkQuest.Effect.AttackEffect;
 const CureEffect   = DarkQuest.Effect.CureEffect;
 const StatusEffect = DarkQuest.Effect.StatusEffect;
 const MindAttackEffect = DarkQuest.Effect.MindAttackEffect;
+const MindCureEffect = DarkQuest.Effect.MindCureEffect;
 const StatusValues = DarkQuest.StatusValues;
 const Feedback = require("./spell/Feedback.js");
 const DrainFeedback = Feedback.DrainFeedback;
@@ -40,11 +41,16 @@ class MonsterRepositoryOnMemory {
             new Spell("フルケア", 100, new CureEffect(Infinity)),
             new Spell("MPバスター", 0, new MindAttackEffect(Infinity, new MagicDrainFeedback()))
         ]);
+        const company = new User(0, "会社", new HitPoint(Infinity, Infinity), new MagicPoint(0, 0), new Equipment(new Weapon("", 0, 0, new HitRate(100))), new Parameter(0, 0), [
+            new Spell("給与", 0, new MindCureEffect(300)),
+            new Spell("弾圧", 0, [new AttackEffect(Infinity), new MindAttackEffect(Infinity)])
+        ]);
 
         priest.counter = new Spell("神の裁き", 0, new AttackEffect(Infinity));
         world.counter = new Spell("MPバスター", 0, new MindAttackEffect(Infinity, new MagicDrainFeedback()));
         holiday.counter = new Spell("MPバスター", 0, new MindAttackEffect(Infinity, new MagicDrainFeedback()));
-        this.monsters = [world, priest, holiday];
+        company.counter = new Spell("弾圧", 0, [new AttackEffect(Infinity), new MindAttackEffect(Infinity)]);
+        this.monsters = [world, priest, holiday, company];
     }
 
     get() {
