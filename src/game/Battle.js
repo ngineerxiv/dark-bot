@@ -114,19 +114,25 @@ class Battle {
                 break;
             default:
                 messages.push(this.lang.spell.cast(actor, spellName));
-                const statusEffectResult = result.effects.status.filter((e) => e.effective);
                 if( result.effects.attack !== null ) {
                     messages.push(this.lang.target.damaged(result.target, result.effects.attack));
                     result.target.isDead() && messages.push(this.lang.attack.dead(result.target));
-                } else if(result.effects.status.length > 0) {
+                }
+
+                const statusEffectResult = result.effects.status.filter((e) => e.effective);
+                if(result.effects.status.length > 0) {
                     (statusEffectResult.length > 0) ?
                         messages.push(this.lang.raise.default(result.target)): 
                         messages.push(this.lang.actor.noeffect(result.actor));
                 } else if( result.effects.cure !== null) {
                     messages.push(this.lang.cure.default(result.target));
-                } else if( result.effects.mindAttack !== null ) {
+                }
+
+                if( result.effects.mindAttack !== null ) {
                     messages.push(this.lang.mind.attack(result.target, result.effects.mindAttack));
-                } else if( result.effects.mindCure !== null ) {
+                }
+
+                if( result.effects.mindCure !== null ) {
                     messages.push(this.lang.mind.cure(result.target));
                 }
 
