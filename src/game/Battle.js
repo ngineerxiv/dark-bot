@@ -140,8 +140,8 @@ class Battle {
                     return {
                         "damaged": pre.damaged + cur.damaged,
                         "cured": pre.cured + cur.cured,
-                        "mindDamaged": pre.mindDamaged + cur.mindDamaged,
-                        "mindCured": pre.mindCured + cur.mindCured
+                        "mindDamage": pre.mindDamage + cur.mindDamage,
+                        "mindCure": pre.mindCure + cur.mindCure
                     };
                 }, {"damaged": 0, "cured": 0, "mindDamaged": 0, "mindCured": 0})
                 feedback.damaged > 0 && messages.push(this.lang.actor.feedback.damaged(actor, feedback.damaged));

@@ -72,6 +72,21 @@ module.exports = (robot) => {
                 );
     })
 
+    robot.hear(/^給料日$/, (res) => {
+        darkGame.payDay(
+                res.message.user.name.replace(/@/g, ""), 
+                (m) => res.send(m)
+                );
+    })
+
+    robot.hear(/^おちんぎん$/, (res) => {
+        darkGame.payDay(
+                res.message.user.name.replace(/@/g, ""), 
+                (m) => res.send(m)
+                );
+    })
+
+
     robot.router.get("/game/api/v1/users", (req, res) => {
         const users = darkGame.game.users.map((user) => {
             const u = Object.assign({}, user);

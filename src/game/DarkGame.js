@@ -161,6 +161,26 @@ class DarkGame {
         return messageSender(result.messages.join("\n"));
     }
 
+    payDay(targetName, messageSender) {
+        const requiredBitness = 500;
+        const target = this.game.findUser(targetName);
+        if ( !target ) {
+            return messageSender(lang.actor.notarget(target));
+        }
+        const bitness = this.bitnessRepository.get(target.id);
+        const company = this.monsterRepository.getByName("会社");
+        let message = "";
+        if( this.bitnessRepository.get(target.id) < requiredBitness ) {
+            message = lang.bitness.notenough();
+        } else {
+            const result = this.battle.cast(company, target, "給与");
+            this.bitnessRepository.decrease(target.id, requiredBitness);
+            message = result.messages.join("\n");
+        }
+
+        return messageSender(message);
+    }
+
 }
 
 module.exports = DarkGame;
