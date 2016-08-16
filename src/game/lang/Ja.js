@@ -28,6 +28,10 @@ module.exports = {
   cure: {
     default: (target) => `[CURE] ${target.name}のキズがかいふくした！残り: ${target.hitPoint.current} / ${target.hitPoint.max}`
   },
+  mind: {
+      attack: (target, p) => `${target.name}のMPに ${p} のダメージ！ 残り：${target.magicPoint.current} / ${target.magicPoint.max}`,
+      cure: (target) => `${target.name}のMPがかいふくした！残り：${target.magicPoint.current} / ${target.magicPoint.max}`
+  },
   raise: {
     default: (target) => `[CURE] ${target.name}は いきかえった！`
   },
