@@ -75,7 +75,12 @@ module.exports = (robot => {
         };
 
         request(options, (error, response, body) => {
-            error && robot.logger.error(error);
+            if (error) {
+                robot.logger.error(error);
+                robot.logger.error(response);
+                robot.logger.error(body);
+                return callback();
+            }
             let json = JSON.parse(body);
             let i = 0;
             let len = json.members.length;
