@@ -7,7 +7,10 @@ module.exports = {
     counter: (actor) => `${actor.name} の反撃！`,
     feedback: {
         damaged : (actor, p) => `${actor.name}に ${p} のダメージ！ 残り：${actor.hitPoint.current} / ${actor.hitPoint.max}`,
-        cured: (actor, p) => `${actor.name}のキズがかいふくした！残り：${actor.hitPoint.current} / ${actor.hitPoint.max}`
+        cured: (actor, p) => `${actor.name}のキズがかいふくした！残り：${actor.hitPoint.current} / ${actor.hitPoint.max}`,
+        mindDamaged : (actor, p) => `${actor.name}のMPに ${p} のダメージ！ 残り：${actor.magicPoint.current} / ${actor.magicPoint.max}`,
+        mindCured: (actor, p) => `${actor.name}のMPがかいふくした！残り：${actor.magicPoint.current} / ${actor.magicPoint.max}`
+
     }
   },
   target: {
@@ -24,6 +27,10 @@ module.exports = {
   },
   cure: {
     default: (target) => `[CURE] ${target.name}のキズがかいふくした！残り: ${target.hitPoint.current} / ${target.hitPoint.max}`
+  },
+  mind: {
+      attack: (target, p) => `${target.name}のMPに ${p} のダメージ！ 残り：${target.magicPoint.current} / ${target.magicPoint.max}`,
+      cure: (target) => `${target.name}のMPがかいふくした！残り：${target.magicPoint.current} / ${target.magicPoint.max}`
   },
   raise: {
     default: (target) => `[CURE] ${target.name}は いきかえった！`

@@ -30,7 +30,7 @@ class DarkGame {
         this.battle             = new Battle(this.game, lang);
         this.cronJobs           = [
             new Cron("0 0 * * 1", () => this.cureAll(), null, true, "Asia/Tokyo"),
-            new Cron("0 4 * * *", () => this.game.users.forEach((u) => u.magicPoint.change(Infinity)), null, true, "Asia/Tokyo")
+            new Cron("0 4 * * *", () => this.game.users.forEach((u) => u.mindCured(Infinity)), null, true, "Asia/Tokyo")
         ];
         this.bitnessRepository  = bitnessRepository;
     }
@@ -159,6 +159,26 @@ class DarkGame {
         const damage = result.result.filter((r) => typeof r !== 'symbol').filter((r) => r.attack.hit).reduce((pre, cur) => pre + cur.attack.value, 0);
         this.bitnessRepository.increase(target.id, damage);
         return messageSender(result.messages.join("\n"));
+    }
+
+    payDay(targetName, messageSender) {
+        const requiredBitness = 500;
+        const target = this.game.findUser(targetName);
+        if ( !target ) {
+            return messageSender(lang.actor.notarget(target));
+        }
+        const bitness = this.bitnessRepository.get(target.id);
+        const company = this.monsterRepository.getByName("会社");
+        let message = "";
+        if( this.bitnessRepository.get(target.id) < requiredBitness ) {
+            message = lang.bitness.notenough();
+        } else {
+            const result = this.battle.cast(company, target, "給与");
+            this.bitnessRepository.decrease(target.id, requiredBitness);
+            message = result.messages.join("\n");
+        }
+
+        return messageSender(message);
     }
 
 }
