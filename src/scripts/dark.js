@@ -14,6 +14,11 @@
 const uuid = require("node-uuid");
 const config = require("config");
 const Levenshtein = require("levenshtein");
+const sqlite3 = require("sqlite3").verbose();
+const sqliteDBPath = process.env.KUSOKORA_DB_PATH
+const db = new sqlite3.Database(sqliteDBPath || ':memory:');
+const KusokoraRepository = require("../dark/KusokoraRepository");
+const kusokoraRepository = new KusokoraRepository(db);
 
 const gomas = [
     () => `http://yamiga.waka.ru.com/images/goma/01.jpg?cb=${uuid.v4()}`,
@@ -58,17 +63,11 @@ module.exports = (robot) => {
     })
 
     robot.respond(/PAPIX$/i, (res) => {
-        const req = robot.http("https://ngineerxiv-dark.appspot.com/api/v1/kusokora").get();
-        req((err, response, body) => {
-            err && hubot.logger.error(err);
-            const json = JSON.parse(body);
-            if( json.kusokora ) {
-                const url = res.random(json.kusokora);
+        kusokoraRepository.getAll((urls) => {
+            if (urls.length > 0) {
+                const url = res.random(urls);
                 res.send(`${url}#cb=${uuid.v4()}`);
-            } else {
-                res.send("ray ruby `curl -X POST https://ngineerxiv-dark.appspot.com/api/v1/kusokora -H 'Content-Length: 0'`");
             }
-
         });
     });
 
