@@ -1,3 +1,4 @@
+"use strict"
 class KusokoraRepositoryOnSqlite {
     constructor(db) {
         this.db = db;
