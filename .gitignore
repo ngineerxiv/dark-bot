@@ -6,3 +6,4 @@ npm-debug.log
 credentials/development
 config/production.json
 kusokora.db
+game.db
