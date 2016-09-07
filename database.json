@@ -1,10 +1,10 @@
 {
     "dev": {
         "driver": "sqlite3",
-        "filename": "./game.db"
+        "filename": "./dbs/game.db"
     },
     "prod": {
         "driver": "sqlite3",
-        "filename": "./game.db"
+        "filename": "./dbs/game.db"
     }
 }
