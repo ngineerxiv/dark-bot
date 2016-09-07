@@ -5,5 +5,4 @@ npm-debug.log
 *.swp
 credentials/development
 config/production.json
-kusokora.db
-game.db
+dbs/*.db
