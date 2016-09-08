@@ -32,11 +32,14 @@ watch-compile:
 install: ## install dark bot
 	$(npm) install
 
-migrate/up:
+migrate/up: dbs
 	$(npm) run migrate/up
 
-migrate/down:
+migrate/down: dbs
 	$(npm) run migrate/down
+
+dbs:
+	mkdir -p $@
 
 ####################################
 ##########  main scripts  ##########
