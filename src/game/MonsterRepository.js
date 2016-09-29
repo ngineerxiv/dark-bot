@@ -61,6 +61,10 @@ class MonsterRepositoryOnMemory {
         return this.monsters.filter((m) => m.name === name).pop() || null;
     }
 
+    create(name) {
+        return new User(0, name, new HitPoint(3000, 1000), new MagicPoint(1000, 1000), new Equipment(new Weapon("素手", 0, 0, new HitRate(90))), new Parameter(100, 20, 200, 10), []);
+    }
+
 }
 
 module.exports = MonsterRepositoryOnMemory;
