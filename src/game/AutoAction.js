@@ -1,3 +1,5 @@
+"use strict"
+
 class AutoAttackAction {
     constructor(targetManager, battleService, messageSender, game) {
         this.targetManager = targetManager;
