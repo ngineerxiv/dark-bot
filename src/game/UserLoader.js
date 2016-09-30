@@ -48,7 +48,8 @@ class UserLoader {
                     new Status(),
                     job
                     );
-        });
+        }).filter((u) => u.name !== "憲兵");
+        //FIXME auto actionを持っているユーザにしたい
     }
 }
 

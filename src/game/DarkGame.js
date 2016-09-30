@@ -12,6 +12,7 @@ const StatusValues = NodeQuest.StatusValues;
 const negativeWords   = require("../game/NegativeWords.js").factory();
 const UserLoader = require("../game/UserLoader.js");
 const WeaponRepository = require("../game/WeaponRepository.js");
+const AutoAction = require("../game/AutoAction.js");
 
 class DarkGame {
     constructor(userRepository, bitnessRepository) {
@@ -179,6 +180,25 @@ class DarkGame {
         }
 
         return messageSender(message);
+    }
+
+    summon(targetManager, messageSender) {
+        const monsterName = "憲兵";
+        const m = this.monsterRepository.create(monsterName);
+        if (this.game.users.filter((u) => u.name === monsterName).pop()) {
+            return messageSender("召喚に失敗した");
+        }
+        this.game.users.push(m);
+        m.hitPoint.on("changed", (data) => {
+            if (data.next.empty()) {
+                this.game.users = this.game.users.filter((u) => u.name !== monsterName)
+            }
+        });
+        // TODO gameオブジェクトは渡したくない
+        // user repositoryがいい感じじゃない
+        const action = new AutoAction(targetManager, this.battle, messageSender, this.game);
+        action.act(m);
+        messageSender(lang.summon.default("憲兵"));
     }
 
 }

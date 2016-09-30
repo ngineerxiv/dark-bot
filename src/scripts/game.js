@@ -15,6 +15,51 @@
 const DarkGame  = require("../game/DarkGame.js");
 const UserRepository  = require("../game/UserRepository.js");
 const BitnessRepository =require("../game/BitnessRepository.js");
+const SlackAPI = require('slackbotapi');
+
+const init = function(token) {
+    if ( token === undefined ) {
+        return new Error(`WEB_SLACK_TOKEN cannot be empty! value: undefined`);
+    }
+    try {
+        return new SlackAPI({
+            'token': token,
+            'logging': false,
+            'autoReconnect': true
+        });
+    } catch (e) {
+        return e;
+    }
+};
+const slackApi = init(process.env.WEB_SLACK_TOKEN);
+
+class TargetManagerOnSlackApi {
+    constructor(slackApi) {
+        this.slackApi = slackApi;
+        this.targetChannel = null;
+        this.slackApi.reqAPI("channels.list", {}, (res) => {
+            this.targetChannel = res.channels.filter((c) => c.name === "prison").pop();
+        });
+    }
+
+    get(callback) {
+        this.slackApi.reqAPI("channels.info", {
+            channel: this.targetChannel.id
+        }, (res) => {
+            callback(res.channel.members);
+        });
+    }
+
+    kick(user) {
+        this.slackApi.reqAPI("channels.kick", {
+            channel: this.targetChannel.id,
+            user: user.id
+        }, (res) => {
+            console.log(res);
+        });
+    }
+}
+const targetManager = new TargetManagerOnSlackApi(slackApi);
 
 module.exports = (robot) => {
     const bitnessRepository = new BitnessRepository(robot.brain);
@@ -85,6 +130,10 @@ module.exports = (robot) => {
                 (m) => res.send(m)
                 );
     })
+
+    robot.hear(/^summon$/, (res) => {
+        darkGame.summon(targetManager, (m) => res.send(m));
+    });
 
 
     robot.router.get("/game/api/v1/users", (req, res) => {
