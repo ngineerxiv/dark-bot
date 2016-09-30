@@ -13,7 +13,7 @@ class AutoAttackAction {
     }
 
     act(user) {
-        if (user.isDead() || !allowed()) {
+        if (user.isDead() || !this.allowed()) {
             return;
         }
         this.targetManager.get((targets) => {

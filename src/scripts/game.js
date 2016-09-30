@@ -31,37 +31,50 @@ const init = function(token) {
         return e;
     }
 };
-const slackApi = init(process.env.WEB_SLACK_TOKEN);
-
-class TargetManagerOnSlackApi {
-    constructor(slackApi) {
-        this.slackApi = slackApi;
-        this.targetChannel = null;
-        this.slackApi.reqAPI("channels.list", {}, (res) => {
-            this.targetChannel = res.channels.filter((c) => c.name === "prison").pop();
-        });
-    }
-
-    get(callback) {
-        this.slackApi.reqAPI("channels.info", {
-            channel: this.targetChannel.id
-        }, (res) => {
-            callback(res.channel.members);
-        });
-    }
-
-    kick(user) {
-        this.slackApi.reqAPI("channels.kick", {
-            channel: this.targetChannel.id,
-            user: user.id
-        }, (res) => {
-            console.log(res);
-        });
-    }
-}
-const targetManager = new TargetManagerOnSlackApi(slackApi);
-
 module.exports = (robot) => {
+    const slackApi = init(process.env.WEB_SLACK_TOKEN);
+
+    class TargetManagerOnSlackApi {
+        constructor(slackApi) {
+            this.slackApi = slackApi;
+            this.targetChannel = null;
+        }
+
+        init(callback) {
+            if (targetChannel) {
+                callback();
+                return;
+            }
+            this.slackApi.reqAPI("channels.list", {}, (res) => {
+                this.targetChannel = res.channels.filter((c) => c.name === "prison").pop();
+                callback();
+            });
+        }
+
+        get(callback) {
+            init(() => {
+                this.slackApi.reqAPI("channels.info", {
+                    channel: this.targetChannel.id
+                }, (res) => {
+                    callback(res.channel.members);
+                });
+            });
+        }
+
+        kick(user) {
+            init(() => {
+                this.slackApi.reqAPI("channels.kick", {
+                    channel: this.targetChannel.id,
+                    user: user.id
+                }, (res) => {
+                    console.log(res);
+                });
+            });
+        }
+    }
+    const targetManager = new TargetManagerOnSlackApi(slackApi);
+
+
     const bitnessRepository = new BitnessRepository(robot.brain);
     const userRepository    = new UserRepository(robot.brain, robot.adapter.client ? robot.adapter.client.users : {});
     const darkGame = new DarkGame(
