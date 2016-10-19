@@ -6,5 +6,6 @@
   "hubot-moji",
   "hubot-plusplus",
   "hubot-middleware-kuromoji",
-  "hubot-redis-brain"
+  "hubot-redis-brain",
+  "hubot-popute"
 ]
