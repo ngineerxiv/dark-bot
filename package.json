@@ -27,6 +27,7 @@
     "hubot-moji": "^1.0.5",
     "hubot-nullpo": "0.0.7",
     "hubot-plusplus": "^1.2.5",
+    "hubot-popute": "git://github.com/umatoma/hubot-popute.git",
     "hubot-pugme": "^0.1.0",
     "hubot-redis-brain": "0.0.3",
     "hubot-rules": "^0.1.1",
