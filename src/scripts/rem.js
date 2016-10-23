@@ -6,6 +6,22 @@
 //
 
 "use strict"
+const slackAPI = require('slackbotapi');
+const init = function(token) {
+    if ( token === undefined ) {
+        return new Error(`WEB_SLACK_TOKEN cannot be empty! value: undefined`);
+    }
+    try {
+        return new slackAPI({
+            'token': token,
+            'logging': false,
+            'autoReconnect': true
+        });
+    } catch (e) {
+        return e;
+    }
+};
+
 
 
 const remu = [
@@ -22,12 +38,22 @@ const remu = [
 ];
 
 module.exports = (robot) => {
+    const slack = init(process.env.WEB_SLACK_TOKEN);
     robot.respond(/rem$/i, (res) => {
         const message = res.random(remu)(res.message.user.name)
         const c = res.message.rawMessage.channel;
-        let req = res.http(`https://slack.com/api/chat.postMessage?token=${process.env.WEB_SLACK_TOKEN}&channel=${c}&text=${message}&username=dark&link_names=0&pretty=1&icon_emoji=:rem:`).get();
-        req((err, res, body) => {
-            err && robot.logger.error(err);
-        });
+        slack.reqAPI("chat.postMessage", {
+            channel: c,
+            text: message,
+            username: "レム",
+            link_names: 0,
+            pretty: 1,
+            icon_emoji: ":rem:"
+        }, (res) => {
+            if(!res.ok) {
+                robot.logger.error(`something ocuured ${res}`);
+                return;
+            }
+        })
     })
 }
