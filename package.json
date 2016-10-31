@@ -30,6 +30,7 @@
     "hubot-popute": "https://github.com/umatoma/hubot-popute.git",
     "hubot-pugme": "^0.1.0",
     "hubot-redis-brain": "0.0.3",
+    "hubot-rem": "^1.0.0",
     "hubot-rules": "^0.1.1",
     "hubot-shipit": "^0.2.0",
     "hubot-slack": "^3.0.2 < 4.0.0",
