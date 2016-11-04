@@ -8,5 +8,5 @@
   "hubot-middleware-kuromoji",
   "hubot-redis-brain",
   "hubot-popute",
-  "hubot-rem"
+  "hubot-character"
 ]
