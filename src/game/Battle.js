@@ -6,8 +6,7 @@ const SpellRepository = require("./SpellRepository.js");
 const spellRepository = new SpellRepository();
 
 class Battle {
-    constructor(game, lang) {
-        this.game = game;
+    constructor(lang) {
         this.lang = lang;
     }
 

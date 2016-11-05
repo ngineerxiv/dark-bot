@@ -10,76 +10,65 @@ const Battle    = require("../game/Battle.js");
 const lang      = require("../game/lang/Ja.js");
 const StatusValues = NodeQuest.StatusValues;
 const negativeWords   = require("../game/NegativeWords.js").factory();
-const UserLoader = require("../game/UserLoader.js");
+const UserManager = require("../game/UserManager.js");
 const WeaponRepository = require("../game/WeaponRepository.js");
 const AutoAction = require("../game/AutoAction.js");
 
 class DarkGame {
     constructor(userRepository, bitnessRepository) {
-        this.game               = new NodeQuest.Game();
         this.spellRepository    = new SpellRepository();
         this.jobRepository      = new JobRepository();
         this.weaponRepository   = new WeaponRepository();
-        this.userRepository     = userRepository;
-        this.userLoader         = new UserLoader(
-            this.userRepository,
+        this.monsterRepository  = new MonsterRepository();
+        this.userManager        = new UserManager(
+            userRepository,
             this.spellRepository,
             this.jobRepository,
-            this.weaponRepository
+            this.weaponRepository,
+            this.monsterRepository
         );
-        this.monsterRepository  = new MonsterRepository();
-        this.battle             = new Battle(this.game, lang);
+        this.battle             = new Battle(lang);
         this.cronJobs           = [
             new Cron("0 0 * * 1", () => this.cureAll(), null, true, "Asia/Tokyo"),
-            new Cron("0 4 * * *", () => this.game.users.forEach((u) => u.mindCured(Infinity)), null, true, "Asia/Tokyo")
+            new Cron("0 4 * * *", () => {
+                const users = this.userManager.getAllUsers()
+                users.forEach((u) => u.mindCured(Infinity))
+            }, null, true, "Asia/Tokyo")
         ];
         this.bitnessRepository  = bitnessRepository;
     }
 
     loadUsers() {
-        const users = this.userLoader.load();
-        const monsters = this.monsterRepository.get();
-        users.forEach((u) => {
-            u.hitPoint.on("changed", (data) => {
-                this.userRepository.save(this.game.users);
-            });
-            u.magicPoint.on("changed", (data) => {
-                this.userRepository.save(this.game.users);
-            });
-
-            u.on("jobChanged", (data) => {
-                this.userRepository.save(this.game.users);
-            });
-        });
-        this.game.setUsers(users.concat(monsters));
+        const slackUsers = robot.adapter.client ? robot.adapter.client.users : {};
+        const users = this.userManager.load(slackUsers);
         this.bitnessRepository.load();
-        return this.game;
+        return users;
     }
 
     attackToUser(actorName, targetName, messageSender) {
-        const actor = this.game.findUser(actorName);
+        const actor = this.userManager.getByName(actorName);
         if (!actor) {
             this.loadUsers();
             return;
         }
-        const target = this.game.findUser(targetName);
+        const target = this.userManager.getByName(targetName);
         const result = this.battle.attack(actor, target);
         return messageSender(result.messages.join("\n"));
     }
 
     castToUser(actorName, targetName, spellName, messageSender) {
-        const actor  = this.game.findUser(actorName);
+        const actor  = this.userManager.getByName(actorName);
         if (!actor) {
             this.loadUsers();
             return;
         }
-        const target = this.game.findUser(targetName);
+        const target = this.userManager.getByName(targetName);
         const result = this.battle.cast(actor, target, spellName);
         return messageSender(result.messages.join("\n"));
     }
 
     statusOfUser(targetName, messageSender) {
-        const target = this.game.findUser(targetName);
+        const target = this.userManager.getByName(targetName);
         if ( !target ) {
             return messageSender(lang.actor.notarget(target));
         }
@@ -95,7 +84,7 @@ class DarkGame {
     }
 
     changeJob(targetName, jobName, messageSender) {
-        const target    = this.game.findUser(targetName);
+        const target    = this.userManager.getByName(targetName);
         if ( !target) {
             this.loadUsers();
             return;
@@ -125,7 +114,8 @@ class DarkGame {
 
     cureAll() {
         const holiday   = this.monsterRepository.getByName("休日");
-        this.game.users.forEach((u) => {
+        const users = this.userManager.getAllUsers()
+        users.forEach((u) => {
             holiday.cast("アレイズ", u);
             holiday.cast("フルケア", u);
         })
@@ -133,7 +123,7 @@ class DarkGame {
 
     prayToPriest(actorName, messageSender) {
         const priest = this.monsterRepository.getByName("神父");
-        const target = this.game.findUser(actorName);
+        const target = this.userManager.getByName(actorName);
         let message = "";
         if( this.bitnessRepository.get(target.id) < 300 ) {
             message = lang.bitness.notenough();
@@ -147,7 +137,7 @@ class DarkGame {
 
     takePainByWorld(targetName, kuromojiFormedMessages, messageSender) {
         const shakai = this.monsterRepository.getByName("社会");
-        const target = this.game.findUser(targetName)
+        const target = this.userManager.getByName(targetName)
         if ( !target || target.isDead() ) {
             this.loadUsers();
             return;
@@ -164,7 +154,7 @@ class DarkGame {
 
     payDay(targetName, messageSender) {
         const requiredBitness = 500;
-        const target = this.game.findUser(targetName);
+        const target = this.userManager.getByName(targetName);
         if ( !target ) {
             return messageSender(lang.actor.notarget(target));
         }
