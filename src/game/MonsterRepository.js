@@ -51,10 +51,11 @@ class MonsterRepositoryOnMemory {
         holiday.counter = new Spell("MPバスター", 0, new MindAttackEffect(Infinity, new MagicDrainFeedback()));
         company.counter = new Spell("弾圧", 0, [new AttackEffect(Infinity), new MindAttackEffect(Infinity)]);
         this.monsters = [world, priest, holiday, company];
+        this.summoned = [];
     }
 
     get() {
-        return this.monsters;
+        return this.monsters.concat(this.summoned);
     }
 
     getByName(name) {
@@ -62,7 +63,18 @@ class MonsterRepositoryOnMemory {
     }
 
     create(name) {
-        return new User(0, name, new HitPoint(2000, 2000), new MagicPoint(1000, 1000), new Equipment(new Weapon("素手", 100, 50, new HitRate(90))), new Parameter(100, 20, 200, 0), []);
+        const m = new User(0, name, new HitPoint(2000, 2000), new MagicPoint(1000, 1000), new Equipment(new Weapon("素手", 100, 50, new HitRate(90))), new Parameter(100, 20, 200, 0), [])
+        m.hitPoint.on("changed", (data) => {
+            if (data.next.empty()) {
+                this.monsterRepository.remove(monsterName);
+            }
+        });
+        this.summoned.push(m);
+        return m;
+    }
+
+    remove(name) {
+        this.summond = this.summoned.filter((m) => m.name !== name);
     }
 
 }

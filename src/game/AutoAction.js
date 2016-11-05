@@ -1,14 +1,15 @@
 "use strict"
 
 class AutoAttackAction {
-    constructor(targetManager, battleService, messageSender, game) {
+    constructor(targetManager, battleService, messageSender, userManager) {
         this.targetManager = targetManager;
         this.battleService = battleService;
         this.messageSender = messageSender;
-        this.game = game;
+        this.userManager   = userManager;
     }
 
     allowed() {
+        return true;
         const now = new Date();
         const currentHour = now.getHours();
         return 9 <= currentHour && currentHour < 23;
@@ -21,15 +22,16 @@ class AutoAttackAction {
         this.targetManager.get((targets) => {
             const idx = Math.floor(Math.random() * targets.length)
             const targetId = targets[idx];
-            const target = this.game.users.filter((u) => {
-                return u.id === targetId && u.name !== "dark"
+            const users = this.userManager.getAllUsers();
+            const target = users.filter((u) => {
+                return u.id === targetId && u.name !== "dark" && !u.isDead()
             }).pop();
-            if (!target || target.isDead()) {
+
+            if (!target) {
                 this.next(user);
                 return;
             }
             const result = this.battleService.attack(user, target);
-            target.isDead() && this.targetManager.kick(target);
             this.next(user);
             return this.messageSender(result.messages.join("\n"));
         });

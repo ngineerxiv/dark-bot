@@ -41,7 +41,7 @@ module.exports = (robot) => {
         }
 
         init(callback) {
-            if (targetChannel) {
+            if (this.targetChannel) {
                 callback();
                 return;
             }
@@ -52,22 +52,11 @@ module.exports = (robot) => {
         }
 
         get(callback) {
-            init(() => {
+            this.init(() => {
                 this.slackApi.reqAPI("channels.info", {
                     channel: this.targetChannel.id
                 }, (res) => {
                     callback(res.channel.members);
-                });
-            });
-        }
-
-        kick(user) {
-            init(() => {
-                this.slackApi.reqAPI("channels.kick", {
-                    channel: this.targetChannel.id,
-                    user: user.id
-                }, (res) => {
-                    console.log(res);
                 });
             });
         }

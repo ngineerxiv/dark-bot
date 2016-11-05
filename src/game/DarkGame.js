@@ -174,21 +174,13 @@ class DarkGame {
 
     summon(targetManager, messageSender) {
         const monsterName = "憲兵";
-        const m = this.monsterRepository.create(monsterName);
-        if (this.game.users.filter((u) => u.name === monsterName).pop()) {
+        if (this.userManager.getByName(monsterName)) {
             return messageSender("召喚に失敗した");
         }
-        this.game.users.push(m);
-        m.hitPoint.on("changed", (data) => {
-            if (data.next.empty()) {
-                this.game.users = this.game.users.filter((u) => u.name !== monsterName)
-            }
-        });
-        // TODO gameオブジェクトは渡したくない
-        // user repositoryがいい感じじゃない
-        const action = new AutoAction(targetManager, this.battle, messageSender, this.game);
+        const m = this.monsterRepository.create(monsterName);
+        const action = new AutoAction(targetManager, this.battle, messageSender, this.userManager);
         action.act(m);
-        messageSender(lang.summon.default("憲兵"));
+        messageSender(lang.summon.default(monsterName));
     }
 
 }
