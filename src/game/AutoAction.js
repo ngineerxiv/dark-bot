@@ -24,7 +24,7 @@ class AutoAttackAction {
             const targetId = targets[idx];
             const users = this.userManager.getAllUsers();
             const target = users.filter((u) => {
-                return u.id === targetId && u.name !== "dark" && !u.isDead()
+                return u.id === targetId && !u.isBot && !u.isDead()
             }).pop();
 
             if (!target) {
