@@ -1,15 +1,18 @@
 "use strict"
 
 class UserManager {
-    constructor(userRepository, spellRepository, jobRepository, weaponRepository) {
+    constructor(userRepository, spellRepository, jobRepository, weaponRepository, monsterRepository) {
         this.userRepository     = userRepository;
         this.spellRepository    = spellRepository;
         this.jobRepository      = jobRepository;
         this.weaponRepository   = weaponRepository;
+        this.monsterRepository  = monsterRepository;
     }
 
     getAllUsers() {
-        return this.userRepository.get();
+        const allUsers = this.userRepository.get();
+        const monsters = this.monsterRepository.get();
+        return allUsers.concat(monsters);
     }
 
     getByName(name) {

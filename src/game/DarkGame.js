@@ -15,18 +15,18 @@ const WeaponRepository = require("../game/WeaponRepository.js");
 
 class DarkGame {
     constructor(userRepository, bitnessRepository) {
-        this.game               = new NodeQuest.Game();
         this.spellRepository    = new SpellRepository();
         this.jobRepository      = new JobRepository();
         this.weaponRepository   = new WeaponRepository();
+        this.monsterRepository  = new MonsterRepository();
         this.userManager        = new UserManager(
             userRepository,
             this.spellRepository,
             this.jobRepository,
-            this.weaponRepository
+            this.weaponRepository,
+            this.monsterRepository
         );
-        this.monsterRepository  = new MonsterRepository();
-        this.battle             = new Battle(this.game, lang);
+        this.battle             = new Battle(lang);
         this.cronJobs           = [
             new Cron("0 0 * * 1", () => this.cureAll(), null, true, "Asia/Tokyo"),
             new Cron("0 4 * * *", () => {
@@ -114,7 +114,7 @@ class DarkGame {
     cureAll() {
         const holiday   = this.monsterRepository.getByName("休日");
         const users = this.userManager.getAllUsers()
-        .users.forEach((u) => {
+        users.forEach((u) => {
             holiday.cast("アレイズ", u);
             holiday.cast("フルケア", u);
         })
