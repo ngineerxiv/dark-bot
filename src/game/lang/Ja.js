@@ -55,5 +55,9 @@ module.exports = {
     notfound: (jobName) => `職業 "${jobName}"はみつからなかった・・・`,
     notenough: (currentBitness, requiredBitness) => `社会から受けたつらさが足りない！ 現在: ${currentBitness}, 必要な量: ${requiredBitness}`,
     changed: (target, job) => `${target.name} は "${job.name}" に転職した！`
+  },
+  summon: {
+      default: (name) => `${name}を召喚した。`
   }
+
 }

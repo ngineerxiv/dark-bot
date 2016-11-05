@@ -12,6 +12,7 @@ const StatusValues = NodeQuest.StatusValues;
 const negativeWords   = require("../game/NegativeWords.js").factory();
 const UserManager = require("../game/UserManager.js");
 const WeaponRepository = require("../game/WeaponRepository.js");
+const AutoAction = require("../game/AutoAction.js");
 
 class DarkGame {
     constructor(userRepository, bitnessRepository) {
@@ -169,6 +170,18 @@ class DarkGame {
         }
 
         return messageSender(message);
+    }
+
+    summon(targetManager, messageSender) {
+        const monsterName = "憲兵";
+        if (this.userManager.getByName(monsterName)) {
+            return messageSender("召喚に失敗した");
+        }
+        // Factoryクラスの責務っぽい
+        const m = this.monsterRepository.create(monsterName);
+        const action = new AutoAction(targetManager, this.battle, messageSender, this.userManager);
+        action.act(m);
+        messageSender(lang.summon.default(monsterName));
     }
 
 }
