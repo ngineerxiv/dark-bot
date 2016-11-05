@@ -33,6 +33,10 @@ const isaos = [
     () => `https://camo.githubusercontent.com/4a011f97909b89a26822ee21e921eb7012e9df18/68747470733a2f2f34302e6d656469612e74756d626c722e636f6d2f31346231333736396364336238303235623163653338626238626238626261352f74756d626c725f6e75313538697269536c31756e3475366c6f315f313238302e6a7067?cb=${uuid.v4()}`
 ];
 
+const nayus = [
+    ":nayu: 「宇宙規模で見れば3000行のコミットなんて些細な物」"
+];
+
 module.exports = (robot) => {
 
     robot.respond(/poem$/i, (res) => {
@@ -74,6 +78,10 @@ module.exports = (robot) => {
     robot.respond(/stenyan (.+)$/, (res) => {
         const target = res.match[1];
         res.send(`ウェーイww君${target}っぽいね？てかLINEやってる？笑`);
+    });
+
+    robot.respond(/NAYU$/i, (res) => {
+        res.send(res.random(nayus));
     });
 
     robot.hear(/^di (.+)$/, (res) => {
