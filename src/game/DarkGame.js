@@ -10,7 +10,7 @@ const Battle    = require("../game/Battle.js");
 const lang      = require("../game/lang/Ja.js");
 const StatusValues = NodeQuest.StatusValues;
 const negativeWords   = require("../game/NegativeWords.js").factory();
-const UserLoader = require("../game/UserLoader.js");
+const UserManager = require("../game/UserManager.js");
 const WeaponRepository = require("../game/WeaponRepository.js");
 
 class DarkGame {
@@ -19,7 +19,7 @@ class DarkGame {
         this.spellRepository    = new SpellRepository();
         this.jobRepository      = new JobRepository();
         this.weaponRepository   = new WeaponRepository();
-        this.userManager        = new UserLoader(
+        this.userManager        = new UserManager(
             userRepository,
             this.spellRepository,
             this.jobRepository,
