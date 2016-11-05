@@ -177,6 +177,7 @@ class DarkGame {
         if (this.userManager.getByName(monsterName)) {
             return messageSender("召喚に失敗した");
         }
+        // Factoryクラスの責務っぽい
         const m = this.monsterRepository.create(monsterName);
         const action = new AutoAction(targetManager, this.battle, messageSender, this.userManager);
         action.act(m);

@@ -9,7 +9,6 @@ class AutoAttackAction {
     }
 
     allowed() {
-        return true;
         const now = new Date();
         const currentHour = now.getHours();
         return 9 <= currentHour && currentHour < 23;
