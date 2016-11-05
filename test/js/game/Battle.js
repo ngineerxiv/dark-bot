@@ -25,7 +25,7 @@ describe('Battle', () => {
         const game = new NodeQuest.Game();
         game.setUsers([u1, u2]);
 
-        const battle = new Battle(game, lang);
+        const battle = new Battle(lang);
         const result = battle.attack(u1, u2);
         assert.deepEqual(result.messages, [lang.attack.default(u1, u2, 100)]);
     })
@@ -50,7 +50,7 @@ describe('Battle', () => {
         const game = new NodeQuest.Game();
         game.setUsers([u1, u2]);
 
-        const battle = new Battle(game, lang);
+        const battle = new Battle(lang);
         const result = battle.attack(u1, u2);
         assert.deepEqual(result.messages, [lang.target.dead(u2)]);
     })
@@ -76,7 +76,7 @@ describe('Battle', () => {
         const game = new NodeQuest.Game();
         game.setUsers([u1, u2]);
 
-        const battle = new Battle(game, lang);
+        const battle = new Battle(lang);
         const result = battle.cast(u1, u2, "fire");
 
         assert.deepEqual(result.messages, [

@@ -5,7 +5,8 @@ const UserRepository = require("../../../src/game/UserRepository.js");
 const DarkQuest = require("node-quest");
 const HitPoint  = DarkQuest.HitPoint;
 const MagicPoint= DarkQuest.MagicPoint;
-
+const JobRepository   = require("../../../src/game/JobRepository.js");
+const WeaponRepository = require("../../../src/game/WeaponRepository.js");
 
 describe('UserRepository', () => {
     class MockBrain {
@@ -28,8 +29,8 @@ describe('UserRepository', () => {
             "b": {"id": "b", "name": "fuga"},
             "c": {"id": "c", "name": "piyo"}
         };
-        const r = new UserRepository(new MockBrain(), users);
-        r.save([
+        const r = new UserRepository(new MockBrain());
+        r.load([
                 {
                     id: "a",
                     hitPoint: {
@@ -48,7 +49,7 @@ describe('UserRepository', () => {
                         current: 10
                     }
                 }
-        ]);
+        ], new JobRepository(), new WeaponRepository());
         const actual = r.get();
         assert.equal(Object.keys(actual).length, 2);
     })
