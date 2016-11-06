@@ -1,6 +1,7 @@
 "use strict"
 
-const HUBOT_NODE_QUEST_USERS  = "HUBOT_NODE_QUEST_USERS";
+const config = require("config");
+const HUBOT_NODE_QUEST_USERS  = config.brainKeys.hubotNodeQuestUsers;
 const DarkQuest = require("node-quest");
 const Equipment = DarkQuest.Equipment;
 const Parameter = DarkQuest.Parameter;
@@ -16,9 +17,9 @@ const MAX_HIT_POINT   = 5000;
 const MAX_MAGIC_POINT = 1000;
 
 class UserRepositoryOnHubot {
-    constructor(robot, users) {
+    constructor(robot) {
         this.robot = robot;
-        this.users = users || [];
+        this.users = [];
     }
 
     save() {
@@ -41,7 +42,7 @@ class UserRepositoryOnHubot {
             const saved = savedUserStates[id];
             const hitPoint      = (saved && !isNaN(saved.hitPoint)) ? saved.hitPoint : MAX_HIT_POINT;
             const magicPoint    = (saved && !isNaN(saved.magicPoint)) ? saved.magicPoint : MAX_MAGIC_POINT;
-            const job           = saved ? jobRepository.getByName(saved.jobName) : null;
+            const job           = (saved && saved.jobName)? jobRepository.getByName(saved.jobName) : null;
             const weapon        = weaponRepository.getByName("素手");
             const u = new User(
                 user.id, 
@@ -55,7 +56,7 @@ class UserRepositoryOnHubot {
                 job
             );
 
-            u.isBot = idToSlackUser[id] && idToSlackUser[id].is_bot;
+            u.isBot = !!(idToSlackUser[id] && idToSlackUser[id].is_bot);
             u.hitPoint.on("changed", (data) => {
                 this.save();
             });
