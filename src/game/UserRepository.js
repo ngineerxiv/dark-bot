@@ -16,9 +16,9 @@ const MAX_HIT_POINT   = 5000;
 const MAX_MAGIC_POINT = 1000;
 
 class UserRepositoryOnHubot {
-    constructor(robot) {
+    constructor(robot, users) {
         this.robot = robot;
-        this.users = [];
+        this.users = users || [];
     }
 
     save() {
