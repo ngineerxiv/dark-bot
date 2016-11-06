@@ -6,6 +6,7 @@ const SpellRepository = require("../game/SpellRepository.js");
 const UserRepository  = require("../game/UserRepository.js");
 const JobRepository   = require("../game/JobRepository.js");
 const MonsterRepository = require("../game/MonsterRepository.js");
+const MonsterFactory = require("../game/MonsterFactory.js");
 const Battle    = require("../game/Battle.js");
 const lang      = require("../game/lang/Ja.js");
 const StatusValues = NodeQuest.StatusValues;
@@ -16,10 +17,12 @@ const AutoAction = require("../game/AutoAction.js");
 
 class DarkGame {
     constructor(userRepository, bitnessRepository) {
+        this.userRepository     = userRepository;
         this.spellRepository    = new SpellRepository();
         this.jobRepository      = new JobRepository();
         this.weaponRepository   = new WeaponRepository();
         this.monsterRepository  = new MonsterRepository();
+        this.monsterFactory     = new MonsterFactory();
         this.userManager        = new UserManager(
             userRepository,
             this.spellRepository,
@@ -33,6 +36,10 @@ class DarkGame {
             new Cron("0 4 * * *", () => this.cureMindAll(), null, true, "Asia/Tokyo")
         ];
         this.bitnessRepository  = bitnessRepository;
+        ["社会", "休日", "神父", "会社"].forEach((monsterName) => {
+            const m = this.monsterFactory.factory(monsterName);
+            this.monsterRepository.put(m);
+        });
     }
 
     loadUsers() {
@@ -178,8 +185,8 @@ class DarkGame {
         if (this.userManager.getByName(monsterName)) {
             return messageSender("召喚に失敗した");
         }
-        // Factoryクラスの責務っぽい
-        const m = this.monsterRepository.create(monsterName);
+        const m = this.monsterFactory.factory(monsterName);
+        this.monsterRepository.put(m);
         const action = new AutoAction(targetManager, this.battle, messageSender, this.userManager);
         action.act(m);
         messageSender(lang.summon.default(monsterName));
