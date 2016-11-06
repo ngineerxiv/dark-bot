@@ -39,8 +39,7 @@ class DarkGame {
     }
 
     loadUsers() {
-        const slackUsers = robot.adapter.client ? robot.adapter.client.users : {};
-        const users = this.userManager.load(slackUsers);
+        const users = this.userManager.load();
         this.bitnessRepository.load();
         return users;
     }

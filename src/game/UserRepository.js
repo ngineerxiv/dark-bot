@@ -16,9 +16,9 @@ const MAX_HIT_POINT   = 5000;
 const MAX_MAGIC_POINT = 1000;
 
 class UserRepositoryOnHubot {
-    constructor(brain) {
-        this.brain = brain;
-        this.users = [];
+    constructor(robot, users) {
+        this.robot = robot;
+        this.users = users || [];
     }
 
     save() {
@@ -30,11 +30,12 @@ class UserRepositoryOnHubot {
                 jobName: (u.job ? u.job.name : null)
             }
         });
-        this.brain.set(HUBOT_NODE_QUEST_USERS, us);
+        this.robot.brain.set(HUBOT_NODE_QUEST_USERS, us);
     }
 
-    load(idToSlackUser, jobRepository, weaponRepository) {
-        const savedUserStates = this.brain.get(HUBOT_NODE_QUEST_USERS) || {};
+    load(jobRepository, weaponRepository) {
+        const idToSlackUser = this.robot.adapter.client ? this.robot.adapter.client.users : {}
+        const savedUserStates = this.robot.brain.get(HUBOT_NODE_QUEST_USERS) || {};
         const users =  Object.keys(idToSlackUser).map((id) => {
             const user  = idToSlackUser[id];
             const saved = savedUserStates[id];

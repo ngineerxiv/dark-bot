@@ -21,9 +21,9 @@ class UserManager {
         return targets.length === 0 ? null : targets.pop();
     }
 
-    load(slackUsers) {
+    load() {
         // TODO repositoryのメソッドにrepository渡すのなんか違う気がしている
-        const users = this.userRepository.load(slackUsers, this.jobRepository, this.weaponRepository);
+        const users = this.userRepository.load(this.jobRepository, this.weaponRepository);
         users.forEach((u) => {
             if (!u.isBot) {
                 u.spells = this.spellRepository.get();
