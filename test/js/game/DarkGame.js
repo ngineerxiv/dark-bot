@@ -57,40 +57,90 @@ describe('DarkGame', () => {
     });
 
     describe("#attackToUser", () => {
-        const robot = new MockRobot(new MockBrain({
-            HUBOT_NODE_QUEST_USERS: {
-                "a": {
-                    id: "a",
-                    hitPoint: 10,
-                    magicPoint: 10,
-                },
-                "b": {
-                    id: "b",
-                    hitPoint: 1,
-                    magicPoint: 10,
+        const initGame = () => {
+            const robot = new MockRobot(new MockBrain({
+                HUBOT_NODE_QUEST_USERS: {
+                    "a": {
+                        id: "a",
+                        hitPoint: 10,
+                        magicPoint: 10,
+                    },
+                    "b": {
+                        id: "b",
+                        hitPoint: 1,
+                        magicPoint: 10,
+                    }
                 }
-            }
-        }), {
-            "a": {"id": "a", "name": "hoge"},
-            "b": {"id": "b", "name": "fuga"},
-            "c": {"id": "c", "name": "piyo"}
-        });
-        const userRepository = new UserRepository(robot);
-        const bitnessRepository = new BitnessRepository(robot.brain);
-        const darkGame = new DarkGame(
-            userRepository,
-            bitnessRepository
-        );
+            }), {
+                "a": {"id": "a", "name": "hoge"},
+                "b": {"id": "b", "name": "fuga"},
+                "c": {"id": "c", "name": "piyo"}
+            });
+            const userRepository = new UserRepository(robot);
+            const bitnessRepository = new BitnessRepository(robot.brain);
+            return new DarkGame(
+                userRepository,
+                bitnessRepository
+            );
+        };
 
         it("should attack to user and decrease hp", () => {
+            const darkGame = initGame();
             darkGame.loadUsers()
             const actual = darkGame.attackToUser("hoge", "fuga", (message) => {
                 assert.notEqual(message, undefined);
                 assert.ok(message.length > 0);
             });
-            const users = userRepository.get()
+            const users = darkGame.userRepository.get()
+            assert.equal(users.length, 3);
             // FIXME 命中率とかの関連でたまに落ちるのでHPが減ってるテストが書けない
         });
+
+        it("should decrease hit point to 0 when user attacks 神父 and countered to user", () => {
+            const darkGame = initGame();
+            darkGame.loadUsers();
+            const actual = darkGame.attackToUser("piyo", "神父", (message) => {
+                assert.notEqual(message, undefined);
+                assert.ok(message.length > 0);
+            });
+            const users = darkGame.userRepository.get()
+            assert.deepEqual(users.map((u) => {
+                return {
+                    id: u.id,
+                    name: u.name,
+                    hp: u.hitPoint.current,
+                    mp: u.magicPoint.current
+                }
+            }), [
+                {id: "a", name:"hoge", hp: 10, mp: 10},
+                {id: "b", name:"fuga", hp: 1, mp:10},
+                {id: "c", name:"piyo", hp: 0, mp:1000}
+            ]);
+        });
+
+        it("should decrease magic point to 0 when user attacks 社会 and countered to user", () => {
+            const darkGame = initGame();
+            darkGame.loadUsers();
+            const actual = darkGame.attackToUser("piyo", "社会", (message) => {
+                assert.notEqual(message, undefined);
+                assert.ok(message.length > 0);
+            });
+            const users = darkGame.userRepository.get()
+            assert.deepEqual(users.map((u) => {
+                return {
+                    id: u.id,
+                    name: u.name,
+                    hp: u.hitPoint.current,
+                    mp: u.magicPoint.current
+                }
+            }), [
+                {id: "a", name:"hoge", hp: 10, mp: 10},
+                {id: "b", name:"fuga", hp: 1, mp:10},
+                {id: "c", name:"piyo", hp: 5000, mp: 0}
+            ]);
+
+        });
+
     });
 
     describe("#castToUser", () => {
