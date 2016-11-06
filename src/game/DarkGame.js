@@ -30,10 +30,7 @@ class DarkGame {
         this.battle             = new Battle(lang);
         this.cronJobs           = [
             new Cron("0 0 * * 1", () => this.cureAll(), null, true, "Asia/Tokyo"),
-            new Cron("0 4 * * *", () => {
-                const users = this.userManager.getAllUsers()
-                users.forEach((u) => u.mindCured(Infinity))
-            }, null, true, "Asia/Tokyo")
+            new Cron("0 4 * * *", () => this.cureMindAll(), null, true, "Asia/Tokyo")
         ];
         this.bitnessRepository  = bitnessRepository;
     }
@@ -118,6 +115,11 @@ class DarkGame {
             holiday.cast("アレイズ", u);
             holiday.cast("フルケア", u);
         })
+    }
+
+    cureMindAll() {
+        const users = this.userManager.getAllUsers()
+        users.forEach((u) => u.mindCured(Infinity))
     }
 
     prayToPriest(actorName, messageSender) {
