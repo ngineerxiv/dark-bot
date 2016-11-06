@@ -23,6 +23,57 @@ describe('UserRepository', () => {
         }
     }
 
+    it("should load", () => {
+        const mockRobot = {
+            brain: new MockBrain(),
+            adapter: {
+                client: {
+                    users: {
+                        "a": {"id": "a", "name": "hoge"},
+                        "b": {"id": "b", "name": "fuga"},
+                        "c": {"id": "c", "name": "piyo"}
+                    }
+                }
+            }
+        };
+
+        const r = new UserRepository(mockRobot, [
+            {
+                id: "a",
+                hitPoint: {
+                    current:10
+                },
+                magicPoint: {
+                    current: 10
+                }
+            },
+            {
+                id: "b",
+                hitPoint: {
+                    current: 0
+                },
+                magicPoint: {
+                    current: 10
+                }
+            }
+        ]);
+        const actual = r.load(new JobRepository(), new WeaponRepository());
+        assert.equal(Object.keys(actual).length, 3);
+        assert.deepEqual(actual.map((u) => {
+            return {
+                id: u.id,
+                name: u.name,
+                hp: u.hitPoint.current,
+                mp: u.magicPoint.current
+            }
+        }), [
+            {id: "a", name:"hoge", hp: 5000, mp:1000},
+            {id: "b", name:"fuga", hp: 5000, mp:1000},
+            {id: "c", name:"piyo", hp: 5000, mp:1000}
+        ]);
+
+    });
+
     it("should save and get", () => {
         const mockRobot = {
             brain: new MockBrain(),
