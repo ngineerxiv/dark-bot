@@ -65,7 +65,7 @@ module.exports = (robot) => {
 
 
     const bitnessRepository = new BitnessRepository(robot.brain);
-    const userRepository    = new UserRepository(robot.brain);
+    const userRepository    = new UserRepository(robot);
     const darkGame = new DarkGame(
         userRepository,
         bitnessRepository
