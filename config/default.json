@@ -1,9 +1,4 @@
 {
-    "optout": {
-        "channels": [
-            "abyss"
-        ]
-    },
     "brainKeys": {
         "hubotNodeQuestUsers": "HUBOT_NODE_QUEST_USERS"
     }
