@@ -37,6 +37,10 @@ const nayus = [
     ":nayu: 「宇宙規模で見れば3000行のコミットなんて些細な物」"
 ];
 
+const kirins = [
+    ":kirin: 「名言 :ha: :tsukureru: 」"
+];
+
 module.exports = (robot) => {
 
     robot.respond(/poem$/i, (res) => {
@@ -83,6 +87,8 @@ module.exports = (robot) => {
     robot.respond(/NAYU$/i, (res) => {
         res.send(res.random(nayus));
     });
+
+    robot.respond(/KIRIN/i, (res) => res.send(res.random(kirins)));
 
     robot.hear(/^di (.+)$/, (res) => {
         const message = res.message;
