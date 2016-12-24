@@ -23,5 +23,5 @@ resource "aws_lambda_function" "dark_bot" {
     role = "${aws_iam_role.iam_for_dark_bot.arn}"
     handler = "exports.handler"
     source_code_hash = "${base64sha256(file("dark_bot.zip"))}"
-    runtime = "nodejs4.3"
+    runtime = "python2.7"
 }
