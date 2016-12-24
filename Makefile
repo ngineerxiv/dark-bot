@@ -54,9 +54,6 @@ start-local: ## start hubot with shell adapter
 config/production.json: ## If you wanna confirm to go well or not, please use `make config/production.json config_production=config/development.json`
 	cp -f $(config_production) $@
 
-run-new-channels: src/dark/bin/NewChannels.js
-	source $(credential);$(node) $<
-
 ######################################
 ##########  Jenkins scripts  #########
 ######################################
