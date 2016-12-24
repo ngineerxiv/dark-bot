@@ -1,0 +1,2 @@
+virtualenv:
+	$@ -p python2 .

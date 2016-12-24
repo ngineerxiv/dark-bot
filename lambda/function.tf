@@ -1,3 +1,7 @@
+variable "slack_token" {
+    description = "Slack Token for dark bot"
+}
+
 resource "aws_iam_role" "iam_for_dark_bot" {
     name = "iam_for_dark_bot"
     assume_role_policy = <<EOF
@@ -24,4 +28,9 @@ resource "aws_lambda_function" "dark_bot" {
     handler = "exports.handler"
     source_code_hash = "${base64sha256(file("dark_bot.zip"))}"
     runtime = "python2.7"
+    environment {
+      variables = {
+        SLACK_API_TOKEN = "${var.slack_token}"
+      }
+    }
 }

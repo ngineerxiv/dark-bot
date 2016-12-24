@@ -17,6 +17,7 @@ terraform/plan: terraform/remote_pull
 
 terraform/apply: terraform/plan
 	$(TERRAFORM) apply
+	$(MAKE) terraform/remote_push
 
 terraform/remote_pull: terraform/remote_config
 		$(TERRAFORM) remote pull
@@ -35,10 +36,12 @@ terraform/remote_config: .terraform
 
 clean:
 	rm -rf dist
+	rm -f $(package_file_name)
 
 package: dist
 	cp src/exports.py $</exports.py
-	cd $< && zip -r ${package_file_name} ./exports.py
+	cp -r src/lib/python2.7/site-packages/* $</
+	cd $< && zip -r ${package_file_name} ./*
 	mv -f $</$(package_file_name) ./$(package_file_name)
 
 dist:
