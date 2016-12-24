@@ -6,12 +6,12 @@ sc = SlackClient(slack_token)
 
 
 def handler(event, context):
-    print(event)
-
     ret = sc.api_call(
-          "chat.postMessage",
-          channel="#bot_heaven",
-          text="Hello from Lambda! :tada:"
+        "chat.postMessage",
+        channel="#bot_heaven",
+        text="Hello from Lambda! :tada:",
+        username="dark",
+        icon_emoji=":dark:"
     )
     return {'text': ret}
 
