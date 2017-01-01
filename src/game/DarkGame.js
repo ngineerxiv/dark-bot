@@ -67,7 +67,11 @@ class DarkGame {
         }
         const target = this.userManager.getByName(targetName);
         const result = this.battle.cast(actor, target, spellName);
-        return messageSender(result.messages.join("\n"));
+        const chant = this.spellRepository.getChant(spellName);
+        let messages = [];
+        chant && messages.push(chant);
+        messages = messages.concat(result.messages);
+        return messageSender(messages.join("\n"));
     }
 
     statusOfUser(targetName, messageSender) {

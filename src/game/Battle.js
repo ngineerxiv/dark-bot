@@ -2,8 +2,6 @@
 
 const NodeQuest = require("node-quest");
 const UserStates  = NodeQuest.UserStates;
-const SpellRepository = require("./SpellRepository.js");
-const spellRepository = new SpellRepository();
 
 class Battle {
     constructor(lang) {
@@ -96,8 +94,6 @@ class Battle {
         }
 
         let messages = [];
-        const chant = spellRepository.getChant(spellName);
-        chant && messages.push(chant);
         const result    = actor.cast(spellName, target);
         switch (result) {
             case UserStates.NoTargetSpell:
