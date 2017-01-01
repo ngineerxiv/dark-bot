@@ -12,6 +12,9 @@ deploy:
 	$(MAKE) package
 	$(MAKE) terraform/apply
 
+terraform.tfvars: terraform.sample.tfvars
+	cp -f $< $@
+
 terraform/plan: terraform/remote_pull
 	$(TERRAFORM) plan
 
