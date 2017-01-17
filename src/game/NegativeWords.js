@@ -5,6 +5,7 @@ const guessWords    = ['そう'];
 const denialWords   = ['ない'];
 const ableToGoHome  = ['帰れる', 'かえれる'];
 const appreciateWords = ['おつかれ', 'おつかれさま'];
+const questionSymbols = ['?', '？'];
 
 class NegativeWords {
     constructor(negativeWordsRepository, logger, defaultNegativeWords) {
@@ -22,6 +23,9 @@ class NegativeWords {
     };
 
     countPain(kuromojiFormedTokens) {
+        if (this.isQuestion(kuromojiFormedTokens)) {
+            return 0;
+        }
         const negativeCount   = this.countNegativeWords(kuromojiFormedTokens.map((t) => t.basic_form));
         const appreciateCount = this.countAppreciatingWords(kuromojiFormedTokens.map((t) => t.surface_form));
         return Math.max(negativeCount - appreciateCount, 0);
@@ -52,6 +56,15 @@ class NegativeWords {
             this.isAppreciatingWord(token, next) && appreciateCount++;
         });
         return appreciateCount;
+    }
+
+    isQuestion(tokens) {
+        if (!Array.isArray(tokens)) {
+            return false;
+        }
+        return tokens.some(
+            (t) => questionSymbols.indexOf(t.surface_form) !== -1
+        );
     }
 
     hasNegative(token, next) {
