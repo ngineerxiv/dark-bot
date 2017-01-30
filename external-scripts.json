@@ -8,5 +8,6 @@
   "hubot-middleware-kuromoji",
   "hubot-redis-brain",
   "hubot-popute",
-  "hubot-character"
+  "hubot-character",
+  "hubot-fujiwara"
 ]
