@@ -20,6 +20,7 @@
     "eventemitter2": "^2.0.0",
     "hubot": "^2.18.0",
     "hubot-character": "^0.2.0",
+    "hubot-fujiwara": "^1.0.0",
     "hubot-google-images": "^0.2.6",
     "hubot-google-translate": "^0.2.0",
     "hubot-help": "^0.2.0",
