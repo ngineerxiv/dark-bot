@@ -9,7 +9,7 @@ const defaultWeapon = new Weapon("素手", 100, 50, new HitRate(90), new Critica
 class WeaponRepositoryOnMemory {
     constructor() {
         this.weapons = [
-            new Weapon("素手", 100, 50, new HitRate(90), new Critical(10))
+            defaultWeapon
         ];
     }
 

@@ -36,7 +36,7 @@ class UserManager {
         this.users = slackUsers.map((slackUser) => {
             const saved = this.userRepository.getStatesById(slackUser.id);
             const job           = this.jobRepository.getByName(saved.jobName) || null;
-            const weapon        = this.weaponRepository.getByName(saved.weaponName) || null;
+            const weapon        = this.weaponRepository.getByName(saved.weaponName);
             const u = new User(
                 slackUser.id, 
                 slackUser.name, 

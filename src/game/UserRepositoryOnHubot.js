@@ -58,7 +58,7 @@ class UserRepositoryOnHubot {
                 (saved && !isNaN(saved.magicPoint)) ? saved.magicPoint : MAX_MAGIC_POINT,
                 MAX_MAGIC_POINT
             ),
-            jobName: (saved && saved.jobName)? jobRepository.getByName(saved.jobName) : null,
+            jobName: (saved && saved.jobName)? saved.jobName : null,
             weaponName: "素手",
         };
     }
