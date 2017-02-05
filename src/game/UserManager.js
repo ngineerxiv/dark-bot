@@ -1,7 +1,14 @@
 "use strict"
+const DarkQuest = require("node-quest");
+const User      = DarkQuest.User;
+const Equipment = DarkQuest.Equipment;
+const Parameter = DarkQuest.Parameter;
+const Status    = DarkQuest.Status;
 
 class UserManager {
-    constructor(userRepository, spellRepository, jobRepository, weaponRepository, monsterRepository) {
+    constructor(slackUserRepository, userRepository, spellRepository, jobRepository, weaponRepository, monsterRepository) {
+        this.users = [];
+        this.slackUserRepository = slackUserRepository;
         this.userRepository     = userRepository;
         this.spellRepository    = spellRepository;
         this.jobRepository      = jobRepository;
@@ -9,10 +16,13 @@ class UserManager {
         this.monsterRepository  = monsterRepository;
     }
 
+    getUsers() {
+        return this.users;
+    }
+
     getAllUsers() {
-        const allUsers = this.userRepository.get();
         const monsters = this.monsterRepository.get();
-        return allUsers.concat(monsters);
+        return this.users.concat(monsters);
     }
 
     getByName(name) {
@@ -22,18 +32,43 @@ class UserManager {
     }
 
     load() {
-        // TODO repositoryのメソッドにrepository渡すのなんか違う気がしている
-        const users = this.userRepository.load(this.jobRepository, this.weaponRepository);
-        users.forEach((u) => {
-            if (!u.isBot) {
+        const slackUsers = this.slackUserRepository.load();
+        this.users = slackUsers.map((slackUser) => {
+            const saved = this.userRepository.getStatesById(slackUser.id);
+            const job           = this.jobRepository.getByName(saved.jobName) || null;
+            const weapon        = this.weaponRepository.getByName(saved.weaponName) || null;
+            const u = new User(
+                slackUser.id, 
+                slackUser.name, 
+                saved.hitPoint, 
+                saved.magicPoint, 
+                new Equipment(weapon),
+                new Parameter(100, 50, 200, 0),
+                [],
+                new Status(),
+                job
+            );
+
+            u.hitPoint.on("changed", (data) => {
+                this.userRepository.saveState(u);
+            });
+            u.magicPoint.on("changed", (data) => {
+                this.userRepository.saveState(u);
+            });
+
+            u.on("jobChanged", (data) => {
+                this.userRepository.saveState(u);
+            });
+            if (!slackUser.isBot) {
                 u.spells = this.spellRepository.get();
             }
+            return u;
         });
-        return users;
+        return this.users;
     }
 
     save() {
-        this.userRepository.save();
+        this.userRepository.saveAll(this.users);
     }
 }
 

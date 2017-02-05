@@ -2,7 +2,7 @@
 const assert = require("power-assert");
 const config = require("config");
 const HUBOT_NODE_QUEST_USERS  = config.brainKeys.hubotNodeQuestUsers;
-const UserRepository = require("../../../src/game/UserRepository.js");
+const UserRepository = require("../../../src/game/UserRepositoryOnHubot.js");
 const DarkQuest = require("node-quest");
 const HitPoint  = DarkQuest.HitPoint;
 const MagicPoint= DarkQuest.MagicPoint;

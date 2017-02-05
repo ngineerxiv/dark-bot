@@ -13,7 +13,8 @@
 "use strict"
 
 const DarkGame  = require("../game/DarkGame.js");
-const UserRepository  = require("../game/UserRepository.js");
+const SlackUserRepository = require("../game/SlackUserRepository");
+const UserRepository  = require("../game/UserRepositoryOnHubot.js");
 const BitnessRepository =require("../game/BitnessRepository.js");
 const SlackAPI = require('slackbotapi');
 
@@ -66,7 +67,9 @@ module.exports = (robot) => {
 
     const bitnessRepository = new BitnessRepository(robot.brain);
     const userRepository    = new UserRepository(robot);
+    const slackUserRepository = new SlackUserRepository(robot.adapter);
     const darkGame = new DarkGame(
+        slackUserRepository,
         userRepository,
         bitnessRepository
     );

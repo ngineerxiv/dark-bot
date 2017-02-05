@@ -3,7 +3,6 @@
 const NodeQuest = require("node-quest");
 const Cron      = require("cron").CronJob;
 const SpellRepository = require("../game/SpellRepository.js");
-const UserRepository  = require("../game/UserRepository.js");
 const JobRepository   = require("../game/JobRepository.js");
 const MonsterRepository = require("../game/MonsterRepository.js");
 const MonsterFactory = require("../game/MonsterFactory.js");
@@ -16,7 +15,7 @@ const WeaponRepository = require("../game/WeaponRepository.js");
 const AutoAction = require("../game/AutoAction.js");
 
 class DarkGame {
-    constructor(userRepository, bitnessRepository) {
+    constructor(slackUserRepository, userRepository, bitnessRepository) {
         this.userRepository     = userRepository;
         this.spellRepository    = new SpellRepository();
         this.jobRepository      = new JobRepository();
@@ -24,6 +23,7 @@ class DarkGame {
         this.monsterRepository  = new MonsterRepository();
         this.monsterFactory     = new MonsterFactory();
         this.userManager        = new UserManager(
+            slackUserRepository,
             userRepository,
             this.spellRepository,
             this.jobRepository,
