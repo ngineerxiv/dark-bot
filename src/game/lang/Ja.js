@@ -42,7 +42,7 @@ module.exports = {
              `使える魔法: ${target.getLearnedSpells().map((s) => s.name).join(",")}`,
              `現在の職業: ${target.job ? target.job.name : "無職"}`
     ].join("\n"),
-    bitness: (value) => `社会から受けたつらさ: ${value}`
+    bitness: (value) => `信仰(社会から受けたつらさ): ${value}`
   },
   spell: {
     cast: (actor, spellName) => `${actor.name} は ${spellName} をとなえた！`
