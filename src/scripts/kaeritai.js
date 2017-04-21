@@ -32,4 +32,8 @@ module.exports = (robot) => {
     robot.hear(/おはよう/, (res) => {
         res.send(`https://pbs.twimg.com/media/C8mZoFoXoAMgt24.jpg#${uuid.v4()}`);
     });
+
+    robot.hear(/帰る/, (res) => {
+        res.send(`https://pbs.twimg.com/media/C9HxdfrVYAA-Dth.jpg#${uuid.v4()}`);
+    });
 }
