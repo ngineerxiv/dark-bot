@@ -25,21 +25,21 @@ class OrenoyomeClient {
     }
 
     request(callback, errorCallback) {
-      const req = http.get(this.resourceJsonUrl, {
-          'timeout': timeoutMillisec
-      }, (err, res, body) => {
-          if (err) {
-              if (err.code === 'ETIMEDOUT') {
-                  errorCallback(
-                      `request to ${this.resourceJsonUrl} timed out. waited ${timeoutMillisec / 1000.0} seconds`,
-                      body
-                  );
-              }
-              errorCallback(err, body);
-          } else {
-              callback(body);
-          }
-      });
+        const req = http.get(this.resourceJsonUrl, {
+            'timeout': timeoutMillisec
+        }, (err, res, body) => {
+            if (err) {
+                if (err.code === 'ETIMEDOUT') {
+                    errorCallback(
+                        `request to ${this.resourceJsonUrl} timed out. waited ${timeoutMillisec / 1000.0} seconds`,
+                        body
+                    );
+                }
+                errorCallback(err, body);
+            } else {
+                callback(body);
+            }
+        });
     }
 
     requestWith(yome, callback, errorCallback) {
@@ -61,31 +61,31 @@ module.exports = (robot) => {
     robot.respond (/小路綾/i, (msg) => client.requestWith(
         '小路綾',
         (y) => msg.send(y),
-        (err, body) => msg.send(err)
+            (err, body) => msg.send(err)
     ));
 
     robot.respond (/小野寺小咲/i, (msg) => client.requestWith(
         '小野寺小咲',
         (y) => msg.send(y),
-        (err, body) => msg.send(err)
+            (err, body) => msg.send(err)
     ));
 
     robot.respond (/(月子|筒隠月子)/i, (msg) => client.requestWith(
         '筒隠月子',
         (y) => msg.send(y),
-        (err, body) => msg.send(err)
+            (err, body) => msg.send(err)
     ));
 
     robot.respond (/(流子|御船流子)/i, (msg) => client.requestWith(
         '御船流子',
         (y) => msg.send(y),
-        (err, body) => msg.send(err)
+            (err, body) => msg.send(err)
     ));
 
     robot.respond (/(エリオ|藤和エリオ)/i, (msg) => client.request(
         '藤和エリオ',
         (y) => msg.send(y),
-        (err, body) => msg.send(err)
+            (err, body) => msg.send(err)
     ));
 
     robot.respond (/(orenoyome|俺の嫁) list/i, (msg) => {
