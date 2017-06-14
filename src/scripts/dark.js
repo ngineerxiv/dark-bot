@@ -97,4 +97,8 @@ module.exports = (robot) => {
         const matched = res.match[1];
         message.text = `${robot.name} image ${matched}`;
     });
+
+    robot.hear(/^5000兆円欲しい$/i, (res) => {
+        res.send(':5: :0: :0sono1: :0sono2: :chou: :en: :ho: :shi: :ii:');
+    });
 }
