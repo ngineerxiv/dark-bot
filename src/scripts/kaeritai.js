@@ -11,17 +11,17 @@
 const uuid = require("node-uuid");
 
 module.exports = (robot) => {
-    robot.hear(/すごい/, (res) => {
+    robot.hear(/^すごい$/, (res) => {
         res.send(`https://pbs.twimg.com/media/C920YtzVwAAQZvX.jpg#${uuid.v4()}`);
     });
 
-    robot.hear(/出勤/, (res) => {
+    robot.hear(/^出勤$/, (res) => {
         (new Date()).getDay() === 1 ?
             res.send(`https://pbs.twimg.com/media/C9AJZaFUAAANxq9.jpg#${uuid.v4()}`):
             res.send(`https://pbs.twimg.com/media/C8hNeWlV0AI6F90.jpg#${uuid.v4()}`);
     });
 
-    robot.hear(/帰った/, (res) => {
+    robot.hear(/^帰った$/, (res) => {
         res.send(`https://pbs.twimg.com/media/C9I1iydVwAASPma.jpg#${uuid.v4()}`);
     });
 
@@ -33,7 +33,7 @@ module.exports = (robot) => {
         res.send(`https://pbs.twimg.com/media/C8mZoFoXoAMgt24.jpg#${uuid.v4()}`);
     });
 
-    robot.hear(/帰る/, (res) => {
+    robot.hear(/^帰る$/, (res) => {
         res.send(`https://pbs.twimg.com/media/C9HxdfrVYAA-Dth.jpg#${uuid.v4()}`);
     });
 }
