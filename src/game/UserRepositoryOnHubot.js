@@ -22,6 +22,50 @@ class UserRepositoryOnHubot {
         this.users = [];
     }
 
+
+    saveState(u) {
+        let savedUserStates = this.robot.brain.get(HUBOT_NODE_QUEST_USERS) || {};
+        savedUserStates[u.id] = {
+            hitPoint: u.hitPoint.current,
+            magicPoint: u.magicPoint.current,
+            jobName: (u.job ? u.job.name : null),
+            weaponName: (u.equipment ? u.equipment.weapon.name : null)
+        }
+        this.robot.brain.set(HUBOT_NODE_QUEST_USERS, savedUserStates);
+    }
+
+    saveAll(users) {
+        let us = {};
+        users.forEach((u) => {
+            us[u.id] = {
+                hitPoint: u.hitPoint.current,
+                magicPoint: u.magicPoint.current,
+                jobName: (u.job ? u.job.name : null)
+            }
+        });
+        this.robot.brain.set(HUBOT_NODE_QUEST_USERS, us);
+    }
+
+    getStatesById(id) {
+        const savedUserStates = this.robot.brain.get(HUBOT_NODE_QUEST_USERS) || {};
+        const saved = savedUserStates[id];
+        return {
+            hitPoint: new HitPoint(
+                (saved && !isNaN(saved.hitPoint)) ? saved.hitPoint : MAX_HIT_POINT,
+                MAX_HIT_POINT
+            ),
+            magicPoint: new MagicPoint(
+                (saved && !isNaN(saved.magicPoint)) ? saved.magicPoint : MAX_MAGIC_POINT,
+                MAX_MAGIC_POINT
+            ),
+            jobName: (saved && saved.jobName)? saved.jobName : null,
+            weaponName: "素手",
+        };
+    }
+
+    /**
+     * @deprecated
+     */
     save() {
         const us = {};
         this.users.forEach((u) => {
@@ -34,6 +78,9 @@ class UserRepositoryOnHubot {
         this.robot.brain.set(HUBOT_NODE_QUEST_USERS, us);
     }
 
+    /**
+     * @deprecated
+     */
     load(jobRepository, weaponRepository) {
         const idToSlackUser = this.robot.adapter.client ? this.robot.adapter.client.users : {}
         const savedUserStates = this.robot.brain.get(HUBOT_NODE_QUEST_USERS) || {};
@@ -74,6 +121,9 @@ class UserRepositoryOnHubot {
         return this.users;
     }
 
+    /**
+     * @deprecated
+     */
     get() {
         return this.users;
     }

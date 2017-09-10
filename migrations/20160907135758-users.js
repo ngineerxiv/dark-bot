@@ -16,8 +16,16 @@ exports.setup = function(options, seedLink) {
 
 exports.up = function(db, callback) {
     db.createTable('users', {
-        id: { type: 'int', primaryKey: true, autoIncrement: true},
-        SlackID: 'string',
+        id: {
+            type: 'int',
+            unsigned: true,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        SlackID: {
+            type: 'string',
+            unique: true
+        },
         JobName: 'string',
         HitPoint: 'int',
         MagicPoint: 'int'

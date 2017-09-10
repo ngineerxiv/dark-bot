@@ -7,8 +7,9 @@ const DarkGame  = require("../../../src/game/DarkGame.js");
 const lang      = require("../../../src/game/lang/Ja.js");
 const MockBrain = require("../mock/Brain.js");
 const MockRobot = require("../mock/Robot.js");
-const UserRepository    = require("../../../src/game/UserRepository.js");
+const UserRepository    = require("../../../src/game/UserRepositoryOnHubot.js");
 const BitnessRepository = require("../../../src/game/BitnessRepository.js");
+const SlackUserRepository = require("../../../src/game/SlackUserRepository");
 
 describe('DarkGame', () => {
     describe("#loadUsers", () => {
@@ -33,7 +34,9 @@ describe('DarkGame', () => {
 
         const userRepository = new UserRepository(robot);
         const bitnessRepository = new BitnessRepository(robot.brain);
+        const slackUserRepository = new SlackUserRepository(robot.adapter);
         const darkGame = new DarkGame(
+            slackUserRepository,
             userRepository,
             bitnessRepository
         );
@@ -78,7 +81,9 @@ describe('DarkGame', () => {
             });
             const userRepository = new UserRepository(robot);
             const bitnessRepository = new BitnessRepository(robot.brain);
+            const slackUserRepository = new SlackUserRepository(robot.adapter);
             return new DarkGame(
+                slackUserRepository,
                 userRepository,
                 bitnessRepository
             );
@@ -91,7 +96,7 @@ describe('DarkGame', () => {
                 assert.notEqual(message, undefined);
                 assert.ok(message.length > 0);
             });
-            const users = darkGame.userRepository.get()
+            const users = darkGame.userManager.getUsers()
             assert.equal(users.length, 3);
             // FIXME 命中率とかの関連でたまに落ちるのでHPが減ってるテストが書けない
         });
@@ -103,7 +108,7 @@ describe('DarkGame', () => {
                 assert.notEqual(message, undefined);
                 assert.ok(message.length > 0);
             });
-            const users = darkGame.userRepository.get()
+            const users = darkGame.userManager.getUsers()
             assert.deepEqual(users.map((u) => {
                 return {
                     id: u.id,
@@ -125,7 +130,7 @@ describe('DarkGame', () => {
                 assert.notEqual(message, undefined);
                 assert.ok(message.length > 0);
             });
-            const users = darkGame.userRepository.get()
+            const users = darkGame.userManager.getUsers()
             assert.deepEqual(users.map((u) => {
                 return {
                     id: u.id,
@@ -138,9 +143,31 @@ describe('DarkGame', () => {
                 {id: "b", name:"fuga", hp: 1, mp:10},
                 {id: "c", name:"piyo", hp: 5000, mp: 0}
             ]);
-
         });
 
+        it("user's hit point should be saved on damaged", () => {
+            const darkGame = initGame();
+            darkGame.loadUsers();
+            const before = darkGame.userManager.userRepository.getStatesById("c");
+            const actual = darkGame.attackToUser("piyo", "神父", (message) => {
+                assert.notEqual(message, undefined);
+                assert.ok(message.length > 0);
+            });
+            const user = darkGame.userManager.userRepository.getStatesById("c");
+            assert.equal(user.hitPoint.current, 0);
+        });
+
+        it("user's magic point should be saved on damaged", () => {
+            const darkGame = initGame();
+            darkGame.loadUsers();
+            const before = darkGame.userManager.userRepository.getStatesById("c");
+            const actual = darkGame.attackToUser("hoge", "社会", (message) => {
+                assert.notEqual(message, undefined);
+                assert.ok(message.length > 0);
+            });
+            const user = darkGame.userManager.userRepository.getStatesById("a");
+            assert.equal(user.magicPoint.current, 0);
+        });
     });
 
     describe("#castToUser", () => {
@@ -164,7 +191,9 @@ describe('DarkGame', () => {
         });
         const userRepository = new UserRepository(robot);
         const bitnessRepository = new BitnessRepository(robot.brain);
+        const slackUserRepository = new SlackUserRepository(robot.adapter);
         const darkGame = new DarkGame(
+            slackUserRepository,
             userRepository,
             bitnessRepository
         );
@@ -172,7 +201,7 @@ describe('DarkGame', () => {
         it("should cast to user and decrease hp", () => {
             darkGame.loadUsers()
             const actual = darkGame.castToUser("hoge", "fuga", "メラ", (message) => {});
-            const users = userRepository.get()
+            const users = darkGame.userManager.getUsers()
             assert.deepEqual(users.map((u) => {
                 return {
                     id: u.id,
@@ -209,7 +238,9 @@ describe('DarkGame', () => {
         });
         const userRepository = new UserRepository(robot);
         const bitnessRepository = new BitnessRepository(robot.brain);
+        const slackUserRepository = new SlackUserRepository(robot.adapter);
         const darkGame = new DarkGame(
+            slackUserRepository,
             userRepository,
             bitnessRepository
         );
@@ -217,7 +248,7 @@ describe('DarkGame', () => {
         it("should cure all users", () => {
             darkGame.loadUsers()
             const actual = darkGame.cureAll();
-            const users = userRepository.get()
+            const users = darkGame.userManager.getUsers()
             assert.deepEqual(users.map((u) => {
                 return {
                     id: u.id,
@@ -254,7 +285,9 @@ describe('DarkGame', () => {
         });
         const userRepository = new UserRepository(robot);
         const bitnessRepository = new BitnessRepository(robot.brain);
+        const slackUserRepository = new SlackUserRepository(robot.adapter);
         const darkGame = new DarkGame(
+            slackUserRepository,
             userRepository,
             bitnessRepository
         );
@@ -262,7 +295,7 @@ describe('DarkGame', () => {
         it("should cure all user's mp", () => {
             darkGame.loadUsers()
             const actual = darkGame.cureMindAll();
-            const users = userRepository.get()
+            const users = darkGame.userManager.getUsers()
             assert.deepEqual(users.map((u) => {
                 return {
                     id: u.id,
@@ -290,6 +323,7 @@ describe('DarkGame', () => {
             "c": {"id": "c", "name": "piyo"}
         });
         const darkGame = new DarkGame(
+            new SlackUserRepository(robot.adapter),
             new UserRepository(robot),
             new BitnessRepository(robot.brain)
         );
