@@ -90,7 +90,14 @@ module.exports = (robot) => {
         res.send(res.random(nayus));
     });
 
-    robot.respond(/KIRIN/i, (res) => res.send(res.random(kirins)));
+    robot.respond(/KIRIN$/i, (res) => res.send(res.random(kirins)));
+
+    robot.respond(/KIRIN (\d+)$/i, (res) => {
+        const n = res.match[1];
+        const x = parseFloat(n);
+        const y = x / 140000;
+        res.send(`${n}円は${y}きりん`);
+    })
 
     robot.hear(/^di (.+)$/, (res) => {
         const message = res.message;
