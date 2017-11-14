@@ -40,8 +40,9 @@ const nayus = [
 ];
 
 const kirins = [
-    ":kirin: 「名言 :ha: :tsukureru: 」",
-    "https://78.media.tumblr.com/285789508369fafedf077149d14cbb40/tumblr_ozeltfR7SE1wi2duuo1_1280.png"
+    () => ":kirin: 「名言 :ha: :tsukureru: 」",
+    () => `https://78.media.tumblr.com/285789508369fafedf077149d14cbb40/tumblr_ozeltfR7SE1wi2duuo1_1280.png?cb=${uuid.v4()}`,
+    () => `https://78.media.tumblr.com/48b7fb2197972dbf5962c6ce4896e12c/tumblr_ozemn25ogo1r4buwio1_1280.png?cb=${uuid.v4()}`
 ];
 
 module.exports = (robot) => {
@@ -91,7 +92,7 @@ module.exports = (robot) => {
         res.send(res.random(nayus));
     });
 
-    robot.respond(/KIRIN$/i, (res) => res.send(res.random(kirins)));
+    robot.respond(/KIRIN$/i, (res) => res.send( (res.random(kirins))()) );
 
     robot.respond(/KIRIN (\d+)$/i, (res) => {
         const n = res.match[1];
