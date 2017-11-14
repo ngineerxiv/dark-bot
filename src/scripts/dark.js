@@ -40,7 +40,8 @@ const nayus = [
 ];
 
 const kirins = [
-    ":kirin: 「名言 :ha: :tsukureru: 」"
+    ":kirin: 「名言 :ha: :tsukureru: 」",
+    "https://78.media.tumblr.com/285789508369fafedf077149d14cbb40/tumblr_ozeltfR7SE1wi2duuo1_1280.png"
 ];
 
 module.exports = (robot) => {
@@ -108,4 +109,17 @@ module.exports = (robot) => {
     robot.hear(/^5000兆円欲しい$/i, (res) => {
         res.send(':5: :0: :0sono1: :0sono2: :chou: :en: :ho: :shi: :ii:');
     });
+
+    robot.hear(/^大丈夫？$/, (res) => {
+        res.send(
+            res.random([
+                ':oppai: :momu: :hatena:'
+            ])
+        );
+    });
+
+    robot.hear(/^もむ$/, (res) => {
+        res.send(':atamanowaruihito: :momu:  :momu: :exclamation:');
+    });
+
 }
