@@ -19,24 +19,22 @@ help:
 ###########################################
 
 test: ## run dark's all tests
-	./bin/hubot --config-check
-	$(npm) run compile
-	$(npm) run test-js
+	$(npm) run test
 
-watch-test-js:
-	$(npm) run test-watch-js
+mocha:
+	$(npm) run mocha
 
-watch-compile:
-	$(npm) run compile-watch
+mocha/watch:
+	$(npm) run mocha:watch
 
 install: ## install dark bot
 	$(npm) install
 
-migrate/up: dbs
-	$(npm) run migrate/up
+update: ## update script
+	$(npm) update
 
-migrate/down: dbs
-	$(npm) run migrate/down
+migrate/up: dbs
+	$(npm) run migrate:up
 
 dbs:
 	mkdir -p $@
@@ -45,14 +43,22 @@ dbs:
 ##########  main scripts  ##########
 ####################################
 
-start: config/production.json ## start hubot with slack adapter.
-	env NODE_ENV=$(ENV) ./bin/hubot-slack $(credential) --monitoring-code=$(monitoring-code)
+start/slack: ## start hubot with slack adapter.
+	$(MAKE) start adapter=slack
 
-start-local: ## start hubot with shell adapter
-	source $(credential);./bin/hubot
+start/local: ## start hubot with shell adapter
+	$(MAKE) start
+
+name=dark
+adapter=shell
+start: config/production.json
+	env NODE_ENV=$(ENV) sh -c 'source $(credential) && $(npm) run start -- --name $(name) --adapter $(adapter) --monitoring-code=$(monitoring-code)'
 
 config/production.json: ## If you wanna confirm to go well or not, please use `make config/production.json config_production=config/development.json`
 	cp -f $(config_production) $@
+
+$(credential): credentials/sample
+	cp -f $@ $<
 
 ######################################
 ##########  Jenkins scripts  #########
@@ -66,6 +72,4 @@ deploy: ## deploy script for Jenkins
 ping: ## ping script for Jenkins
 	timeout 60 sh -c 'until curl --user $(basic_user):$(basic_pass) -i localhost:8081/hubot/ping | grep "PONG";do sleep 2; done'
 
-update: ## update script for Jenkins
-	$(npm) update
 
