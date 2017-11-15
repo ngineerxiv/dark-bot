@@ -4,13 +4,13 @@
   "private": true,
   "author": "Arata Tanaka <tarata43@yahoo.co.jp>",
   "scripts": {
-    "test": "make test",
-    "test-js": "mocha --compilers js:babel-register,coffee:coffee-script/register --recursive ./test/js -R spec",
-    "test-watch-js": "mocha --compilers js:babel-register,coffee:coffee-script/register --recursive ./test/js -R spec --watch",
+    "test": "npm-run-all mocha hubot-config-check compile",
+    "hubot-config-check": "hubot --config-check",
+    "mocha": "mocha --compilers js:babel-register,coffee:coffee-script/register --recursive ./test/js -R spec",
+    "mocha:watch": "mocha --compilers js:babel-register,coffee:coffee-script/register --recursive ./test/js -R spec --watch",
     "compile": "babel src",
-    "compile-watch": "babel src --watch --out-file /dev/null",
-    "migrate/up": "db-migrate --migrations-dir ./migrations up",
-    "migrate/down": "db-migrate --migrations-dir ./migrations down"
+    "migrate:up": "db-migrate --migrations-dir ./migrations up",
+    "start": "hubot"
   },
   "description": "Dark",
   "dependencies": {
@@ -38,7 +38,6 @@
     "hubot-youtube": "^1.0.2",
     "kuromoji": "0.1.1",
     "levenshtein": "^1.0.5",
-    "newrelic": "^1.34.0",
     "node-quest": "^0.9.0",
     "node-uuid": "^1.4.7",
     "punycode": "^2.0.0",
@@ -61,6 +60,7 @@
     "db-migrate-sqlite3": "^0.1.9",
     "hubot-test-helper": "^1.4.4",
     "mocha": "^3.0.2",
+    "npm-run-all": "^4.1.2",
     "power-assert": "^1.3.1"
   }
 }

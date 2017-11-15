@@ -1,7 +1,0 @@
-#! /bin/sh
-
-file=${1:- "./credentials/sample"}
-. $file; \
-    export WEB_SLACK_TOKEN;
-
-node src/dark/bin/NewChannels.js
