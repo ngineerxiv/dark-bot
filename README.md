@@ -7,7 +7,7 @@ This is Dark Bot
 
 # What is Dark?
 
-Dark is [Dark](https://ngineerxiv.doorkeeper.jp/)
+Dark is [Dark](https://dark.connpass.com/)
 
 # Dependencies
 
@@ -27,7 +27,7 @@ make install
 make start-local
 
 # for slack
-make start credential=${credential path. see ./credentials/sample}
+make start/slack
 ```
 
 # Test

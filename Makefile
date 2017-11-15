@@ -57,6 +57,9 @@ start: config/production.json
 config/production.json: ## If you wanna confirm to go well or not, please use `make config/production.json config_production=config/development.json`
 	cp -f $(config_production) $@
 
+$(credential): credentials/sample
+	cp -f $@ $<
+
 ######################################
 ##########  Jenkins scripts  #########
 ######################################
