@@ -12,7 +12,7 @@ const Url = require('../lib/Url');
 
 module.exports = (robot) => {
     robot.hear(/^すごい$/, (res) => {
-        res.send(Url.apply('https://pbs.twimg.com/media/C920YtzVwAAQZvX.jpg', '#');
+        res.send(Url.apply('https://pbs.twimg.com/media/C920YtzVwAAQZvX.jpg', '#'));
     });
 
     robot.hear(/^出勤$/, (res) => {
