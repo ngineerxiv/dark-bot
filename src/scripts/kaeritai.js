@@ -17,8 +17,8 @@ module.exports = (robot) => {
 
     robot.hear(/^出勤$/, (res) => {
         (new Date()).getDay() === 1 ?
-            res.send(Url.apply('https://pbs.twimg.com/media/C9AJZaFUAAANxq9.jpg', '#'):
-            res.send(Url.apply('https://pbs.twimg.com/media/C8hNeWlV0AI6F90.jpg', '#');
+            res.send(Url.apply('https://pbs.twimg.com/media/C9AJZaFUAAANxq9.jpg', '#')):
+            res.send(Url.apply('https://pbs.twimg.com/media/C8hNeWlV0AI6F90.jpg', '#'));
     });
 
     robot.hear(/^帰った$/, (res) => {
