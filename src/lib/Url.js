@@ -1,4 +1,4 @@
-const uuid = require("node-uuid");
+const uuidv4 = require('uuid/v4');
 
 class Url {
     constructor(urlString, cacheBusterPrefix) {
@@ -9,7 +9,7 @@ class Url {
     }
 
     withCacheBuster() {
-        return this.urlString + this.cacheBusterPrefix + 'cb=' + uuid.v4();
+        return this.urlString + this.cacheBusterPrefix + 'cb=' + uuidv4();
     }
 
     static apply(urlString, cacheBusterPrefix) {
