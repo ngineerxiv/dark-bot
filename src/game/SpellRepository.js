@@ -1,6 +1,5 @@
 "use strict"
 
-const uuid = require("node-uuid");
 const Game      = require("node-quest");
 const Spell     = Game.Spell;
 const AttackEffect = Game.Effect.AttackEffect;
@@ -9,6 +8,7 @@ const StatusEffect = Game.Effect.StatusEffect;
 const StatusValues = Game.StatusValues;
 const Feedback     = Game.Feedback;
 const FeedbackResult    = Game.FeedbackResult;
+const Url = require("../lib/Url");
 
 class SpellRepositoryOnMemory {
     constructor() {
@@ -29,8 +29,8 @@ class SpellRepositoryOnMemory {
             "破道の九〇": () => "滲み出す混濁の紋章\n不遜なる狂気の器\n湧き上がり・否定し・痺れ・瞬き・眠りを妨げる\n爬行する鉄の王女\n絶えず自壊する泥の人形\n結合せよ\n反発せよ\n地に満ち己の無力を知れ\n\n破道の九十　『黒棺』",
             "黒棺": () =>  {
                 const url = Math.random() > 0.5 ? 
-                    `http://yamiga.waka.ru.com/images/hado90.jpg?cb=${uuid.v4()}`: 
-                    `http://yamiga.waka.ru.com/images/hado90AA.jpg?cb=${uuid.v4()}`;
+                    (Url.apply('http://yamiga.waka.ru.com/images/hado90.jpg')):
+                    (Url.apply('http://yamiga.waka.ru.com/images/hado90AA.jpg'));
                 return `滲み出す混濁の紋章\n不遜なる狂気の器\n湧き上がり・否定し・痺れ・瞬き・眠りを妨げる\n爬行する鉄の王女\n絶えず自壊する泥の人形\n結合せよ\n反発せよ\n地に満ち己の無力を知れ\n\n破道の九十　『黒棺』\n\n ${url}`
             },
             "破道の九一": () => `千手の涯\n届かざる闇の御手\n映らざる天の射手\n光を落とす道\n火種を煽る風\n集いて惑うな\n我が指を見よ\n光弾・八身・九条・天経・疾宝・大輪・灰色の砲塔\n弓引く彼方\n皎皎として消ゆ\n\n破道の九十一　『千手皎天汰炮』`,
