@@ -39,7 +39,6 @@
     "kuromoji": "0.1.1",
     "levenshtein": "^1.0.5",
     "node-quest": "^0.9.0",
-    "node-uuid": "^1.4.7",
     "punycode": "^2.0.0",
     "request": "^2.72.0",
     "slack-api-client": "^0.1.1",
