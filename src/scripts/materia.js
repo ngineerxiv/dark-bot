@@ -3,7 +3,8 @@
 //   くっくっくっ・・・メテオ呼ぶ
 //
 
-const uuid = require("node-uuid");
+const Url = require('../lib/Url');
+
 const targets = [
     () => "黒マテリア",
     () => "黒マテリア",
@@ -14,9 +15,9 @@ const targets = [
     () => "メテオ呼ぶ",
     () => "メテオ呼ぶ",
     () => "メテオ呼ぶ",
-    () => `http://yamiga.waka.ru.com/images/cloud.jpg?cb=${uuid.v4()}`,
-    () => `http://yamiga.waka.ru.com/images/cloud.jpg?cb=${uuid.v4()}`,
-    () => `http://yamiga.waka.ru.com/images/cloud.jpg?cb=${uuid.v4()}`,
+    () => Url.apply('http://yamiga.waka.ru.com/images/cloud.jpg'),
+    () => Url.apply('http://yamiga.waka.ru.com/images/cloud.jpg'),
+    () => Url.apply('http://yamiga.waka.ru.com/images/cloud.jpg'),
     () => "ックパッド"
 ];
 

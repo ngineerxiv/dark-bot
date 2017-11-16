@@ -7,7 +7,7 @@
 
 "use strict"
 
-const uuid = require("node-uuid");
+const Url = require("../lib/Url");
 
 module.exports = (robot => {
     const urataku = 'U034TCZKE';
@@ -22,7 +22,7 @@ module.exports = (robot => {
             robot.logger.error(e);
         }
         const selected = res.random(filtered);
-        res.send(`http://yamiga.waka.ru.com/images/zoi${selected}.jpg?cb=${uuid.v4()}`);
+        res.send(Url.apply(`http://yamiga.waka.ru.com/images/zoi${selected}.jpg`));
     };
 
     robot.respond(/zoi/i, res => {

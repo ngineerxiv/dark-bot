@@ -7,10 +7,10 @@
 //   hubot time - Reply with current time
 //
 
-const uuid = require("node-uuid");
+const Url = require('../lib/Url');
 
 module.exports = (robot) => {
-  robot.respond(/PING$/i, (msg) => msg.send(`http://yamiga.waka.ru.com/images/ping.jpg?cb=${uuid.v4()}`));
+  robot.respond(/PING$/i, (msg) => msg.send(Url.apply('http://yamiga.waka.ru.com/images/ping.jpg')));
 
   robot.respond(/ECHO (.*)$/i, (msg) => msg.send(msg.match[1]));
 

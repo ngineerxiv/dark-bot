@@ -8,32 +8,32 @@
 "use strict"
 
 
-const uuid = require("node-uuid");
+const Url = require('../lib/Url');
 
 module.exports = (robot) => {
     robot.hear(/^すごい$/, (res) => {
-        res.send(`https://pbs.twimg.com/media/C920YtzVwAAQZvX.jpg#${uuid.v4()}`);
+        res.send(Url.apply('https://pbs.twimg.com/media/C920YtzVwAAQZvX.jpg', '#'));
     });
 
     robot.hear(/^出勤$/, (res) => {
         (new Date()).getDay() === 1 ?
-            res.send(`https://pbs.twimg.com/media/C9AJZaFUAAANxq9.jpg#${uuid.v4()}`):
-            res.send(`https://pbs.twimg.com/media/C8hNeWlV0AI6F90.jpg#${uuid.v4()}`);
+            res.send(Url.apply('https://pbs.twimg.com/media/C9AJZaFUAAANxq9.jpg', '#')):
+            res.send(Url.apply('https://pbs.twimg.com/media/C8hNeWlV0AI6F90.jpg', '#'));
     });
 
     robot.hear(/^帰った$/, (res) => {
-        res.send(`https://pbs.twimg.com/media/C9I1iydVwAASPma.jpg#${uuid.v4()}`);
+        res.send(Url.apply('https://pbs.twimg.com/media/C9I1iydVwAASPma.jpg', '#'));
     });
 
     robot.hear(/遅刻/, (res) => {
-        res.send(`https://pbs.twimg.com/media/C8wtqyoVYAAx5br.jpg#${uuid.v4()}`);
+        res.send(Url.apply('https://pbs.twimg.com/media/C8wtqyoVYAAx5br.jpg', '#'));
     });
 
     robot.hear(/おはよう/, (res) => {
-        res.send(`https://pbs.twimg.com/media/C8mZoFoXoAMgt24.jpg#${uuid.v4()}`);
+        res.send(Url.apply('https://pbs.twimg.com/media/C8mZoFoXoAMgt24.jpg', '#'));
     });
 
     robot.hear(/^帰る$/, (res) => {
-        res.send(`https://pbs.twimg.com/media/C9HxdfrVYAA-Dth.jpg#${uuid.v4()}`);
+        res.send(Url.apply('https://pbs.twimg.com/media/C9HxdfrVYAA-Dth.jpg', '#'));
     });
 }
