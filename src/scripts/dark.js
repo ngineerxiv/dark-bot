@@ -19,6 +19,7 @@ const db = new sqlite3.Database(sqliteDBPath || ':memory:');
 const KusokoraRepository = require("../dark/KusokoraRepository");
 const kusokoraRepository = new KusokoraRepository(db);
 const Url = require('../lib/Url');
+const format = require('string-template');
 
 const gomas = [
     () => Url.apply('http://yamiga.waka.ru.com/images/goma/01.jpg'),
@@ -121,6 +122,30 @@ module.exports = (robot) => {
 
     robot.hear(/^もむ$/, (res) => {
         res.send(':atamanowaruihito: :momu:  :momu: :exclamation:');
+    });
+
+    const templates = [
+        ':robot_face: 「この時の {name} はあんなことになるとは思ってなかったのであった」',
+        ':robot_face: 「{n} 年前の俺もそうしたくないと思ってはいたんだ・・・」',
+        ':atamanowaruihito: 「フラグ」',
+        ':atamanowaruihito: 「エターナルフォースブリザード」',
+        ':robot_face: 「素晴らしい！！この研究は大成功だ！！！もう{action}さなくていい薬が完成したぞ！」',
+        ':robot_face: 「何、バカなことを言ってるんだ？もう二度と絶対に{action}すなんてことするわけないだろう」'
+    ];
+
+    robot.hear(/^もう(.+)したくない$/, (res) => {
+        // FIXME shell adapterだと多分コケる
+        const message = res.random(templates);
+        const name = res.message.user.name;
+        const action = res.match[1];
+        const n = parseInt(Math.random() * 10);
+
+        const m = format(message, {
+            name: name,
+            n: n,
+            action: action
+        });
+        res.send(m);
     });
 
 }
