@@ -46,6 +46,10 @@ const kirins = [
     () => Url.apply('https://78.media.tumblr.com/48b7fb2197972dbf5962c6ce4896e12c/tumblr_ozemn25ogo1r4buwio1_1280.png'),
 ];
 
+const tries = [
+    () => Url.apply('https://cdn.hotolab.net/images/lgtm_mrtry.gif'),
+];
+
 module.exports = (robot) => {
 
     robot.respond(/poem$/i, (res) => {
@@ -101,6 +105,10 @@ module.exports = (robot) => {
         const y = x / 140000;
         res.send(`${n}円は${y}きりん`);
     })
+
+    robot.respond(/MRTRY$/i, (res) => res.send( (res.random(tries))() ));
+
+    robot.respond(/TRY$/i, (res) => res.send( (res.random(tries))() ));
 
     robot.hear(/^di (.+)$/, (res) => {
         const message = res.message;
