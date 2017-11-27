@@ -1,7 +1,7 @@
 // Description:
-//   選ぶ
+//   Slack用の機能
 // Commands:
-//   hubot 選んで ..... - 空白とかカンマ区切りの何かから選んでくれる
+//   hubot channel id - 今いるSlackのChannelIDを教えてくれる
 //
 
 "use strict"
