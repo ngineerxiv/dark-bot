@@ -15,7 +15,7 @@ module.exports = (robot => {
         return;
     }
 
-    robot.respond(/channel id/i, (res) => {
+    robot.respond(/CHANNEL ID/i, (res) => {
         res.send(res.message.rawMessage.channel)
     });
 });
