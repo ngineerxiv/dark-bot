@@ -37,7 +37,8 @@ const isaos = [
 ];
 
 const nayus = [
-    ":nayu: 「宇宙規模で見れば3000行のコミットなんて些細な物」"
+    () => ":nayu: 「宇宙規模で見れば3000行のコミットなんて些細な物」",
+    () => Url.apply("https://pbs.twimg.com/media/DQICMH-VwAAmmdW.jpg", '#'),
 ];
 
 const kirins = [
@@ -94,7 +95,7 @@ module.exports = (robot) => {
     });
 
     robot.respond(/NAYU$/i, (res) => {
-        res.send(res.random(nayus));
+        res.send( (res.random(nayus))() );
     });
 
     robot.respond(/KIRIN$/i, (res) => res.send( (res.random(kirins))()) );
