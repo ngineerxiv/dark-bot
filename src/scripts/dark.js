@@ -39,6 +39,7 @@ const isaos = [
 const nayus = [
     () => ":nayu: 「宇宙規模で見れば3000行のコミットなんて些細な物」",
     () => Url.apply("https://pbs.twimg.com/media/DQICMH-VwAAmmdW.jpg", '#'),
+    () => Url.apply("https://twitter.com/nayucolony/status/937324757141266432", '#'),
 ];
 
 const kirins = [
