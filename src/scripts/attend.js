@@ -51,7 +51,7 @@ module.exports = (robot => {
             result.changed && res.send(`*${userName} joined!* -> ${status(event)}`)
         } else if ( checkResult.notAttend ) {
             const result = eventServer.leave(userName, eventServer.latestEvent());
-            result.changed && res.send(`*${userName} leaved!* <- ${status(event)}`);
+            result.changed && res.send(`*${userName} left!* <- ${status(event)}`);
         }
     })
 
