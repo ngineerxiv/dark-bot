@@ -31,7 +31,7 @@ module.exports = (robot => {
     // TODO Event当日は無視
     // TODO 次回・来週とかあったら見よう
     robot.hear(/.*/i, res => {
-        if (res.message.room !== "mokumoku") {
+        if (res.message.room !== "もくもく会") {
             return;
         }
         const event    = eventServer.latestEvent();
