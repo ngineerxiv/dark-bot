@@ -46,6 +46,7 @@ const kirins = [
     () => ":kirin: 「名言 :ha: :tsukureru: 」",
     () => Url.apply('https://78.media.tumblr.com/285789508369fafedf077149d14cbb40/tumblr_ozeltfR7SE1wi2duuo1_1280.png'),
     () => Url.apply('https://78.media.tumblr.com/48b7fb2197972dbf5962c6ce4896e12c/tumblr_ozemn25ogo1r4buwio1_1280.png'),
+    () => Url.apply('https://togetter.com/li/1224842'),
 ];
 
 const tries = [
