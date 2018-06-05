@@ -17,7 +17,7 @@ help:
 ##########  Development scripts  ##########
 ###########################################
 
-test: mocha config ## run dark's all tests
+test: mocha hubot/config ## run dark's all tests
 
 mocha:
 	$(YARN) run mocha
@@ -25,7 +25,7 @@ mocha:
 mocha/watch:
 	$(YARN) run mocha:watch
 
-config:
+hubot/config:
 	$(YARN) run hubot-config-check
 
 install: ## install dark bot
