@@ -1,5 +1,4 @@
 npm=$(shell which npm)
-node=$(shell which node)
 monitoring-code=local
 credential=./credentials/development
 deploy-branch="master"
@@ -18,8 +17,7 @@ help:
 ##########  Development scripts  ##########
 ###########################################
 
-test: ## run dark's all tests
-	$(npm) run test
+test: mocha config ## run dark's all tests
 
 mocha:
 	$(npm) run mocha
@@ -27,17 +25,11 @@ mocha:
 mocha/watch:
 	$(npm) run mocha:watch
 
+config:
+	$(npm) run hubot-config-check
+
 install: ## install dark bot
 	$(npm) install
-
-update: ## update script
-	$(npm) update
-
-migrate/up: dbs
-	$(npm) run migrate:up
-
-dbs:
-	mkdir -p $@
 
 ####################################
 ##########  main scripts  ##########
