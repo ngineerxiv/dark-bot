@@ -41,6 +41,7 @@
     "levenshtein": "^1.0.5",
     "node-quest": "^0.9.0",
     "punycode": "^2.0.0",
+    "raven": "^2.6.2",
     "request": "^2.72.0",
     "slack-api-client": "^0.1.1",
     "slackbotapi": "^1.3.7",
