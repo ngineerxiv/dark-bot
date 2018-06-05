@@ -15,7 +15,7 @@
     "cron": "^1.1.0",
     "eastasianwidth": "^0.1.1",
     "eventemitter2": "^2.0.0",
-    "hubot": "^2.18.0",
+    "hubot": "2.19.0",
     "hubot-character": "^0.2.0",
     "hubot-fujiwara": "^1.0.0",
     "hubot-google-images": "^0.2.6",
