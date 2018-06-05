@@ -13,11 +13,6 @@
 
 const config = require("config");
 const Levenshtein = require("levenshtein");
-const sqlite3 = require("sqlite3").verbose();
-const sqliteDBPath = process.env.KUSOKORA_DB_PATH
-const db = new sqlite3.Database(sqliteDBPath || ':memory:');
-const KusokoraRepository = require("../dark/KusokoraRepository");
-const kusokoraRepository = new KusokoraRepository(db);
 const Url = require('../lib/Url');
 const format = require('string-template');
 
@@ -83,12 +78,11 @@ module.exports = (robot) => {
     })
 
     robot.respond(/PAPIX$/i, (res) => {
-        kusokoraRepository.getAll((urls) => {
-            if (urls.length > 0) {
-                const url = res.random(urls);
-                res.send(Url.apply(url, '#'));
-            }
-        });
+        const urls = config.kusokoras;
+        if (urls.length > 0) {
+            const url = res.random(urls);
+            res.send(Url.apply(url, '#'));
+        }
     });
 
     robot.respond(/stenyan (.+)$/, (res) => {
