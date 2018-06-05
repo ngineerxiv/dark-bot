@@ -4,12 +4,10 @@
   "private": true,
   "author": "Arata Tanaka <tarata43@yahoo.co.jp>",
   "scripts": {
-    "test": "npm-run-all mocha hubot-config-check compile",
+    "test": "npm-run-all mocha hubot-config-check",
     "hubot-config-check": "hubot --config-check",
-    "mocha": "mocha --compilers js:babel-register,coffee:coffee-script/register --recursive ./test/js -R spec",
-    "mocha:watch": "mocha --compilers js:babel-register,coffee:coffee-script/register --recursive ./test/js -R spec --watch",
-    "compile": "babel src",
-    "migrate:up": "db-migrate --migrations-dir ./migrations up",
+    "mocha": "mocha --recursive ./test/js -R spec",
+    "mocha:watch": "mocha --recursive ./test/js -R spec --watch",
     "start": "hubot"
   },
   "description": "Dark",
