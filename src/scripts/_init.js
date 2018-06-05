@@ -8,10 +8,6 @@
 const config = require("config");
 const Raven = require('raven'); // TODO wrapper
 
-function isProduction() {
-    return process.env.NODE_ENV === 'production';
-}
-
 function sentryIsSet() {
     return config.sentry !== null;
 }
@@ -21,6 +17,7 @@ module.exports = function(robot) {
     robot.logger.info(`server port: ${process.env.PORT}`);
     if (sentryIsSet()) {
         Raven.config(config.sentry).install();
+        robot.logger.info(`sentry installed`);
     }
 
     robot.error((err, res) => {
