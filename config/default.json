@@ -1,5 +1,29 @@
 {
     "brainKeys": {
         "hubotNodeQuestUsers": "HUBOT_NODE_QUEST_USERS"
-    }
+    },
+    "kusokoras": [
+        "https://pbs.twimg.com/media/CjeQ9FwUUAAeJrS.jpg",
+        "https://pbs.twimg.com/media/CrWmemIUMAACRMc.jpg",
+        "https://pbs.twimg.com/media/Cq3U8DqVUAAuMbi.jpg",
+        "https://pbs.twimg.com/media/CoCf0ILUIAABbiS.jpg",
+        "https://pbs.twimg.com/media/CoBbOjyW8AARFDK.jpg",
+        "https://pbs.twimg.com/media/Cm7IwiFVIAAm2mo.jpg",
+        "https://pbs.twimg.com/media/Cm7GWSyUkAESaQj.jpg",
+        "https://pbs.twimg.com/media/CmW_coZUsAEUWHs.jpg",
+        "https://pbs.twimg.com/media/ClyfiY-VEAASNWd.jpg",
+        "https://pbs.twimg.com/media/ClpTQN_UsAAleZF.jpg",
+        "https://pbs.twimg.com/media/ClpMXk7UYAAYlK-.jpg",
+        "https://pbs.twimg.com/media/CkmoVBvUYAAjEZ4.jpg",
+        "https://pbs.twimg.com/media/CkVh_bHUUAAluUW.jpg",
+        "https://pbs.twimg.com/media/CjroruZUkAAMhvp.jpg",
+        "https://pbs.twimg.com/media/Cjh9hEeUgAEDRfk.jpg",
+        "https://pbs.twimg.com/media/CjhnD3CUkAIK49r.jpg",
+        "https://pbs.twimg.com/media/Cjhih3xUUAA9aMk.jpg",
+        "https://pbs.twimg.com/media/Cjhhes-UgAAdK6K.jpg",
+        "https://pbs.twimg.com/media/CjeSRLgVEAM0MZX.jpg",
+        "https://pbs.twimg.com/media/CjeQ9FwUUAAeJrS.jpg",
+        "https://pbs.twimg.com/media/Ci_TcCiVEAAQ0Zm.jpg",
+        "https://pbs.twimg.com/media/Ci_HUfIUoAAHQC_.jpg"
+    ]
 }
