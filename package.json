@@ -26,7 +26,7 @@
     "hubot-plusplus": "^1.2.5",
     "hubot-redis-brain": "0.0.3",
     "hubot-slack": "^3.0.2 < 4.0.0",
-    "hubot-vg-8th-floors": "^1.0.3",
+    "hubot-vg-8th-floors": "1.0.4",
     "hubot-youtube": "^1.0.2",
     "kuromoji": "0.1.1",
     "levenshtein": "^1.0.5",
