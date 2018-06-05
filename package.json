@@ -40,7 +40,7 @@
     "uuid": "3.2.1"
   },
   "engines": {
-    "node": "v6.11.x"
+    "node": ">= 6.11.1"
   },
   "devDependencies": {
     "mocha": "5.2.0",

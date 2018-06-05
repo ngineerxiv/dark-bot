@@ -1,4 +1,4 @@
-npm=$(shell which npm)
+YARN=yarn
 monitoring-code=local
 credential=./credentials/development
 deploy-branch="master"
@@ -20,16 +20,16 @@ help:
 test: mocha config ## run dark's all tests
 
 mocha:
-	$(npm) run mocha
+	$(YARN) run mocha
 
 mocha/watch:
-	$(npm) run mocha:watch
+	$(YARN) run mocha:watch
 
 config:
-	$(npm) run hubot-config-check
+	$(YARN) run hubot-config-check
 
 install: ## install dark bot
-	$(npm) install
+	$(YARN) install
 
 ####################################
 ##########  main scripts  ##########
@@ -44,7 +44,7 @@ start/local: ## start hubot with shell adapter
 name=dark
 adapter=shell
 start: config/production.json
-	env NODE_ENV=$(ENV) sh -c 'source $(credential) && $(npm) run start -- --name $(name) --adapter $(adapter) --monitoring-code=$(monitoring-code)'
+	env NODE_ENV=$(ENV) sh -c 'source $(credential) && $(YARN) run start --name $(name) --adapter $(adapter) --monitoring-code=$(monitoring-code)'
 
 config/production.json: ## If you wanna confirm to go well or not, please use `make config/production.json config_production=config/development.json`
 	cp -f $(config_production) $@
