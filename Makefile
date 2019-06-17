@@ -31,6 +31,9 @@ hubot/config:
 install: ## install dark bot
 	$(YARN) install
 
+compile:
+	$(YARN) run compile
+
 ####################################
 ##########  main scripts  ##########
 ####################################
@@ -60,6 +63,7 @@ deploy: ## deploy script for Jenkins
 	git checkout $(deploy-branch)
 	git pull origin $(deploy-branch)
 	$(MAKE) install
+	$(MAKE) compile
 
 ping: ## ping script for Jenkins
 	timeout 60 sh -c 'until curl --user $(basic_user):$(basic_pass) -i localhost:8081/hubot/ping | grep "PONG";do sleep 2; done'
