@@ -5,6 +5,7 @@
         "removeComments": false,
         "preserveConstEnums": true,
         "sourceMap": false,
+        "alwaysStrict": false,
         "lib": [ "es2015" ]
     },
     "include": [
