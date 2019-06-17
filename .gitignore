@@ -9,3 +9,4 @@ config/characters.json
 dbs/*.db
 
 src/scripts/cat.js
+src/lib/*.js
