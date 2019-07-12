@@ -7,3 +7,5 @@ credentials/development
 config/production.json
 config/characters.json
 dbs/*.db
+
+src/scripts/cat.js
