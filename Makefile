@@ -31,6 +31,9 @@ hubot/config:
 install: ## install dark bot
 	$(YARN) install
 
+compile:
+	$(YARN) run tsc
+
 ####################################
 ##########  main scripts  ##########
 ####################################
@@ -43,7 +46,7 @@ start/local: ## start hubot with shell adapter
 
 name=dark
 adapter=shell
-start: config/production.json
+start: config/production.json compile
 	env NODE_ENV=$(ENV) sh -c 'source $(credential) && $(YARN) run start --name $(name) --adapter $(adapter) --monitoring-code=$(monitoring-code)'
 
 config/production.json: ## If you wanna confirm to go well or not, please use `make config/production.json config_production=config/development.json`
