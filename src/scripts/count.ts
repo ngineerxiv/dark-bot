@@ -31,6 +31,10 @@ function view(counter: MessageCounter): string {
   return `盛り上がってるチャンネルはここだ！\nチャンネル -> 発言数\n${s}`;
 }
 
+function isPublicChannel(channel: string): boolean {
+  return channel.startsWith("C");
+}
+
 module.exports = (robot: HubotRobot) => {
   // TODO save not on memory
   const counter: Counter = new Counter();
@@ -59,7 +63,7 @@ module.exports = (robot: HubotRobot) => {
   robot.hear(/(.+)/i, function(msg: any) {
     const envelope: { room: string } = msg.envelope;
     const room = envelope.room;
-    if (room === undefined) {
+    if (room === undefined || !isPublicChannel(room)) {
       return;
     }
     counter.countUp(new Date(), room);
