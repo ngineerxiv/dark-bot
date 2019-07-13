@@ -43,6 +43,7 @@
     "node": ">= 6.11.1"
   },
   "devDependencies": {
+    "@types/cron": "^1.7.1",
     "@types/hubot": "^2.19.5",
     "@types/node": "^12.6.2",
     "mocha": "5.2.0",
