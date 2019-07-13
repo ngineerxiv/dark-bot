@@ -42,8 +42,8 @@ class DarkGame {
         });
     }
 
-    loadUsers() {
-        const users = this.userManager.load();
+    async loadUsers() {
+        const users = await this.userManager.load();
         this.bitnessRepository.load();
         return users;
     }
@@ -77,7 +77,7 @@ class DarkGame {
         }
         const bitness = this.bitnessRepository.get(target.id);
         return messageSender([
-                lang.status.default(target), 
+                lang.status.default(target),
                 lang.status.bitness(bitness)
         ].join("\n"));
     }
@@ -143,11 +143,11 @@ class DarkGame {
         return messageSender(message);
     }
 
-    takePainByWorld(targetName, kuromojiFormedMessages, messageSender) {
+    async takePainByWorld(targetName, kuromojiFormedMessages, messageSender) {
         const shakai = this.monsterRepository.getByName("社会");
         const target = this.userManager.getByName(targetName)
         if ( !target || target.isDead() ) {
-            this.loadUsers();
+            await this.loadUsers();
             return;
         }
         const count = negativeWords.countPain(kuromojiFormedMessages);
