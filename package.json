@@ -16,7 +16,7 @@
     "eastasianwidth": "^0.1.1",
     "eventemitter2": "^2.0.0",
     "hubot": "2.19.0",
-    "hubot-character": "^0.2.0",
+    "hubot-character": "^0.3.0",
     "hubot-fujiwara": "1.1.0",
     "hubot-google-images": "^0.2.6",
     "hubot-help": "^1.0.1",
@@ -39,7 +39,7 @@
     "uuid": "3.2.1"
   },
   "engines": {
-    "node": ">= 6.11.1"
+    "node": ">= 8"
   },
   "devDependencies": {
     "@types/cron": "^1.7.1",
