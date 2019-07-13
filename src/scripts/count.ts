@@ -32,6 +32,7 @@ function view(counter: MessageCounter): string {
 }
 
 module.exports = (robot: HubotRobot) => {
+  // TODO save not on memory
   const counter: Counter = new Counter();
   new CronJob("5 0 * * *", () => {
     counter.clear(new Date());
