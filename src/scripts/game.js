@@ -85,20 +85,4 @@ module.exports = (robot) => {
                 (m) => res.send(m)
                 );
     })
-
-    robot.router.get("/game/api/v1/users", (req, res) => {
-        const allUsers = darkGame.userManager.getAllUsers();
-        const users = allUsers.map((user) => {
-            const u = Object.assign({}, user);
-            u.spells = user.getLearnedSpells();
-            u.bitness = bitnessRepository.get(u.id) || 0;
-            return u;
-        });
-        res.end(JSON.stringify(users, (k, v) => {
-            if ( v === Infinity ) {
-                return "Infinity";
-            }
-            return v;
-        }));
-    });
 }
