@@ -1401,7 +1401,7 @@ slack-client@~1.4.0:
     log "1.4.0"
     ws "0.4.31"
 
-slackbotapi@^1.3.7, slackbotapi@^1.3.9:
+slackbotapi@^1.3.9:
   version "1.3.9"
   resolved "https://registry.yarnpkg.com/slackbotapi/-/slackbotapi-1.3.9.tgz#5318e0b67e4de75810e84dace7ad3125e618312f"
   dependencies:
