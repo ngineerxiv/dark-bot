@@ -25,7 +25,7 @@ function view(counter: MessageCounter): string {
     .map(tuple => {
       const c = tuple[0];
       const n = tuple[1];
-      return `#${c} -> ${n}`;
+      return `<#${c}> -> ${n}`;
     })
     .join("\n");
   return `盛り上がってるチャンネルはここだ！\nチャンネル -> 発言数\n${s}`;
@@ -45,6 +45,12 @@ module.exports = (robot: HubotRobot) => {
   });
 
   robot.respond(/EXCITED TODAY$/i, (msg: HubotResponse) => {
+    const dayOfWeek = today(new Date());
+    const c = counter.get(dayOfWeek);
+    msg.send(view(c));
+  });
+
+  robot.respond(/EXCITED$/i, (msg: HubotResponse) => {
     const dayOfWeek = today(new Date());
     const c = counter.get(dayOfWeek);
     msg.send(view(c));
