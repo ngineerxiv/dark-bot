@@ -24,10 +24,21 @@ module.exports = (robot) => {
         bitnessRepository
     );
 
+    const senderName = (res) => {
+        if (res.message.user.name === undefined) {
+            return null;
+        }
+        return res.message.user.name;
+    }
+
     robot.brain.once("loaded", (data) => darkGame.loadUsers());
 
     robot.hear(/^attack (.+)/i, (res) => {
-        darkGame.attackToUser(res.message.user.name.replace(/@/g, ""), res.match[1].trim().replace(/@/g, ""), (m) => res.send(m));
+        const n = senderName(res)
+        if (n === null)  {
+            return;
+        }
+        darkGame.attackToUser(n.replace(/@/g, ""), res.match[1].trim().replace(/@/g, ""), (m) => res.send(m));
     });
 
     robot.hear(/^status (.+)/i, (res) => {
@@ -35,25 +46,41 @@ module.exports = (robot) => {
     });
 
     robot.hear(/^pray$/i, (res) => {
-        darkGame.prayToPriest(res.message.user.name.replace(/@/g, ""), (m) => res.send(m));
+        const n = senderName(res)
+        if (n === null)  {
+            return;
+        }
+        darkGame.prayToPriest(n.replace(/@/g, ""), (m) => res.send(m));
     });
 
     robot.hear(/^神父 (.+)/, (res) => {
-        darkGame.prayToPriest(res.message.user.name.replace(/@/g, ""), (m) => res.send(m));
+        const n = senderName(res)
+        if (n === null)  {
+            return;
+        }
+        darkGame.prayToPriest(n.replace(/@/g, ""), (m) => res.send(m));
     });
 
     robot.hear(/.*/, (res) => {
+        const n = senderName(res)
+        if (n === null)  {
+            return;
+        }
         darkGame.takePainByWorld(
-                res.message.user.name.replace(/@/g, ""),
+                n.replace(/@/g, ""),
                 (res.message.tokenized || []),
                 (m) => res.send(m)
                 )
     });
 
     robot.hear(/(.+)/, (res) => {
+        const n = senderName(res)
+        if (n === null)  {
+            return;
+        }
         const messages = (res.message.text || "").split(" ");
         (messages.length >= 2) && darkGame.castToUser(
-                res.message.user.name.replace(/@/g, ""),
+                n.replace(/@/g, ""),
                 messages[1].trim().replace(/@/g, ""),
                 messages[0],
                 (m) => res.send(m)
@@ -65,23 +92,36 @@ module.exports = (robot) => {
     });
 
     robot.hear(/^job change (.+)$/, (res) => {
+        const n = senderName(res)
+        if (n === null)  {
+            return;
+        }
         darkGame.changeJob(
-                res.message.user.name.replace(/@/g, ""),
+                n.replace(/@/g, ""),
                 res.match[1].trim().replace(/@/g, ""),
                 (m) => res.send(m)
                 );
     })
 
     robot.hear(/^給料日$/, (res) => {
+        const n = senderName(res)
+        if (n === null)  {
+            return;
+        }
+
         darkGame.payDay(
-                res.message.user.name.replace(/@/g, ""),
+                n.replace(/@/g, ""),
                 (m) => res.send(m)
                 );
     })
 
     robot.hear(/^おちんぎん$/, (res) => {
+        const n = senderName(res)
+        if (n === null)  {
+            return;
+        }
         darkGame.payDay(
-                res.message.user.name.replace(/@/g, ""),
+                n.replace(/@/g, ""),
                 (m) => res.send(m)
                 );
     })
