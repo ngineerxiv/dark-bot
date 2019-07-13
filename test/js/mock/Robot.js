@@ -1,13 +1,8 @@
 "use strict"
 
 class Robot {
-    constructor(brain, users) {
+    constructor(brain) {
         this.brain = brain;
-        this.adapter = {
-            client: {
-                users: users
-            }
-        };
     }
 
 }
