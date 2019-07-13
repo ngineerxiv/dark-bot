@@ -15,55 +15,8 @@
 const DarkGame  = require("../game/DarkGame.js");
 const UserRepository  = require("../game/UserRepository.js");
 const BitnessRepository =require("../game/BitnessRepository.js");
-const SlackAPI = require('slackbotapi');
 
-const init = function(token) {
-    if ( token === undefined ) {
-        return new Error(`WEB_SLACK_TOKEN cannot be empty! value: undefined`);
-    }
-    try {
-        return new SlackAPI({
-            'token': token,
-            'logging': false,
-            'autoReconnect': true
-        });
-    } catch (e) {
-        return e;
-    }
-};
 module.exports = (robot) => {
-    const slackApi = init(process.env.WEB_SLACK_TOKEN);
-
-    class TargetManagerOnSlackApi {
-        constructor(slackApi) {
-            this.slackApi = slackApi;
-            this.targetChannel = null;
-        }
-
-        init(callback) {
-            if (this.targetChannel) {
-                callback();
-                return;
-            }
-            this.slackApi.reqAPI("channels.list", {}, (res) => {
-                this.targetChannel = res.channels.filter((c) => c.name === "prison").pop();
-                callback();
-            });
-        }
-
-        get(callback) {
-            this.init(() => {
-                this.slackApi.reqAPI("channels.info", {
-                    channel: this.targetChannel.id
-                }, (res) => {
-                    callback(res.channel.members);
-                });
-            });
-        }
-    }
-    const targetManager = new TargetManagerOnSlackApi(slackApi);
-
-
     const bitnessRepository = new BitnessRepository(robot.brain);
     const userRepository    = new UserRepository(robot);
     const darkGame = new DarkGame(
@@ -91,7 +44,7 @@ module.exports = (robot) => {
 
     robot.hear(/.*/, (res) => {
         darkGame.takePainByWorld(
-                res.message.user.name.replace(/@/g, ""), 
+                res.message.user.name.replace(/@/g, ""),
                 (res.message.tokenized || []),
                 (m) => res.send(m)
                 )
@@ -113,30 +66,25 @@ module.exports = (robot) => {
 
     robot.hear(/^job change (.+)$/, (res) => {
         darkGame.changeJob(
-                res.message.user.name.replace(/@/g, ""), 
-                res.match[1].trim().replace(/@/g, ""), 
+                res.message.user.name.replace(/@/g, ""),
+                res.match[1].trim().replace(/@/g, ""),
                 (m) => res.send(m)
                 );
     })
 
     robot.hear(/^給料日$/, (res) => {
         darkGame.payDay(
-                res.message.user.name.replace(/@/g, ""), 
+                res.message.user.name.replace(/@/g, ""),
                 (m) => res.send(m)
                 );
     })
 
     robot.hear(/^おちんぎん$/, (res) => {
         darkGame.payDay(
-                res.message.user.name.replace(/@/g, ""), 
+                res.message.user.name.replace(/@/g, ""),
                 (m) => res.send(m)
                 );
     })
-
-    robot.hear(/^summon$/, (res) => {
-        darkGame.summon(targetManager, (m) => res.send(m));
-    });
-
 
     robot.router.get("/game/api/v1/users", (req, res) => {
         const allUsers = darkGame.userManager.getAllUsers();
