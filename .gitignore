@@ -10,3 +10,5 @@ dbs/*.db
 
 src/scripts/cat.js
 src/scripts/count.js
+
+src/counter/*.js
