@@ -21,10 +21,10 @@ const ttlSec = 2 * 60 * 60;
 const UserCacheKey = 'slack_user_cache'
 
 class UserRepositoryOnHubot {
-    constructor(robot) {
+    constructor(robot, cache = new NodeCache()) {
         this.robot = robot;
         this.users = [];
-        this.cache = new NodeCache();
+        this.cache = cache;
     }
 
     save() {

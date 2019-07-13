@@ -1,18 +1,20 @@
 "use strict"
 const assert = require("power-assert");
-const config = require("config");
-const HUBOT_NODE_QUEST_USERS  = config.brainKeys.hubotNodeQuestUsers;
 const UserRepository = require("../../../src/game/UserRepository.js");
-const DarkQuest = require("node-quest");
-const HitPoint  = DarkQuest.HitPoint;
-const MagicPoint= DarkQuest.MagicPoint;
 const JobRepository   = require("../../../src/game/JobRepository.js");
 const WeaponRepository = require("../../../src/game/WeaponRepository.js");
 const MockBrain = require("../mock/Brain.js");
 const MockRobot = require("../mock/Robot.js");
+const NodeCache = require('node-cache');
 
 describe('UserRepository', () => {
-    it("should load", () => {
+    it("should load", async () => {
+        const cache = new NodeCache();
+        cache.set("slack_user_cache", [
+            {"id": "a", "name": "hoge", is_bot: false},
+            {"id": "b", "name": "fuga", is_bot: false},
+            {"id": "c", "name": "piyo", is_bot: false}
+        ]);
         const mockRobot = new MockRobot(new MockBrain({
             HUBOT_NODE_QUEST_USERS: {
                 "a": {
@@ -26,14 +28,10 @@ describe('UserRepository', () => {
                     magicPoint: 10,
                 }
             }
-        }), {
-            "a": {"id": "a", "name": "hoge"},
-            "b": {"id": "b", "name": "fuga"},
-            "c": {"id": "c", "name": "piyo"}
-        });
+        }));
 
-        const r = new UserRepository(mockRobot);
-        const actual = r.load(new JobRepository(), new WeaponRepository());
+        const r = new UserRepository(mockRobot, cache);
+        const actual = await r.load(new JobRepository(), new WeaponRepository());
         assert.equal(Object.keys(actual).length, 3);
         assert.deepEqual(actual.map((u) => {
             return {
@@ -50,7 +48,13 @@ describe('UserRepository', () => {
 
     });
 
-    it("should save and get", () => {
+    it("should save and get", async () => {
+        const cache = new NodeCache();
+        cache.set("slack_user_cache", [
+            {"id": "a", "name": "hoge", is_bot: false},
+            {"id": "b", "name": "fuga", is_bot: false},
+            {"id": "c", "name": "piyo", is_bot: false}
+        ]);
         const mockRobot = new MockRobot(new MockBrain({
             HUBOT_NODE_QUEST_USERS: {
                 "a": {
@@ -64,21 +68,17 @@ describe('UserRepository', () => {
                     magicPoint: 10,
                 }
             }
-        }), {
-            "a": {"id": "a", "name": "hoge"},
-            "b": {"id": "b", "name": "fuga"},
-            "c": {"id": "c", "name": "piyo"}
-        });
+        }));
 
-        const r = new UserRepository(mockRobot);
-        r.load(new JobRepository(), new WeaponRepository());
+        const r = new UserRepository(mockRobot, cache);
+        await r.load(new JobRepository(), new WeaponRepository());
         const users = r.get();
-        const user = users.filter((u) => u.name === "hoge").pop(); 
+        const user = users.filter((u) => u.name === "hoge").pop();
         user.cured(100);
         r.save();
 
 
-        r.load(new JobRepository(), new WeaponRepository());
+        await r.load(new JobRepository(), new WeaponRepository());
         const actual = r.get();
         assert.equal(Object.keys(actual).length, 3);
         assert.deepEqual(actual.map((u) => {
