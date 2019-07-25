@@ -17,7 +17,7 @@
     "eventemitter2": "5.0.1",
     "hubot": "3.3.2",
     "hubot-character": "^0.3.0",
-    "hubot-fujiwara": "1.1.0",
+    "hubot-fujiwara": "1.1.1",
     "hubot-google-images": "^0.2.6",
     "hubot-help": "^1.0.1",
     "hubot-middleware-kuromoji": "^0.2.1",
