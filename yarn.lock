@@ -988,10 +988,10 @@ hubot-character@^0.3.0:
     "@slack/web-api" "^5.0.1"
     string-template "^1.0.0"
 
-hubot-fujiwara@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/hubot-fujiwara/-/hubot-fujiwara-1.1.0.tgz#b0a59c40541db026fa70b684bc34b1fc2705a799"
-  integrity sha512-W10g2ON1h+xKsgqqMFR+3z3llR0SZzPWXsLUfFlrcImRPO7X55/uj8jSdu7DAvHtRY/PMly8Hh3ue65kVP1IkA==
+hubot-fujiwara@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/hubot-fujiwara/-/hubot-fujiwara-1.1.1.tgz#919fcb0ba9fef747e744e98cea3f363b81402285"
+  integrity sha512-qkIYhnqR60esZqPvSZqjGJ297AknzU1rJupzK8oBtPhLpIe2JVSgsIXbC/NJLwP+8IXsvt6GrQ5zpauzQnNXsA==
   dependencies:
     fujiwara "^0.4.0"
 
