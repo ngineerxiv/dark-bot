@@ -1,5 +1,7 @@
 YARN=yarn
 monitoring-code=local
+source=source
+source_credential=$(source) $(credential)
 credential=./credentials/development
 deploy-branch="master"
 basic_user=
@@ -47,7 +49,7 @@ start/local: ## start hubot with shell adapter
 name=dark
 adapter=shell
 start: config/production.json compile
-	env NODE_ENV=$(ENV) sh -c 'source $(credential) && $(YARN) run start --name $(name) --adapter $(adapter) --monitoring-code=$(monitoring-code)'
+	env NODE_ENV=$(ENV) sh -c '$(source_credential) && $(YARN) run start --name $(name) --adapter $(adapter) --monitoring-code=$(monitoring-code)'
 
 config/production.json: ## If you wanna confirm to go well or not, please use `make config/production.json config_production=config/development.json`
 	cp -f $(config_production) $@
